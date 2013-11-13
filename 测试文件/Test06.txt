@@ -1,8 +1,0 @@
-const int a = 1;
-float b;
-int c;
-void main(){
-	b = 123.456;
-	c = b / 1.5 + 1;
-	printf c;
-}
