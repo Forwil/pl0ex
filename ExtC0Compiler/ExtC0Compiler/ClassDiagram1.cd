@@ -1,0 +1,592 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="quaternion" Collapsed="true">
+    <Position X="39.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAhAABAAQAAABACgAAKAAAACAAAMAAgAAAIAIAA=</HashCode>
+      <FileName>quaternion.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="basic_block" Collapsed="true">
+    <Position X="38" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIADIAAAAQAAAAAAAAAAAAAAAAAkAAAgAACACEEI=</HashCode>
+      <FileName>basic_block.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="function_block" Collapsed="true">
+    <Position X="46.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAwQACAAAIAAAEAAAAAAAoAEEiAAAIChMI=</HashCode>
+      <FileName>function_block.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="instructions" Collapsed="true">
+    <Position X="39.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAEAGAgFAAyIAgABACQACAAgACQCAAAAABAI=</HashCode>
+      <FileName>instructions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dag" Collapsed="true">
+    <Position X="38" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAggAEAAAAAEAAAAAAAAAAAAAAAAAAAAAIggAAAAIAA=</HashCode>
+      <FileName>dag.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dag_node" Collapsed="true">
+    <Position X="39.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAlQAKCAAAIAAAAIIAIECAAACAAAgAA=</HashCode>
+      <FileName>dag_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="constance_propagation" Collapsed="true">
+    <Position X="46.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>constance_propagation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="bit_set" Collapsed="true">
+    <Position X="39.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CgAAAAAAAAAAAAQAQAECIAACACAAAAQACAAAAAAAAAE=</HashCode>
+      <FileName>bit_set.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="chain" Collapsed="true">
+    <Position X="41.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>chain.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="conflict_graph" Collapsed="true">
+    <Position X="45" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEMEAQAAAAAAABAAIAAkCAAAAkAAACABIACAAQABAI=</HashCode>
+      <FileName>conflict_graph.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="data_stream" Collapsed="true">
+    <Position X="41.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAGAAAAYAAAAAAACAAAAAAAACAAAAAIABAAAAAAAAAA=</HashCode>
+      <FileName>data_stream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="live_variable" Collapsed="true">
+    <Position X="43.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAACAAABgAAAEAgAAAIQBAAAAAAARAE=</HashCode>
+      <FileName>live_variable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="nets" Collapsed="true">
+    <Position X="45" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAcAAAAAEAAAAKAJAAgAAAAAAAEAABBAACAIIBBQA=</HashCode>
+      <FileName>nets.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="reach_definition" Collapsed="true">
+    <Position X="41.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAACAACAAAAgAAAEAAAAAAQBAAAAAAARAA=</HashCode>
+      <FileName>reach_definition.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tokenizer" Collapsed="true">
+    <Position X="41.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEqAAAQAAAAQwgggAAAAAAQAEoAEABJBgAACQCAAAAA=</HashCode>
+      <FileName>tokenizer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="parser" Collapsed="true">
+    <Position X="38" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>Ck7BAIAAAAAIwHQMJANCFAGEgpAygAJBgm6CQKAALIE=</HashCode>
+      <FileName>parser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="identifier_node" Collapsed="true">
+    <Position X="25.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>identifier_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="leaf_node" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAgAAACAACAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>leaf_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="literal_node" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>literal_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="node" Collapsed="true">
+    <Position X="46.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAAAAAAAQAIAAEAAAAAAABAAAAIAAAAAACAAA=</HashCode>
+      <FileName>node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="operator_node" Collapsed="true">
+    <Position X="14" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>operator_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="type_node" Collapsed="true">
+    <Position X="20.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>type_node.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="global_symbol_table" Collapsed="true">
+    <Position X="38" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AaAIAAAEAEAAAIAAADABAAACCCAKAACAIAAAAAACAAA=</HashCode>
+      <FileName>global_symbol_table.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="label_manager" Collapsed="true">
+    <Position X="41.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAgAAAA=</HashCode>
+      <FileName>label_manager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="symbol_table" Collapsed="true">
+    <Position X="38" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAAAAAAAAQUAgAAAQAAACAAAAGACAAIgAEAI=</HashCode>
+      <FileName>symbol_table.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="temp_variable_manager" Collapsed="true">
+    <Position X="39.75" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>temp_variable_manager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="symbol" Collapsed="true">
+    <Position X="46.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQoAAAQAAhAAAEIAMAgABCBYAACAGAAAQgAgAAAQgA=</HashCode>
+      <FileName>symbol.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="error" Collapsed="true">
+    <Position X="43.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAgAAAAAAAAGAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>error.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="error_list" Collapsed="true">
+    <Position X="45" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEABAAgAAIEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>error_list.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="compilation_unit" Collapsed="true">
+    <Position X="43.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAYAACAAAAAABAAAAAAAAAAAAEABAAAEAQAAAACAA=</HashCode>
+      <FileName>compilation_unit.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="object_code" Collapsed="true">
+    <Position X="46.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAABAAAAAAAAAACAAA=</HashCode>
+      <FileName>object_code.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="runtime_environment" Collapsed="true">
+    <Position X="43.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEACCQgQAAEACBAAAAAAAAAgAAAAAAAAAAAIIAARAw=</HashCode>
+      <FileName>runtime_environment.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="runtime_manager" Collapsed="true">
+    <Position X="45" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASBIAYEQICAAAJAIgAIKAIAAAEABCAIAiBKICgZCgA=</HashCode>
+      <FileName>runtime_manager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="translator" Collapsed="true">
+    <Position X="43.25" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIAIAYJRAECAAJBQAAACgQGQRMAYgAkEQAWCCASVAg=</HashCode>
+      <FileName>translator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::program" Collapsed="true">
+    <Position X="41" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::constance_declaration" Collapsed="true">
+    <Position X="47.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::constance_definition" Collapsed="true">
+    <Position X="54.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::constance_declarator" Collapsed="true">
+    <Position X="61.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::variable_declaration" Collapsed="true">
+    <Position X="68" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::variable_definition" Collapsed="true">
+    <Position X="74.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::function_definition" Collapsed="true">
+    <Position X="81.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::argument_declaration" Collapsed="true">
+    <Position X="88.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::argument_declarator" Collapsed="true">
+    <Position X="27.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::function_body" Collapsed="true">
+    <Position X="34.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::compond_statement" Collapsed="true">
+    <Position X="43.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::procedure_definition" Collapsed="true">
+    <Position X="50" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::procedure_body" Collapsed="true">
+    <Position X="56.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::main_function" Collapsed="true">
+    <Position X="63.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::expression" Collapsed="true">
+    <Position X="70.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::term" Collapsed="true">
+    <Position X="77" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::factor" Collapsed="true">
+    <Position X="83.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::statement" Collapsed="true">
+    <Position X="90.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::block" Collapsed="true">
+    <Position X="29.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::assign_statement" Collapsed="true">
+    <Position X="36.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::condition_statement" Collapsed="true">
+    <Position X="45.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::condition" Collapsed="true">
+    <Position X="52.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::while_statement" Collapsed="true">
+    <Position X="59" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::for_statement" Collapsed="true">
+    <Position X="65.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::increase_statement" Collapsed="true">
+    <Position X="72.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::invoke_statement" Collapsed="true">
+    <Position X="79.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::parameter_list" Collapsed="true">
+    <Position X="86" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::read_statement" Collapsed="true">
+    <Position X="92.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::write_statement" Collapsed="true">
+    <Position X="32" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::return_statement" Collapsed="true">
+    <Position X="38.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::add_operator" Collapsed="true">
+    <Position X="11.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::multiply_operator" Collapsed="true">
+    <Position X="14" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::relation_operator" Collapsed="true">
+    <Position X="16.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::_char" Collapsed="true">
+    <Position X="18.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::_int" Collapsed="true">
+    <Position X="20.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::_float" Collapsed="true">
+    <Position X="23" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::char_const" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::integer" Collapsed="true">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::real" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::string_const" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::step" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ast::identifier" Collapsed="true">
+    <Position X="25.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>ast.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="token" Collapsed="true">
+    <Position X="38" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAQAAAAAABACAAAQAAAAAAAAA=</HashCode>
+      <FileName>token.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tuple" Collapsed="true">
+    <Position X="39.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAIAAAACAIAAAAAABAAAAAAAAAAAAQ=</HashCode>
+      <FileName>object_code.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="chains" Collapsed="true">
+    <Position X="38" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>nets.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="net" Collapsed="true">
+    <Position X="39.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>nets.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="symbol_net" Collapsed="true">
+    <Position X="41.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>runtime_manager.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="compilation_switch" Collapsed="true">
+    <Position X="39.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAgAiAAAAAAAAAAECAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>compilation_unit.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="reg_name" Collapsed="true">
+    <Position X="41.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIQAAAACAAIJAAAAAAAAAAAAAAAAAAAAABAACA=</HashCode>
+      <FileName>runtime_manager.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="asm_ins" Collapsed="true">
+    <Position X="38" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IoAQAlYABQSAiKAAgECCAAAggAFgAYAACgAAIBIAAAA=</HashCode>
+      <FileName>runtime_manager.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,124 @@
+;====================Awaken's C0 Compiler====================
+; 标号以@@name@scope的形式命名
+; 函数以@scope的形式命名
+; 字面值以$$value的形式命名
+; 全局量以$name@global的形式命名
+; 常量以$name@scope的形式命名
+; 全局变量以$name@scope的形式命名
+
+.386									;32位模式
+.model flat, stdcall					;32位寻址, stdcall模式
+option casemap :none					;大小写敏感
+
+includelib msvcrt.lib	;vc运行时环境
+printf PROTO C:ptr sbyte, :vararg
+scanf PROTO C:ptr sbyte, :vararg
+
+.data
+
+$$printf_char db "%c", 0
+$$printf_int db "%d", 0
+$$printf_float db "%f", 0
+$$new_line db 10, 13, 0
+$$scanf_char db "%c", 0
+$$scanf_int db "%d", 0
+$$scanf_float db "%f", 0
+<<<<<<< .mine
+$$int$3 dd 3
+$$int$0 dd 8
+$$int$1 dd 2
+$$int$2 dd 6
+=======
+>>>>>>> .r121
+
+.data?
+
+
+.code
+
+<<<<<<< .mine
+$main PROC
+	SUB ESP, 0
+	MOV EAX, $$int$0
+	CDQ
+	IDIV $$int$1
+	MOV EBX, EAX
+	IMUL EBX, $$int$2
+	MOV ESI, $$int$3
+	ADD ESI, EBX
+	MOV EBP, ESI
+	IMUL EBP, $$int$1
+	MOV EBX, EBP
+	ADD EBX, ESI
+	MOV EDI, EBX
+	SUB EDI, $$int$3
+	MOV EBP, EAX
+	MOV EAX, EDI
+	CDQ
+	IDIV $$int$1
+	MOV EBX, EAX
+	ADD EBX, EDI
+	MOV EBP, EBX
+	SUB EBP, $$int$1
+	MOV EBX, EBP
+	IMUL EBX, EDI
+	MOV ESI, EAX
+	PUSH EBX
+	PUSH offset $$printf_int
+	CALL printf
+	ADD ESP, 8
+	PUSH offset $$new_line
+	CALL printf
+	ADD ESP, 4
+	PUSH ESI
+=======
+$main PROC
+	SUB ESP, 4
+	SUB ESP, 4
+	PUSH ESP
+	PUSH offset $$scanf_int
+	CALL scanf
+	ADD ESP, 8
+	POP dword ptr [esp]
+	SUB ESP, 4
+	PUSH ESP
+	PUSH offset $$scanf_int
+	CALL scanf
+	ADD ESP, 8
+	POP EDI
+	SUB ESP, 4
+	PUSH ESP
+	PUSH offset $$scanf_int
+	CALL scanf
+	ADD ESP, 8
+	POP ESI
+	MOV EBP, EDI
+	IMUL EBP, ESI
+	MOV EBX, dword ptr [esp]
+	ADD EBX, EBP
+	MOV EBP, EBX
+	MOV EBX, EBP
+	MOV EBP, ESI
+	MOV ESI, EBX
+	MOV EBX, EDI
+	IMUL EBX, ESI
+	MOV ESI, EBP
+	ADD ESI, EBX
+	MOV EBX, ESI
+	PUSH EBX
+>>>>>>> .r121
+	PUSH offset $$printf_int
+	CALL printf
+	ADD ESP, 8
+	PUSH offset $$new_line
+	CALL printf
+	ADD ESP, 4
+@@endof$main:
+<<<<<<< .mine
+	ADD ESP, 0
+=======
+	ADD ESP, 4
+>>>>>>> .r121
+	RET 0
+$main ENDP
+END $main

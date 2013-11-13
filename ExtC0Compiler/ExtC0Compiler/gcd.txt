@@ -1,0 +1,23 @@
+int gcd(int a, int b)
+{
+	int r;
+	while(b)
+	{
+		r = a;
+		while(r >= b)
+		{
+			r = r - b;	
+		}		
+		a = b;
+		b = r;
+	}
+	return(a);
+}
+
+void main()
+{
+	int a, b;
+	scanf(a);
+	scanf(b);
+	printf(gcd(a, b));
+}

@@ -1,0 +1,10 @@
+void main()
+{
+	int a,b,c,x,y,z;
+	a=1;
+	b=2;
+	c=(a+b)+(a+b);
+	x=(a+b)+(a+b);
+	y=(a+b)+(a+b);
+	z=c+x+y;
+}

@@ -1,0 +1,12 @@
+#ifndef _COMPILER_QUATERNION
+#define _COMPILER_QUATERNION
+
+struct quaternion
+{
+public:
+
+private:
+
+}
+
+#endif

@@ -1,0 +1,50 @@
+Function Block 0
+Basic Block 0
+Entry:
+Exit: 1
+<<<<<<< .mine
+0   : FUN             main    
+1   : DIV             8       2       $temp0  
+2   : MUL             $temp0  6       $temp1  
+3   : ADD             3       $temp1  $temp2  
+4   : MUL             $temp2  2       $temp3  
+5   : ADD             $temp3  $temp2  $temp4  
+6   : SUB             $temp4  3       $temp5  
+7   : DIV             $temp5  2       b       
+8   : ADD             b       $temp5  $temp7  
+9   : SUB             $temp7  2       $temp8  
+10  : MUL             $temp8  $temp5  a       
+/* 11  : ASSIGN          b       $temp6   */
+/* 12  : ASSIGN          a       $temp9   */
+13  : WRITE           a       
+14  : NEWLINE         
+15  : WRITE           b       
+16  : NEWLINE         
+=======
+0   : FUN             main    
+1   : READ            a       
+2   : READ            b       
+3   : READ            c       
+4   : MUL             b       c       $temp0  
+5   : ADD             a       $temp0  $temp1  
+6   : ASSIGN          $temp1  a       
+7   : ASSIGN          a       d       
+8   : ASSIGN          c       a       
+9   : ASSIGN          d       c       
+10  : MUL             b       c       $temp2  
+11  : ADD             a       $temp2  $temp3  
+12  : ASSIGN          $temp3  a       
+13  : WRITE           a       
+14  : NEWLINE         
+>>>>>>> .r121
+
+Basic Block 1
+Entry: 0
+Exit:
+<<<<<<< .mine
+17  : ENDF            main    
+=======
+15  : ENDF            main    
+>>>>>>> .r121
+
+

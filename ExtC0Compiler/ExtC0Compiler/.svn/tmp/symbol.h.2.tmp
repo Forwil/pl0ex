@@ -1,0 +1,34 @@
+#ifndef _COMPILER_SYMBOL
+#include <string>
+#include <vector>
+
+#define _COMPILER_SYMBOL
+struct symbol
+{
+public:
+	typedef unsigned int address;
+	typedef unsigned int size_type;
+	symbol(std::string _name, std::string _type):name(_name), type(_type), is_func(false), is_const(false){}
+	symbol(std::string _name, std::string _type, std::string _value):name(_name), type(_type), is_func(false), is_const(true), value(_value){}
+	symbol(std::string _name, std::string _type, std::vector<symbol*> *_parameters):name(_name), type(_type), is_func(false), is_const(false)
+	{
+		parameters = _parameters;
+	}
+	std::string get_name() const {return this->name;}
+	std::string get_type() const {return this->type;}
+	bool get_is_func() const {return this->is_func;}
+	bool get_is_const() const {return this->is_const;}
+	std::vector<symbol*>* get_parameters(){return this->parameters;}
+		
+	address get_add() const {return this->add;}
+private:
+	std::string name;
+	std::string type;
+	std::string value;
+	bool is_const; 
+	bool is_func;
+	std::vector<symbol*> *parameters;
+	address add;
+};
+
+#endif

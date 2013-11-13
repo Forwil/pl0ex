@@ -1,0 +1,18 @@
+#ifndef _COMPILER_SYMBOL_TABLE
+#define _COMPILER_SYMBOL_TABLE
+
+#include "symbol.h"
+#include <map>
+
+class symbol_table
+{
+public:
+	symbol_table():symbols(){}
+	bool add(symbol*);
+private:
+	std::map<std::string, symbol*> symbols;
+	std::string scope;
+	bool defined(std::string);
+};
+
+#endif

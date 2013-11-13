@@ -1,0 +1,13 @@
+int g(int aa)
+{
+	int a;
+	if(aa==1)
+		a=1;
+}
+void main()
+{
+int i;
+scanf(i);
+a=g(i);
+printf(a);
+}

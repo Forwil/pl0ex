@@ -1,0 +1,11 @@
+var head,n;
+const z = 0;
+begin
+  n := z;
+  read(head);
+  while n <= head do
+    begin    
+      n := n+1;
+    end;
+  write(n)
+end.

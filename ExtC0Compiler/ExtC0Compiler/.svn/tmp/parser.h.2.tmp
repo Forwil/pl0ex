@@ -1,0 +1,99 @@
+#ifndef _COMPILER_PARSER
+#define _COMPILER_PARSER
+#include <iostream>
+#include <string>
+#include <stack>
+#include <vector>
+#include "tokenizer.h"
+#include "symbol_table.h"
+#include "attribute.h"
+
+class parser
+{
+public:
+	parser():input(std::cin), t(std::cin), symbol_tables(){}
+	parser(std::istream & _input):input(_input), t(_input), symbol_tables(){}
+
+	void parse();
+private:
+	std::istream & input;
+	tokenizer t;//词法分析器
+	token current; //当前token
+	std::stack<symbol_table*> stack_symbol_table;//进行语法分析时的栈式符号表
+	std::vector<symbol_table*> symbol_tables;//符号表
+
+	bool add_symbol();
+
+	void program();
+	void constance_declaration();
+	void constance_definition();
+	attribute integer();
+	attribute real();
+	void variable_declaration();
+	void variable_definition();
+	attribute type_identifier();
+	void function_definition();
+	void procedure_definition();
+	void function_body();
+	void compond_statements();
+	void argument_declaration();
+	void argument_list();
+	void argument_declarator();
+	void main_function();
+	void expression();
+	void term();
+	void factor();
+	void statement();
+	void assign_statement();
+	void variable_or_function_invoke();
+	void condition_statement();
+	void condition();
+	void loop_statement();
+	void invoke_statement();
+	void parameter_list();
+	void statements();
+	void read_statement();
+	void write_statement();
+	void for_statement();
+	void increase_statement();
+	void step();
+	void while_statement();
+	void return_statement();
+
+	void left_parenthese();
+	void right_parenthese();
+	void left_bracket();
+	void right_bracket();
+	void semicolon();
+	void comma();
+
+	attribute add_operator();
+	void multiply_operator();
+	void relation_operator();
+	void assign_operator();
+
+	attribute _void();
+	void _main();
+	attribute _int();
+	attribute _float();
+	attribute _char();
+	void _const();
+	void _for();
+	void _while();
+	void _if();
+	void _else();
+	void _return();
+	void _scanf();
+	void _printf();
+
+	attribute unsigned_integer_const();
+	attribute unsigned_real_const();
+	attribute char_const();
+	void string_const();
+
+	attribute identifier();
+
+	void error();
+	void error(std::string);
+};
+#endif

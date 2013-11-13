@@ -1,0 +1,546 @@
+#include "dag.h"
+#include "utility.h"
+#include <cassert>
+
+#define _NOT_NULL(arg) (arg != NULL)
+#define _SHOULD_NOT_HAPPEN 0
+#define _IS_SYMBOL(arg) (arg->is_leaf())
+#define _IS_OPERATION(arg) (!arg->is_leaf())
+
+namespace
+{
+	bool find_symbol(symbol* arg, std::map<symbol*, unsigned int>& symbols, unsigned int& index)
+	{
+		std::map<symbol*, unsigned int>::iterator iter = symbols.find(arg);
+		if(iter != symbols.end())
+		{
+			index = iter->second;
+			return true;
+		}
+		else
+			return false;
+	}
+
+	/*
+		在operators中寻找操作为oper,左孩子和右孩子分别为left和right的节点，其下标保存在index中
+	*/
+	bool find_operator(quaternion::operation oper, std::map<quaternion::operation, std::set<unsigned int>>& operators, std::vector<dag_node*>& nodes, unsigned int left, unsigned int right, unsigned int& index)
+	{
+		std::map<quaternion::operation, std::set<unsigned int>>::iterator iter = operators.find(oper);
+		if(iter != operators.end())
+		{
+			std::set<unsigned int>& list = iter->second;
+			for(std::set<unsigned int>::iterator i = list.begin(); i != list.end(); i++)
+			{
+				if(nodes[*i]->get_left() == left && nodes[*i]->get_right() == right)
+				{
+					index = *i;
+					return true;
+				}
+			}
+			return false;
+		}
+		else
+			return false;
+	}
+
+	bool find_operator(quaternion::operation oper, std::map<quaternion::operation, std::set<unsigned int>>& operators, std::vector<dag_node*>& nodes, unsigned int left, unsigned int& index)
+	{
+		std::map<quaternion::operation, std::set<unsigned int>>::iterator iter = operators.find(oper);
+		if(iter != operators.end())
+		{
+			std::set<unsigned int>& list = iter->second;
+			for(std::set<unsigned int>::iterator i = list.begin(); i != list.end(); i++)
+			{
+				if(nodes[*i]->get_left() == left)
+				{
+					index = *i;
+					return true;
+				}
+			}
+			return false;
+		}
+		else
+			return false;
+	}
+
+	bool no_parent(std::vector<dag_node*>& nodes, unsigned int index)
+	{
+		for(unsigned int i = 0; i < nodes.size(); i++)
+		{
+			if(!nodes[i]->is_enabled())continue;
+			if(!nodes[i]->is_leaf())
+			{
+				if(nodes[i]->get_left() == index)
+					return false;
+				if(nodes[i]->has_two_children() && nodes[i]->get_right() == index)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/*
+		获得节点编号为index的节点的主要目标操作数，保存在object_operands中
+		如果object_operands已有该节点，则直接返回
+		如果该节点是符号节点，返回其符号
+		否则，必有至少一个符号share该节点，从中选择非临时变量返回
+	*/
+	symbol* get_primative_operand(std::vector<dag_node*>& nodes, std::map<unsigned int, symbol*>& object_operands, std::map<unsigned int, std::vector<symbol*>>& symbols_sharing_operand, unsigned int index)
+	{
+		std::map<unsigned int, symbol*>::iterator iter = object_operands.find(index);
+		if(iter != object_operands.end())
+		{
+			return iter->second;
+		}
+		else if(nodes[index]->is_leaf())
+		{
+			/*return object_operands[index] = nodes[index]->get_symbol();*/
+			std::map<unsigned int, std::vector<symbol*>>::iterator iter1 = symbols_sharing_operand.find(index);
+			if(iter1 != symbols_sharing_operand.end())
+			{
+				std::vector<symbol*>& list = iter1->second;
+				for(unsigned int i = 0; i < list.size(); i++)
+				{
+					//优先返回非临时变量
+					if(list[i] == nodes[index]->get_symbol())
+					{
+						return object_operands[index] = list[i];
+					}
+				}
+				return object_operands[index] = iter1->second[0];
+			}
+			else
+			{
+				assert(_SHOULD_NOT_HAPPEN);
+			}
+		}
+		else
+		{
+			std::map<unsigned int, std::vector<symbol*>>::iterator iter1 = symbols_sharing_operand.find(index);
+			assert(iter1 != symbols_sharing_operand.end());
+			std::vector<symbol*>& list = iter1->second;
+			for(unsigned int i = 0; i < list.size(); i++)
+			{
+				//优先返回非临时变量
+				if(!utility::is_temp(list[i]))
+				{
+					return object_operands[index] = list[i];
+				}
+			}
+			return object_operands[index] = list[0];
+		}
+		assert(_SHOULD_NOT_HAPPEN);
+		return NULL;
+	}
+
+	quaternion* new_instruction(quaternion::operation oper, symbol* arg1, symbol* arg2, symbol* arg3)
+	{
+		switch(oper)
+		{
+		case quaternion::ADD:
+		case quaternion::SUB:
+		case quaternion::MUL:
+		case quaternion::DIV:
+		case quaternion::FADD:
+		case quaternion::FSUB:
+		case quaternion::FMUL:
+		case quaternion::FDIV:
+			return quaternion::new_quaternion(oper, arg1, arg2, arg3);
+		case quaternion::FTOI:
+		case quaternion::ITOF:
+		case quaternion::INV:
+		case quaternion::FINV:
+		case quaternion::ASSIGN:
+			return quaternion::new_quaternion(oper, arg1, arg3);
+		default:
+			assert(_SHOULD_NOT_HAPPEN);
+			return NULL;
+		}
+	}
+}
+
+dag::dag(instructions*& ins, global_symbol_table* tables)
+{
+	build(ins, tables);
+}
+
+void dag::build(instructions*& ins, global_symbol_table* tables)
+{
+	instructions* new_ins = new instructions(ins->tables);
+	symbol_table* table;
+	for(unsigned int i = 0; i < ins->blocks.size(); i++)
+	{
+		function_block* block = ins->blocks[i];
+		for(unsigned int j = 0; j < block->blocks.size(); j++)
+		{
+			basic_block* b_block = block->blocks[j];
+			for(unsigned int k = 0; k < b_block->ins.size(); k++)
+			{
+				quaternion* q = b_block->ins[k];
+				quaternion* nq = NULL;
+				quaternion::operation oper = q->get_operation();
+				symbol* arg1 = q->get_arg(0);
+				symbol* arg2 = q->get_arg(1);
+				symbol* arg3 = q->get_arg(2);
+				unsigned int index1;
+				unsigned int index2;
+				unsigned int index3;
+				switch(oper)
+				{
+				case quaternion::ASSIGN:
+					arg1 = get_real_symbol(arg1);
+					if(!find_symbol(arg1, symbols, index1))
+					{
+						/*
+							右操作数从来没出现过，肯定不会被修改
+						*/
+						index1 = nodes.size();
+						nodes.push_back(new dag_node(arg1));
+						renew_sharing(arg1, index1);
+					}
+<<<<<<< .mine
+					renew_sharing(arg2, index1);
+=======
+					else
+					{
+
+					}
+					/*
+						说明arg2的值是指向arg2_0的，现在正在改变arg2的定义值
+						需要申请一个临时变量，保存arg2原来的值
+						并且，今后再请求arg2原来的值时，会请求到该临时变量的值
+					*/
+					if(!utility::is_temp(arg2) && 
+						symbol_copy.find(arg2) == symbol_copy.end() && 
+						symbols.find(arg2) != symbols.end() &&
+						nodes[symbols[arg2]]->is_leaf() &&
+						nodes[symbols[arg2]]->get_symbol() == arg2)
+					{
+						symbol* temp = table->next_temp(arg2->get_value_type());
+						symbol_copy[arg2] = temp;
+						index2 = nodes.size();
+						nodes.push_back(new dag_node(quaternion::ASSIGN, index1));
+						operators[quaternion::ASSIGN].insert(index2);
+						symbols[temp] = index2;
+					}
+					symbols[arg2] = index1;
+>>>>>>> .r122
+					break;
+				//三元操作
+				case quaternion::ADD:
+				case quaternion::SUB:
+				case quaternion::MUL:
+				case quaternion::DIV:
+				case quaternion::FADD:
+				case quaternion::FSUB:
+				case quaternion::FMUL:
+				case quaternion::FDIV:
+					arg1 = get_real_symbol(arg1);
+					arg2 = get_real_symbol(arg2);
+					if(!find_symbol(arg1, symbols, index1))
+					{
+						index1 = nodes.size();
+						nodes.push_back(new dag_node(arg1));
+						renew_sharing(arg1, index1);
+					}
+					if(!find_symbol(arg2, symbols, index2))
+					{
+						index2 = nodes.size();
+						nodes.push_back(new dag_node(arg2));
+						renew_sharing(arg2, index2);
+					}
+					if(!find_operator(oper, operators, nodes, index1, index2, index3))
+					{
+						index3 = nodes.size();
+						nodes.push_back(new dag_node(oper, index1, index2));
+						operators[oper].insert(index3);
+					}
+<<<<<<< .mine
+					renew_sharing(arg3, index3);
+=======
+					/*if(symbols.find(arg3) != symbols.end() || (nodes[symbol[arg3]]->is_leaf() && nodes[symbol[arg3]]->get_symbol() == arg3)))
+					{
+						symbol* temp = table->next_temp(arg3->get_value_type());
+					}*/
+					symbols[arg3] = index3;
+>>>>>>> .r122
+					break;
+				//二元操作
+				case quaternion::FTOI:
+				case quaternion::ITOF:
+				case quaternion::INV:
+				case quaternion::FINV:
+					arg1 = get_real_symbol(arg1);
+					if(!find_symbol(arg1, symbols, index1))
+					{
+						index1 = nodes.size();
+						nodes.push_back(new dag_node(arg1));
+						renew_sharing(arg1, index1);
+					}
+					if(!find_operator(oper, operators, nodes, index1, index2))
+					{
+						index2 = nodes.size();
+						nodes.push_back(new dag_node(oper, index1));
+						operators[oper].insert(index2);
+					}
+<<<<<<< .mine
+					renew_sharing(arg2, index2);
+=======
+					/*if(symbols.find(arg2) != symbols.end() || (nodes[symbol[arg2]]->is_leaf() && nodes[symbol[arg2]]->get_symbol() == arg2)))
+					{
+						symbol* temp = table->next_temp(arg2->get_value_type());
+					}*/
+					symbols[arg2] = index2;
+>>>>>>> .r122
+					break;
+				case quaternion::CALL:
+				case quaternion::RET:
+					export_quaternions(*new_ins);
+					if(arg2 == NULL)
+						nq = quaternion::new_quaternion(oper, arg1);
+					else
+						nq = quaternion::new_quaternion(oper, arg1, arg2);
+					new_ins->new_instruction(nq);
+					break;
+				case quaternion::FUN:
+					table = tables->get_table(arg1);
+					export_quaternions(*new_ins);
+					nq = quaternion::new_quaternion(oper, arg1);
+					new_ins->new_instruction(nq);
+					break;
+				case quaternion::PARAM:
+				case quaternion::ENDF:
+				case quaternion::JMP:
+				case quaternion::LABEL:
+				case quaternion::READ:
+				case quaternion::WRITE:
+				case quaternion::PUSH:
+					export_quaternions(*new_ins);
+					nq = quaternion::new_quaternion(oper, arg1);
+					new_ins->new_instruction(nq);
+					break;
+				case quaternion::JGT:
+				case quaternion::JGE:
+				case quaternion::JLT:
+				case quaternion::JLE:
+				case quaternion::JEQ:
+				case quaternion::JNE:
+				case quaternion::FJGT:
+				case quaternion::FJGE:
+				case quaternion::FJLT:
+				case quaternion::FJLE:
+				case quaternion::FJEQ:
+				case quaternion::FJNE:
+					export_quaternions(*new_ins);
+					nq = quaternion::new_quaternion(oper, arg1, arg2, arg3);					
+					new_ins->new_instruction(nq);
+					break;
+<<<<<<< .mine
+				case quaternion::NEW_LINE:
+                    export_quaternions(*new_ins);
+                    nq = quaternion::new_quaternion(oper);                                  
+                    new_ins->new_instruction(nq);
+                    break;
+=======
+				case quaternion::NEW_LINE:
+					export_quaternions(*new_ins);
+					nq = quaternion::new_quaternion(oper);					
+					new_ins->new_instruction(nq);
+					break;
+>>>>>>> .r122
+				default:
+					assert(_SHOULD_NOT_HAPPEN);
+				}
+				q->disable();
+			}
+			export_quaternions(*new_ins);
+		}
+		export_quaternions(*new_ins);
+	}
+	//释放ins;
+	delete ins;
+	ins = new_ins;
+}
+
+void dag::export_quaternions(instructions& ins)
+{
+	//导出的操作符的栈
+	std::vector<unsigned int> oper_stack;
+
+	//某个节点的结果保存节点，其他附属于该节点的符号，皆应该使用assign获得副本
+	std::map<unsigned int, symbol*> object_operands;
+
+<<<<<<< .mine
+	//for(std::map<symbol*, unsigned int>::iterator iter = symbols.begin(); iter != symbols.end(); iter++)
+	//	symbols_sharing_operand[iter->second].push_back(iter->first);
+=======
+	//附属在编号为unsigned int节点上的symbol们
+	std::map<unsigned int, std::vector<symbol*>> symbols_sharing_operand;
+
+	for(std::map<symbol*, unsigned int>::iterator iter = symbols.begin(); iter != symbols.end(); iter++)
+	{
+		symbols_sharing_operand[iter->second].push_back(iter->first);
+>>>>>>> .r122
+	}
+
+	//for(std::map<unsigned int, std::vector<symbol*>>::iterator iter == symbols_sharing_operand.begin(); iter != symbols_sharing_operand.end(); iter++)
+	//{
+	//	std::vector<symbol*> iter = symbols_sharing_operand[oper_stack[i - 1]];
+	//	for(unsigned int j = 0; j < iter.size(); j++)
+	//	{
+	//		if(source != iter[j])
+	//			ins.assign(iter[j], source);
+	//	}
+	//}
+	//	if(symbols.find(sym) != symbols.end())
+	//{
+	//	unsigned int i = symbols[sym];
+	//	if(!nodes[i]->is_leaf() || symbols_sharing_operand[i].size() > 1)
+	//	{
+	//		std::vector<symbol*>::iterator iter = symbols_sharing_operand[i].begin();
+	//		while(*iter != sym && iter != symbols_sharing_operand[i].end())
+	//			iter++;
+	//		assert(iter != symbols_sharing_operand[i].end());
+	//		symbols_sharing_operand[i].erase(iter);
+	//	}
+	//}
+
+	//步骤2
+	while(!operators.empty())
+	{
+		bool found = false;
+		unsigned int node_index = 0;
+		//步骤3
+		for(std::map<quaternion::operation, std::set<unsigned int>>::iterator iter = operators.begin(); iter != operators.end(); iter++)
+		{
+			std::set<unsigned int>& node_set = iter->second;
+			for(std::set<unsigned int>::iterator iter1 = node_set.begin(); iter1 != node_set.end(); iter1++)
+			{
+				if(no_parent(nodes, *iter1) && (*iter1 > node_index || !found))
+				{
+					node_index = *iter1;
+					found = true;
+					//break;
+				}
+			}
+			//if(found)break;
+		}
+		if(found)
+		{
+			//步骤4
+			do
+			{
+				std::map<quaternion::operation, std::set<unsigned int>>::iterator iter = operators.find(nodes[node_index]->get_operation());
+				assert(iter != operators.end());
+				//删除已经入栈的节点
+				std::set<unsigned int>& node_set = iter->second;
+				std::set<unsigned int>::iterator iter1 = node_set.find(node_index);
+				node_set.erase(iter1);
+				if(node_set.empty())operators.erase(iter);
+				oper_stack.push_back(node_index);
+				nodes[node_index]->set_enable(false);
+				node_index = nodes[node_index]->get_left();
+			}while(!nodes[node_index]->is_leaf() && no_parent(nodes, node_index));
+		}
+		else
+		{
+			assert(operators.empty());
+		}
+	}
+	
+	/*
+		根据栈导出新的四元式，步骤5
+	*/
+<<<<<<< .mine
+
+	for(unsigned int i = 0; i < nodes.size(); i++)
+	{
+		if(nodes[i]->is_leaf())
+		{
+			symbol* object = get_primative_operand(nodes, object_operands, symbols_sharing_operand, i);
+			symbol* source = nodes[i]->get_symbol();
+			if(source != object)
+				ins.assign(object, source);
+		}
+	}
+	for(unsigned int i = 0; i < nodes.size(); i++)
+	{
+		if(nodes[i]->is_leaf())
+		{
+			symbol* source = get_primative_operand(nodes, object_operands, symbols_sharing_operand, i);
+			std::vector<symbol*> iter = symbols_sharing_operand[i];
+			for(unsigned int j = 0; j < iter.size(); j++)
+			{
+				if(source != iter[j])
+					ins.assign(iter[j], source);
+			}
+		}
+	}
+=======
+>>>>>>> .r122
+	for(unsigned int i = oper_stack.size(); i > 0; i--)
+	{
+		dag_node* node = nodes[oper_stack[i - 1]];
+		quaternion::operation oper = node->get_operation();
+		quaternion* q = NULL;
+		symbol* arg1 = NULL;
+		symbol* arg2 = NULL;
+		symbol* arg3 = NULL;
+
+		assert(_IS_OPERATION(node));
+		arg1 = get_primative_operand(nodes, object_operands, symbols_sharing_operand, node->get_left());
+		if(node->has_two_children())
+			arg2 = get_primative_operand(nodes, object_operands, symbols_sharing_operand, node->get_right());
+		arg3 = get_primative_operand(nodes, object_operands, symbols_sharing_operand, oper_stack[i - 1]);
+		q = new_instruction(oper, arg1, arg2, arg3);
+		ins.new_instruction(q);
+		std::vector<symbol*> iter = symbols_sharing_operand[oper_stack[i - 1]];
+		for(unsigned int j = 0; j < iter.size(); j++)
+		{
+			if(arg3 != iter[j])
+				ins.assign(iter[j], arg3);
+		}
+	}
+	flush();
+}
+
+symbol* dag::get_real_symbol(symbol* sym)
+{
+	if(symbol_copy.find(sym) != symbol_copy.end())
+		return symbol_copy[sym];
+	else
+		return sym;
+}
+
+void dag::flush()
+{
+	symbols.clear();
+	operators.clear();
+	nodes.clear();
+	parents.clear();
+	symbols_sharing_operand.clear();
+}
+
+void dag::renew_sharing(symbol* sym, unsigned int index)
+{
+	symbols_sharing_operand[index].push_back(sym);
+	if(symbols.find(sym) != symbols.end())
+	{
+		unsigned int i = symbols[sym];
+		if(!nodes[i]->is_leaf() || symbols_sharing_operand[i].size() > 1)
+		{
+			std::vector<symbol*>::iterator iter = symbols_sharing_operand[i].begin();
+			while(*iter != sym && iter != symbols_sharing_operand[i].end())
+				iter++;
+			assert(iter != symbols_sharing_operand[i].end());
+			symbols_sharing_operand[i].erase(iter);
+		}
+	}
+	symbols[sym] = index;
+}
+
+#undef _NOT_NULL
+#undef _SHOULD_NOT_HAPPEN 
+#undef _IS_SYMBOL
+#undef _IS_OPERATION

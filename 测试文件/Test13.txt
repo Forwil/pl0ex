@@ -1,0 +1,7 @@
+void main(){
+	int a,b,c,x;
+	x=1+a;
+	x=2+a;
+	x=3+a;
+	x=4+a;
+}

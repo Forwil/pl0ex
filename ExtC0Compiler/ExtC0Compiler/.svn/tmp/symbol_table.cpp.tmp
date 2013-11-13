@@ -1,0 +1,19 @@
+#include "symbol_table.h"
+
+bool symbol_table::defined(std::string symbol_name)
+{
+	return (symbols.find(symbol_name) != symbols.end());
+}
+
+bool symbol_table::add(symbol* symbol_item)
+{
+	if(!defined(symbol_item->get_name()))
+	{
+		symbols[symbol_item->get_name()] = symbol_item;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

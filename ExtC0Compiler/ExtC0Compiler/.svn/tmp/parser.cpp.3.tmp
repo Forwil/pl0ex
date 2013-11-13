@@ -1,0 +1,882 @@
+#include "parser.h"
+
+void parser::program()
+{
+	symbol_table *current_symbol_table = new symbol_table();
+	this->stack_symbol_table.push(current_symbol_table);
+	this->symbol_tables.push_back(current_symbol_table);
+	if(current.get_type() == token::CONST)
+	{
+		constance_declaration();
+	}
+	if((current.get_type() == token::INT || current.get_type() == token::FLOAT || current.get_type() == token::CHAR) && (t.look_ahead(2).get_type() == token::COMMA || t.look_ahead(2).get_type() == token::SEMICOLON))
+	{
+		variable_declaration();
+	}
+	while(current.get_type() == token::INT || current.get_type() == token::FLOAT || current.get_type() == token::CHAR || current.get_type() == token::VOID && t.look_ahead(1).get_type() != token::MAIN)
+	{
+		if(current.get_type() == token::VOID)procedure_definition();
+		else function_definition();
+	}
+	if(current.get_type() == token::VOID && t.look_ahead(1).get_type() == token::MAIN)
+	{
+		main_function();
+	}
+	else
+	{
+		error("main function expected.");
+	}
+	this->stack_symbol_table.pop();
+}
+void parser::constance_declaration()
+{
+	_const();
+	while(t.look_ahead(2).get_type() == token::ASSIGN_OPERATOR)
+	{
+		constance_definition();
+		semicolon();
+	}
+}
+
+void parser::constance_definition()
+{
+	if(current.get_type() == token::INT)
+	{
+		_int();
+		while(1)
+		{
+			attribute id = identifier();
+			assign_operator();
+			attribute value = integer();
+			this->stack_symbol_table.top()->add(new symbol(id.get_value(), "int", value.get_value()));
+			if(current.get_type() == token::COMMA)
+				comma();
+			else
+				break;
+		}
+	}
+	else if(current.get_type() == token::FLOAT)
+	{
+		_float();
+		while(1)
+		{
+			attribute id = identifier();
+			assign_operator();
+			attribute value = real();
+			this->stack_symbol_table.top()->add(new symbol(id.get_value(), "float", value.get_value()));
+			if(current.get_type() == token::COMMA)
+				comma();
+			else
+				break;
+		}
+	}
+	else if(current.get_type() == token::CHAR)
+	{
+		_char();
+		while(1)
+		{
+			attribute id = identifier();
+			assign_operator();
+			attribute value = char_const();
+			this->stack_symbol_table.top()->add(new symbol(id.get_value(), "char", value.get_value()));
+			if(current.get_type() == token::COMMA)
+				comma();
+			else
+				break;
+		}
+	}
+	else
+	{
+		error("type identifier expected.");
+	}
+}
+
+attribute parser::integer()
+{
+	attribute sign;
+	if(current.get_type() == token::ADD_OPERATOR)
+	{
+		sign = add_operator();
+	}
+	attribute value = unsigned_integer();
+	return attribute("integer", sign.get_value() + value.get_value());
+}
+
+attribute parser::real()
+{
+	attribute att;
+	att = integer();
+	if(current.get_type() == token::DOT)
+	{
+		dot();
+		attribute att1 = unsigned_integer();
+		att = attribute("real", att.get_value() + "." + att1.get_value());
+	}
+	return att;
+}
+
+attribute parser::type_identifier()
+{
+	if(current.get_type() == token::INT)
+	{
+		return _int();
+	}
+	else if(current.get_type() == token::FLOAT)
+	{
+		return _float();
+	}
+	else if(current.get_type() == token::CHAR)
+	{
+		return _char();
+	}
+	else
+	{
+		error("type identifier expected.");
+	}
+}
+
+void parser::variable_declaration()
+{
+	do
+	{
+		variable_definition();
+		semicolon();
+	}while((current.get_type() == token::INT || current.get_type() == token::FLOAT || current.get_type() == token::CHAR)&& t.look_ahead(3).get_type() == token::COMMA);
+}
+
+void parser::variable_definition()
+{
+	attribute type = type_identifier();
+	while(1)
+	{
+		attribute id = identifier();
+		this->stack_symbol_table.top()->add(new symbol(id.get_value(), type.get_value()));
+		if(current.get_type() == token::COMMA)
+			comma();
+		else
+			break;
+	}
+}
+
+void parser::function_definition()
+{
+	//TODO
+	attribute type = type_identifier();
+	attribute id = identifier();
+	symbol_table *current_symbol_table = new symbol_table();
+	this->stack_symbol_table.push(current_symbol_table);
+	this->symbol_tables.push_back(current_symbol_table);
+	argument_declaration();
+	function_body();
+	this->stack_symbol_table.pop();
+}
+void parser::procedure_definition()
+{
+	//TODO
+	attribute type = _void();
+	attribute id = identifier();
+
+	symbol_table *current_symbol_table = new symbol_table();
+	this->stack_symbol_table.push(current_symbol_table);
+	this->symbol_tables.push_back(current_symbol_table);
+	argument_declaration();
+	function_body();
+	this->stack_symbol_table.pop();
+}
+
+void parser::function_body()
+{
+	left_bracket();
+	compond_statements();
+	right_bracket();
+}
+
+void parser::compond_statements()
+{
+	if(current.get_type() == token::CONST)
+	{
+		constance_declaration();
+	}
+	if(current.get_type() == token::INT || current.get_type() == token::FLOAT || current.get_type() == token::CHAR)
+	{
+		variable_declaration();
+	}
+	statements();
+}
+
+void parser::argument_declaration()
+{
+	left_parenthese();
+	argument_list();
+	right_parenthese();
+}
+
+void parser::argument_list()
+{
+	if(current.get_type() == token::INT || current.get_type() == token::FLOAT || current.get_type() == token::CHAR)
+	{
+		while(1){
+			argument_declarator();
+			if(current.get_type() == token::COMMA)
+				comma();
+			else
+				break;
+		}
+	}
+}
+
+void parser::argument_declarator()
+{
+	type_identifier();
+	identifier();
+}
+
+void parser::main_function()
+{
+	_void();
+	_main();
+	left_parenthese();
+	right_parenthese();
+	function_body();
+}
+
+void parser::expression()
+{
+	if(current.get_type() == token::ADD_OPERATOR)
+	{
+		add_operator();
+	}
+	term();
+	while(current.get_type() == token::ADD_OPERATOR)
+	{
+		add_operator();
+		term();
+	}
+}
+
+void parser::term()
+{
+	factor();
+	while(current.get_type() == token::MULTIPLY_OPERATOR)
+	{
+		multiply_operator();
+		factor();
+	}
+}
+
+void parser::variable_or_function_invoke()
+{
+	identifier();
+	if(current.get_type() == token::LEFT_PARENTHESE)
+	{
+		left_parenthese();
+		parameter_list();
+		right_parenthese();
+	}
+}
+void parser::factor()
+{
+	if(current.get_type() == token::IDENTIFIER)
+	{
+		variable_or_function_invoke();
+	}
+	else if(current.get_type() == token::CHAR_CONST)
+	{
+		char_const();
+	}
+	else if(current.get_type() == token::LEFT_PARENTHESE)
+	{
+		left_parenthese();
+		expression();
+		right_parenthese();
+	}
+	else if(current.get_type() == token::ADD_OPERATOR && t.look_ahead(1).get_type() == token::UNSIGNED_INT_CONST)
+	{
+		if(t.look_ahead(2).get_type() == token::DOT)
+		{
+			real();
+		}
+		else
+		{
+			integer();
+		}
+	}
+	else if(current.get_type() == token::UNSIGNED_INT_CONST)
+	{
+		if(t.look_ahead(1).get_type() == token::DOT)
+		{
+			real();
+		}
+		else
+		{
+			integer();
+		}
+	}
+	else 
+	{
+		error();
+	}
+}
+
+void parser::statement()
+{
+	if(current.get_type() == token::IF)
+	{
+		condition_statement();
+	}
+	else if(current.get_type() == token::FOR || current.get_type() == token::WHILE)
+	{
+		loop_statement();
+	}
+	else if(current.get_type() == token::RETURN)
+	{
+		return_statement();
+		semicolon();
+	}
+	else if(current.get_type() == token::IDENTIFIER)
+	{
+		if(t.look_ahead(1).get_type() == token::ASSIGN_OPERATOR)
+		{
+			assign_statement();
+			semicolon();
+		}
+		else
+		{
+			invoke_statement();
+			semicolon();
+		}
+	}
+	else if(current.get_type() == token::SCANF)
+	{
+		read_statement();
+		semicolon();
+	}
+	else if(current.get_type() == token::PRINTF)
+	{
+		write_statement();
+		semicolon();
+	}
+	else if(current.get_type() == token::LEFT_BRACKET)
+	{
+		left_bracket();
+		statements();
+		right_bracket();
+	}
+	else if(current.get_type() == token::SEMICOLON)
+	{
+		semicolon();
+	}
+	else
+	{
+		error("statement expected.");
+	}
+}
+
+void parser::assign_statement()
+{
+	identifier();
+	assign_operator();
+	expression();
+}
+
+void parser::condition_statement()
+{
+	_if();
+	left_parenthese();
+	condition();
+	right_parenthese();
+	statement();
+	if(current.get_type() == token::ELSE)
+	{
+		_else();
+		statement();
+	}
+}
+
+void parser::condition()
+{
+	expression();
+	if(current.get_type() == token::RELATION_OPERATOR)
+	{
+		relation_operator();
+		expression();
+	}
+}
+
+void parser::loop_statement()
+{
+	if(current.get_type() == token::FOR)
+	{
+		for_statement();
+	}
+	else if(current.get_type() == token::WHILE)
+	{
+		while_statement();
+	}
+	else
+	{
+		error("for or while expected.");
+	}
+}
+
+void parser::invoke_statement()
+{
+	identifier();
+	left_parenthese();
+	parameter_list();
+	right_parenthese();
+}
+
+void parser::parameter_list()
+{
+	if(current.get_type() == token::ADD_OPERATOR || current.get_type() == token::IDENTIFIER || current.get_type() == token::UNSIGNED_INT_CONST || current.get_type() == token::CHAR_CONST || current.get_type() == token::LEFT_PARENTHESE)
+	{
+		while(1)
+		{
+			expression();
+			if(current.get_type() == token::COMMA)
+				comma();
+			else
+				break;
+		}
+	}
+}
+void parser::statements()
+{
+	while(current.get_type() == token::IF || current.get_type() == token::FOR || current.get_type() == token::WHILE || current.get_type() == token::RETURN || current.get_type() == token::IDENTIFIER || current.get_type() == token::SCANF || current.get_type() == token::PRINTF || current.get_type() == token::LEFT_BRACKET || current.get_type() == token::SEMICOLON)
+	{
+		statement();
+	}
+}
+void parser::read_statement()
+{
+	_scanf();
+	left_parenthese();
+	identifier();
+	right_parenthese();
+}
+
+void parser::write_statement()
+{
+	_printf();
+	left_parenthese();
+	if(current.get_type() == token::STRING_CONST)
+	{
+		string_const();
+		comma();
+	}
+	if(current.get_type() == token::IDENTIFIER)
+	{
+		identifier();
+	}
+	right_parenthese();
+}
+
+void parser::for_statement()
+{
+	_for();
+	left_parenthese();
+	assign_statement();
+	semicolon();
+	condition();
+	semicolon();
+	increase_statement();
+	right_parenthese();
+	statement();
+}
+
+void parser::increase_statement()
+{
+	identifier();
+	assign_operator();
+	identifier();
+	add_operator();
+	step();
+}
+
+void parser::step()
+{
+	if(current.get_type() == token::UNSIGNED_INT_CONST && current.get_value() != "0")
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error();
+	}
+}
+
+void parser::while_statement()
+{
+	_while();
+	left_parenthese();
+	condition();
+	right_parenthese();
+	statement();
+}
+
+void parser::return_statement()
+{
+	_return();
+	left_parenthese();
+	expression();
+	right_parenthese();
+}
+
+attribute parser::add_operator()
+{
+	attribute att;
+	if(current.get_type() == token::ADD_OPERATOR)
+	{
+		att = attribute("add_operator", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("'+' or '-' expected.");
+	}
+	return att;
+}
+
+void parser::multiply_operator()
+{
+	if(current.get_type() == token::MULTIPLY_OPERATOR)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'*' or '/' expected.");
+	}
+}
+
+void parser::relation_operator()
+{
+	if(current.get_type() == token::RELATION_OPERATOR)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("relation operator expected.");
+	}
+}
+	
+void parser::assign_operator()
+{
+	if(current.get_type() == token::ASSIGN_OPERATOR)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'=' operator expected.");
+	}
+}
+
+void parser::left_parenthese()
+{
+	if(current.get_type() == token::LEFT_PARENTHESE)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'(' expected.");
+	}
+}
+
+void parser::right_parenthese()
+{
+	if(current.get_type() == token::RIGHT_PARENTHESE)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("')' expected.");
+	}
+}
+
+void parser::left_bracket()
+{
+	if(current.get_type() == token::LEFT_BRACKET)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'{' expected.");
+	}
+}
+
+void parser::right_bracket()
+{
+	if(current.get_type() == token::RIGHT_BRACKET)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'}' expected.");
+	}
+}
+
+void parser::semicolon()
+{
+	if(current.get_type() == token::SEMICOLON)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("';' expected.");
+	}
+}
+
+void parser::comma()
+{
+	if(current.get_type() == token::COMMA)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("',' expected.");
+	}
+}
+
+void parser::dot()
+{
+	if(current.get_type() == token::DOT)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("'.' expected.");
+	}
+}
+
+attribute parser::_void()
+{
+	attribute att;
+	if(current.get_type() == token::VOID)
+	{
+		att = attribute("key_word", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"void\" expected.");
+	}
+	return att;
+}
+
+void parser::_main()
+{
+	if(current.get_type() == token::MAIN)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"main\" expected.");
+	}
+}
+
+attribute parser::_int()
+{
+	attribute att;
+	if(current.get_type() == token::INT)
+	{
+		att = attribute("type_identifier", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"int\" expected.");
+	}
+	return att;
+}
+
+attribute parser::_float()
+{
+	attribute att;
+	if(current.get_type() == token::FLOAT)
+	{
+		att = attribute("type_identifier", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"float\" expected.");
+	}
+	return att;
+}
+
+attribute parser::_char()
+{
+	attribute att;
+	if(current.get_type() == token::CHAR)
+	{
+		att = attribute("type_identifier", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"char\" expected.");
+	}
+	return att;
+}
+
+void parser::_const()
+{
+	if(current.get_type() == token::CONST)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"const\" expected.");
+	}
+}
+void parser::_for()
+{
+	if(current.get_type() == token::FOR)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"for\" expected.");
+	}
+
+}
+
+void parser::_while()
+{
+	if(current.get_type() == token::WHILE)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"while\" expected.");
+	}
+}
+
+void parser::_if()
+{
+	if(current.get_type() == token::IF)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"if\" expected.");
+	}
+}
+
+void parser::_else()
+{
+	if(current.get_type() == token::ELSE)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"else\" expected.");
+	}
+}
+
+void parser::_return()
+{
+	if(current.get_type() == token::RETURN)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"return\" expected.");
+	}
+}
+
+void parser::_scanf()
+{
+	if(current.get_type() == token::SCANF)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"scanf\" expected.");
+	}
+}
+
+void parser::_printf()
+{
+	if(current.get_type() == token::PRINTF)
+	{
+		current = t.next_token();
+	}
+	else
+	{
+		error("\"printf\" expected.");
+	}
+}
+
+attribute parser::unsigned_integer()
+{
+	attribute att;
+	if(current.get_type() == token::UNSIGNED_INT_CONST)
+	{
+		att = attribute("unsigned_integer", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("unsigned integer expected.");
+	}
+	return att;
+}
+
+attribute parser::char_const()
+{
+	return attribute();
+}
+
+void parser::string_const()
+{
+}
+
+attribute parser::identifier()
+{
+	attribute att;
+	if(current.get_type() == token::IDENTIFIER)
+	{
+		att = attribute("identifier", current.get_value());
+		current = t.next_token();
+	}
+	else
+	{
+		error("identifier expected.");
+	}
+	return att;
+}
+
+void parser::parse()
+{
+	current = t.next_token();
+	program();
+}
+
+void parser::error()
+{
+	std::cout<<"error: line:"<<t.get_line_number()<<std::endl;
+}
+
+void parser::error(std::string msg)
+{
+	std::cout<<"error: line:"<<t.get_line_number()<<":"<<msg<<std::endl;
+}

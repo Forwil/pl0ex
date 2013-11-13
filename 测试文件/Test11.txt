@@ -1,0 +1,14 @@
+const float x=10.5;
+float y;
+void main(){
+	float a,b;
+	int c;
+	c=20;
+	a=c-x;
+	y=x+37.25;
+	scanf(b);
+	printf("The result:");
+	printf(a);
+	printf(b);
+	printf(y);
+}

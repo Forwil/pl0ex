@@ -1,0 +1,1750 @@
+Function Block 0
+Basic Block 0
+Entry:
+Exit: 1
+<<<<<<< .mine
+0   : FUN             main    
+1   : ASSIGN          0       sum     
+=======
+0   : FUN             get     
+1   : PARAM           index   
+>>>>>>> .r125
+
+Basic Block 1
+<<<<<<< .mine
+Entry: 0 2
+Exit: 2 3
+2   : LABEL           label0  
+3   : JGE             sum     100     label1  
+=======
+Entry: 0
+Exit: 2 3
+2   : JNE             0       index   label0  
+>>>>>>> .r125
+
+Basic Block 2
+Entry: 1
+<<<<<<< .mine
+Exit: 1
+4   : READ            a       
+5   : ADD             sum     a       sum     
+/* 6   : ASSIGN          sum     $temp0   */
+7   : JMP             label0  
+=======
+Exit: 21
+3   : RET             get     a0      
+>>>>>>> .r125
+
+Basic Block 3
+<<<<<<< .mine
+Entry: 1
+Exit: 4
+8   : LABEL           label1  
+9   : WRITE           sum     
+10  : NEWLINE         
+=======
+Entry: 1
+Exit: 4 5
+4   : LABEL           label0  
+5   : JNE             1       index   label1  
+>>>>>>> .r125
+
+Basic Block 4
+Entry: 3
+<<<<<<< .mine
+=======
+Exit: 21
+6   : RET             get     a1      
+
+Basic Block 5
+Entry: 3
+Exit: 6 7
+7   : LABEL           label1  
+8   : JNE             2       index   label2  
+
+Basic Block 6
+Entry: 5
+Exit: 21
+9   : RET             get     a2      
+
+Basic Block 7
+Entry: 5
+Exit: 8 9
+10  : LABEL           label2  
+11  : JNE             3       index   label3  
+
+Basic Block 8
+Entry: 7
+>>>>>>> .r125
+Exit: 21
+12  : RET             get     a3      
+
+Basic Block 9
+Entry: 7
+Exit: 10 11
+13  : LABEL           label3  
+14  : JNE             4       index   label4  
+
+Basic Block 10
+Entry: 9
+Exit: 21
+15  : RET             get     a4      
+
+Basic Block 11
+Entry: 9
+Exit: 12 13
+16  : LABEL           label4  
+17  : JNE             5       index   label5  
+
+Basic Block 12
+Entry: 11
+Exit: 21
+18  : RET             get     a5      
+
+Basic Block 13
+Entry: 11
+Exit: 14 15
+19  : LABEL           label5  
+20  : JNE             6       index   label6  
+
+Basic Block 14
+Entry: 13
+Exit: 21
+21  : RET             get     a6      
+
+Basic Block 15
+Entry: 13
+Exit: 16 17
+22  : LABEL           label6  
+23  : JNE             7       index   label7  
+
+Basic Block 16
+Entry: 15
+Exit: 21
+24  : RET             get     a7      
+
+Basic Block 17
+Entry: 15
+Exit: 18 19
+25  : LABEL           label7  
+26  : JNE             8       index   label8  
+
+Basic Block 18
+Entry: 17
+Exit: 21
+27  : RET             get     a8      
+
+Basic Block 19
+Entry: 17
+Exit: 20 21
+28  : LABEL           label8  
+29  : JNE             9       index   label9  
+
+Basic Block 20
+Entry: 19
+Exit: 21
+30  : RET             get     a9      
+
+Basic Block 21
+Entry: 19 2 4 6 8 10 12 14 16 18 20
+Exit:
+<<<<<<< .mine
+11  : ENDF            main    
+=======
+31  : LABEL           label9  
+32  : ENDF            get     
+>>>>>>> .r125
+
+
+<<<<<<< .mine
+=======
+Function Block 1
+Basic Block 22
+Entry:
+Exit: 23
+33  : FUN             set     
+34  : PARAM           index   
+35  : PARAM           value   
+
+Basic Block 23
+Entry: 22
+Exit: 24 25
+36  : JNE             0       index   label0  
+
+Basic Block 24
+Entry: 23
+Exit: 25
+37  : ASSIGN          value   a0      
+
+Basic Block 25
+Entry: 24 23
+Exit: 26 27
+38  : LABEL           label0  
+39  : JNE             1       index   label1  
+
+Basic Block 26
+Entry: 25
+Exit: 27
+40  : ASSIGN          value   a1      
+
+Basic Block 27
+Entry: 26 25
+Exit: 28 29
+41  : LABEL           label1  
+42  : JNE             2       index   label2  
+
+Basic Block 28
+Entry: 27
+Exit: 29
+43  : ASSIGN          value   a2      
+
+Basic Block 29
+Entry: 28 27
+Exit: 30 31
+44  : LABEL           label2  
+45  : JNE             3       index   label3  
+
+Basic Block 30
+Entry: 29
+Exit: 31
+46  : ASSIGN          value   a3      
+
+Basic Block 31
+Entry: 30 29
+Exit: 32 33
+47  : LABEL           label3  
+48  : JNE             4       index   label4  
+
+Basic Block 32
+Entry: 31
+Exit: 33
+49  : ASSIGN          value   a4      
+
+Basic Block 33
+Entry: 32 31
+Exit: 34 35
+50  : LABEL           label4  
+51  : JNE             5       index   label5  
+
+Basic Block 34
+Entry: 33
+Exit: 35
+52  : ASSIGN          value   a5      
+
+Basic Block 35
+Entry: 34 33
+Exit: 36 37
+53  : LABEL           label5  
+54  : JNE             6       index   label6  
+
+Basic Block 36
+Entry: 35
+Exit: 37
+55  : ASSIGN          value   a6      
+
+Basic Block 37
+Entry: 36 35
+Exit: 38 39
+56  : LABEL           label6  
+57  : JNE             7       index   label7  
+
+Basic Block 38
+Entry: 37
+Exit: 39
+58  : ASSIGN          value   a7      
+
+Basic Block 39
+Entry: 38 37
+Exit: 40 41
+59  : LABEL           label7  
+60  : JNE             8       index   label8  
+
+Basic Block 40
+Entry: 39
+Exit: 41
+61  : ASSIGN          value   a8      
+
+Basic Block 41
+Entry: 40 39
+Exit: 42 43
+62  : LABEL           label8  
+63  : JNE             9       index   label9  
+
+Basic Block 42
+Entry: 41
+Exit: 43
+64  : ASSIGN          value   a9      
+
+Basic Block 43
+Entry: 42 41
+Exit:
+65  : LABEL           label9  
+66  : ENDF            set     
+
+
+Function Block 2
+Basic Block 44
+Entry:
+Exit: 45
+67  : FUN             randomize
+68  : PUSH            3       
+69  : PUSH            0       
+70  : CALL            set     
+71  : PUSH            8       
+72  : PUSH            1       
+73  : CALL            set     
+74  : PUSH            4       
+75  : PUSH            2       
+76  : CALL            set     
+77  : PUSH            1       
+78  : PUSH            3       
+79  : CALL            set     
+80  : PUSH            6       
+81  : PUSH            4       
+82  : CALL            set     
+83  : PUSH            5       
+84  : PUSH            5       
+85  : CALL            set     
+86  : PUSH            0       
+87  : PUSH            6       
+88  : CALL            set     
+89  : PUSH            2       
+90  : PUSH            7       
+91  : CALL            set     
+92  : PUSH            9       
+93  : PUSH            8       
+94  : CALL            set     
+95  : PUSH            7       
+96  : PUSH            9       
+97  : CALL            set     
+
+Basic Block 45
+Entry: 44
+Exit:
+98  : ENDF            randomize
+
+
+Function Block 3
+Basic Block 46
+Entry:
+Exit: 47
+99  : FUN             print   
+100 : ASSIGN          0       i       
+
+Basic Block 47
+Entry: 46 48
+Exit: 48 49
+101 : LABEL           label0  
+102 : JGE             i       10      label1  
+
+Basic Block 48
+Entry: 47
+Exit: 47
+103 : WRITE           " "     
+104 : PUSH            i       
+105 : CALL            get     $temp0  
+106 : WRITE           $temp0  
+107 : NEWLINE         
+108 : ADD             i       1       i       
+/* 109 : ASSIGN          i       $temp1   */
+110 : JMP             label0  
+
+Basic Block 49
+Entry: 47
+Exit:
+111 : LABEL           label1  
+112 : ENDF            print   
+
+
+Function Block 4
+Basic Block 50
+Entry:
+Exit: 51
+113 : FUN             swap    
+114 : PARAM           i1      
+115 : PARAM           i2      
+
+Basic Block 51
+Entry: 50
+Exit: 52
+116 : PUSH            i1      
+117 : CALL            get     $temp0  
+118 : ASSIGN          $temp0  tmp     
+119 : PUSH            i2      
+120 : CALL            get     $temp1  
+121 : PUSH            $temp1  
+122 : PUSH            i1      
+123 : CALL            set     
+124 : PUSH            tmp     
+125 : PUSH            i2      
+126 : CALL            set     
+
+Basic Block 52
+Entry: 51
+Exit:
+127 : ENDF            swap    
+
+
+Function Block 5
+Basic Block 53
+Entry:
+Exit: 54
+128 : FUN             sort    
+129 : ASSIGN          0       i       
+
+Basic Block 54
+Entry: 53 60
+Exit: 55 61
+130 : LABEL           label0  
+131 : JGE             i       10      label1  
+
+Basic Block 55
+Entry: 54
+Exit: 56
+132 : ADD             i       1       j       
+/* 133 : ASSIGN          j       $temp0   */
+
+Basic Block 56
+Entry: 55 59
+Exit: 57 60
+134 : LABEL           label2  
+135 : JGE             j       10      label3  
+
+Basic Block 57
+Entry: 56
+Exit: 58 59
+136 : PUSH            i       
+137 : CALL            get     $temp1  
+138 : PUSH            j       
+139 : CALL            get     $temp2  
+140 : JLE             $temp1  $temp2  label4  
+
+Basic Block 58
+Entry: 57
+Exit: 59
+141 : PUSH            j       
+142 : PUSH            i       
+143 : CALL            swap    
+
+Basic Block 59
+Entry: 58 57
+Exit: 56
+144 : LABEL           label4  
+145 : ADD             j       1       j       
+/* 146 : ASSIGN          j       $temp3   */
+147 : JMP             label2  
+
+Basic Block 60
+Entry: 56
+Exit: 54
+148 : LABEL           label3  
+149 : ADD             i       1       i       
+/* 150 : ASSIGN          i       $temp4   */
+151 : JMP             label0  
+
+Basic Block 61
+Entry: 54
+Exit:
+152 : LABEL           label1  
+153 : ENDF            sort    
+
+
+Function Block 6
+Basic Block 62
+Entry:
+Exit: 63
+154 : FUN             qsort   
+155 : PARAM           beg     
+156 : PARAM           end     
+
+Basic Block 63
+Entry: 62
+Exit: 64 75
+157 : ADD             beg     1       $temp0  
+158 : JLT             end     $temp0  label0  
+
+Basic Block 64
+Entry: 63
+Exit: 65
+159 : PUSH            beg     
+160 : CALL            get     $temp1  
+161 : ASSIGN          $temp1  piv     
+162 : ADD             beg     1       k       
+/* 163 : ASSIGN          k       $temp2   */
+164 : ASSIGN          end     r       
+
+Basic Block 65
+Entry: 64 69
+Exit: 66 70
+165 : LABEL           label1  
+166 : JGE             k       r       label2  
+
+Basic Block 66
+Entry: 65
+Exit: 67 68
+167 : PUSH            k       
+168 : CALL            get     $temp3  
+169 : JGE             $temp3  piv     label3  
+
+Basic Block 67
+Entry: 66
+Exit: 69
+170 : ADD             k       1       k       
+/* 171 : ASSIGN          k       $temp4   */
+172 : JMP             label4  
+
+Basic Block 68
+Entry: 66
+Exit: 69
+173 : LABEL           label3  
+174 : PUSH            r       
+175 : PUSH            k       
+176 : CALL            swap    
+177 : SUB             r       1       r       
+/* 178 : ASSIGN          r       $temp5   */
+
+Basic Block 69
+Entry: 68 67
+Exit: 65
+179 : LABEL           label4  
+180 : JMP             label1  
+
+Basic Block 70
+Entry: 65
+Exit: 71 72
+181 : LABEL           label2  
+182 : PUSH            k       
+183 : CALL            get     $temp6  
+184 : JGE             $temp6  piv     label5  
+
+Basic Block 71
+Entry: 70
+Exit: 75
+185 : PUSH            beg     
+186 : PUSH            k       
+187 : CALL            swap    
+188 : PUSH            k       
+189 : PUSH            beg     
+190 : CALL            qsort   
+191 : PUSH            end     
+192 : PUSH            r       
+193 : CALL            qsort   
+194 : JMP             label6  
+
+Basic Block 72
+Entry: 70
+Exit: 73 74
+195 : LABEL           label5  
+196 : SUB             end     beg     $temp7  
+197 : JNE             $temp7  1       label7  
+
+Basic Block 73
+Entry: 72
+Exit: 75
+198 : RET             qsort   
+
+Basic Block 74
+Entry: 72
+Exit: 75
+199 : LABEL           label7  
+200 : SUB             k       1       k       
+/* 201 : ASSIGN          k       $temp8   */
+202 : PUSH            beg     
+203 : PUSH            k       
+204 : CALL            swap    
+205 : PUSH            k       
+206 : PUSH            beg     
+207 : CALL            qsort   
+208 : PUSH            end     
+209 : PUSH            r       
+210 : CALL            qsort   
+
+Basic Block 75
+Entry: 74 63 71 73
+Exit:
+211 : LABEL           label6  
+212 : LABEL           label0  
+213 : ENDF            qsort   
+
+
+Function Block 7
+Basic Block 76
+Entry:
+Exit: 77
+214 : FUN             testcase01
+215 : PARAM           c       
+216 : PARAM           ii      
+217 : PARAM           f       
+
+Basic Block 77
+Entry: 76
+Exit: 78
+218 : ASSIGN          6       i       
+219 : ADD             c       ii      $temp0  
+220 : ITOF            $temp0  $temp1  
+221 : FADD            $temp1  f       $temp2  
+222 : FTOI            $temp2  $temp3  
+223 : RET             testcase01$temp3  
+
+Basic Block 78
+Entry: 77
+Exit:
+224 : ENDF            testcase01
+
+
+Function Block 8
+Basic Block 79
+Entry:
+Exit: 80
+225 : FUN             testcase02
+226 : PARAM           c       
+227 : PARAM           i       
+228 : PARAM           f       
+
+Basic Block 80
+Entry: 79
+Exit: 81
+229 : ASSIGN          gc      c1      
+230 : ADD             1       2       $temp8  
+231 : ADD             c       i       i6      
+/* 232 : ASSIGN          i6      $temp14  */
+233 : FADD            f       1.9     f       
+/* 234 : ASSIGN          f       $temp18  */
+235 : FMUL            f       1.5     f1      
+/* 236 : ASSIGN          f1      $temp19  */
+237 : ITOF            40      $temp23 
+238 : ITOF            100     $temp25 
+239 : ADD             c1      1       c2      
+/* 240 : ASSIGN          c2      $temp0   */
+241 : SUB             c2      2       c3      
+/* 242 : ASSIGN          c3      $temp1   */
+243 : ASSIGN          'X'     c4      
+244 : SUB             c3      c4      c5      
+/* 245 : ASSIGN          c5      $temp2   */
+/* 246 : ASSIGN          c5      c6       */
+247 : ADD             c5      4       c7      
+/* 248 : ASSIGN          c7      $temp3   */
+249 : SUB             c7      1       c8      
+/* 250 : ASSIGN          c8      $temp4   */
+251 : ADD             c8      c1      $temp5  
+252 : ADD             $temp5  gi      i1      
+/* 253 : ASSIGN          i1      $temp6   */
+254 : INV             i1      i2      
+/* 255 : ASSIGN          i2      $temp7   */
+256 : ASSIGN          2       i3      
+257 : MUL             i2      $temp8  $temp9  
+258 : DIV             $temp9  i3      i4      
+/* 259 : ASSIGN          i4      $temp10  */
+260 : ADD             i4      i2      $temp11 
+261 : ADD             $temp11 i1      $temp12 
+262 : ADD             $temp12 i       i5      
+/* 263 : ASSIGN          i5      $temp13  */
+264 : ADD             i5      i6      i7      
+/* 265 : ASSIGN          i7      $temp15  */
+266 : INV             i7      $temp16 
+267 : ADD             $temp16 i       i8      
+/* 268 : ASSIGN          i8      $temp17  */
+269 : ITOF            i8      $temp20 
+270 : FDIV            $temp20 f1      f2      
+/* 271 : ASSIGN          f2      $temp21  */
+272 : FINV            f2      $temp22 
+273 : FADD            $temp22 $temp23 f3      
+/* 274 : ASSIGN          f3      $temp24  */
+275 : FMUL            f3      $temp25 f4      
+/* 276 : ASSIGN          f4      $temp26  */
+277 : ITOF            c4      $temp31 
+278 : ITOF            i6      $temp33 
+279 : ITOF            300     $temp35 
+280 : ADD             c1      gi      $temp27 
+281 : ITOF            $temp27 $temp28 
+282 : FSUB            $temp28 gf      $temp29 
+283 : FMUL            $temp29 3.14    $temp30 
+284 : FSUB            $temp30 $temp31 $temp32 
+285 : FADD            $temp32 $temp33 f5      
+/* 286 : ASSIGN          f5      $temp34  */
+287 : FSUB            f5      $temp35 f6      
+/* 288 : ASSIGN          f6      $temp36  */
+289 : FINV            f6      $temp37 
+290 : FADD            $temp37 91.9    f7      
+/* 291 : ASSIGN          f7      $temp38  */
+292 : FINV            f7      $temp39 
+293 : FSUB            $temp39 0.2     f8      
+/* 294 : ASSIGN          f8      $temp40  */
+295 : FTOI            f8      $temp41 
+296 : RET             testcase02$temp41 
+
+Basic Block 81
+Entry: 80
+Exit:
+297 : ENDF            testcase02
+
+
+Function Block 9
+Basic Block 82
+Entry:
+Exit: 83
+298 : FUN             testcase03
+299 : ASSIGN          1       i       
+300 : SUB             i       i       sum     
+/* 301 : ASSIGN          sum     $temp0   */
+
+Basic Block 83
+Entry: 82 84
+Exit: 84 85
+302 : LABEL           label0  
+303 : JGT             i       100     label1  
+
+Basic Block 84
+Entry: 83
+Exit: 83
+304 : ADD             sum     i       sum     
+/* 305 : ASSIGN          sum     $temp1   */
+306 : ADD             1       i       i       
+/* 307 : ASSIGN          i       $temp2   */
+308 : JMP             label0  
+
+Basic Block 85
+Entry: 83
+Exit: 86
+309 : LABEL           label1  
+310 : RET             testcase03sum     
+
+Basic Block 86
+Entry: 85
+Exit:
+311 : ENDF            testcase03
+
+
+Function Block 10
+Basic Block 87
+Entry:
+Exit: 88
+312 : FUN             testcase04
+313 : PARAM           n       
+
+Basic Block 88
+Entry: 87
+Exit: 89 91
+314 : JNE             n       1       label0  
+
+Basic Block 89
+Entry: 88
+Exit: 98
+315 : RET             testcase042       
+
+Basic Block 90
+Entry:
+Exit: 98
+316 : JMP             label1  
+
+Basic Block 91
+Entry: 88
+Exit: 92 94
+317 : LABEL           label0  
+318 : JNE             n       2       label2  
+
+Basic Block 92
+Entry: 91
+Exit: 98
+319 : INV             1       $temp0  
+320 : RET             testcase04$temp0  
+
+Basic Block 93
+Entry:
+Exit: 98
+321 : JMP             label3  
+
+Basic Block 94
+Entry: 91
+Exit: 95 97
+322 : LABEL           label2  
+323 : JNE             n       3       label4  
+
+Basic Block 95
+Entry: 94
+Exit: 98
+324 : RET             testcase041       
+
+Basic Block 96
+Entry:
+Exit: 98
+325 : JMP             label5  
+
+Basic Block 97
+Entry: 94
+Exit: 98
+326 : LABEL           label4  
+327 : SUB             n       1       $temp1  
+328 : PUSH            $temp1  
+329 : CALL            testcase04$temp2  
+330 : ASSIGN          $temp2  temp    
+331 : SUB             n       2       $temp3  
+332 : PUSH            $temp3  
+333 : CALL            testcase04$temp4  
+334 : ADD             temp    $temp4  temp    
+/* 335 : ASSIGN          temp    $temp5   */
+336 : SUB             n       3       $temp6  
+337 : PUSH            $temp6  
+338 : CALL            testcase04$temp7  
+339 : SUB             temp    $temp7  temp    
+/* 340 : ASSIGN          temp    $temp8   */
+341 : RET             testcase04temp    
+
+Basic Block 98
+Entry: 90 93 96 89 92 95 97
+Exit:
+342 : LABEL           label5  
+343 : LABEL           label3  
+344 : LABEL           label1  
+345 : ENDF            testcase04
+
+
+Function Block 11
+Basic Block 99
+Entry:
+Exit: 100
+346 : FUN             getpi   
+347 : PARAM           loop_time
+
+Basic Block 100
+Entry: 99
+Exit: 101
+348 : ASSIGN          0.0     pi      
+349 : ASSIGN          1.0     fenmu   
+350 : ASSIGN          0       sign_flag
+351 : ASSIGN          sign_flagi       
+
+Basic Block 101
+Entry: 100 105
+Exit: 102 106
+352 : LABEL           label0  
+353 : JGE             i       loop_timelabel1  
+
+Basic Block 102
+Entry: 101
+Exit: 103 104
+354 : FDIV            1.0     fenmu   term    
+/* 355 : ASSIGN          term    $temp0   */
+356 : FADD            fenmu   2.0     fenmu   
+/* 357 : ASSIGN          fenmu   $temp1   */
+358 : JNE             sign_flag0       label2  
+
+Basic Block 103
+Entry: 102
+Exit: 105
+359 : ASSIGN          1       sign_flag
+360 : JMP             label3  
+
+Basic Block 104
+Entry: 102
+Exit: 105
+361 : LABEL           label2  
+362 : FINV            term    term    
+/* 363 : ASSIGN          term    $temp2   */
+364 : ASSIGN          0       sign_flag
+
+Basic Block 105
+Entry: 104 103
+Exit: 101
+365 : LABEL           label3  
+366 : FADD            pi      term    pi      
+/* 367 : ASSIGN          pi      $temp3   */
+368 : ADD             i       1       i       
+/* 369 : ASSIGN          i       $temp4   */
+370 : JMP             label0  
+
+Basic Block 106
+Entry: 101
+Exit: 107
+371 : LABEL           label1  
+372 : FMUL            pi      4.0     $temp5  
+373 : RET             getpi   $temp5  
+
+Basic Block 107
+Entry: 106
+Exit:
+374 : ENDF            getpi   
+
+
+Function Block 12
+Basic Block 108
+Entry:
+Exit: 109
+375 : FUN             testcase05
+376 : ASSIGN          0       i       
+377 : ASSIGN          i       break_flag
+
+Basic Block 109
+Entry: 108 112
+Exit: 110 113
+378 : LABEL           label0  
+379 : JEQ             break_flag1       label1  
+
+Basic Block 110
+Entry: 109
+Exit: 111 112
+380 : ADD             i       2       i       
+/* 381 : ASSIGN          i       $temp0   */
+382 : PUSH            i       
+383 : CALL            getpi   $temp1  
+384 : ASSIGN          $temp1  this    
+385 : SUB             i       1       $temp2  
+386 : PUSH            $temp2  
+387 : CALL            getpi   $temp3  
+388 : ASSIGN          $temp3  last    
+389 : FSUB            last    this    $temp4  
+390 : FJGE            $temp4  limit   label2  
+
+Basic Block 111
+Entry: 110
+Exit: 112
+391 : ASSIGN          1       break_flag
+
+Basic Block 112
+Entry: 111 110
+Exit: 109
+392 : LABEL           label2  
+393 : JMP             label0  
+
+Basic Block 113
+Entry: 109
+Exit: 114
+394 : LABEL           label1  
+395 : RET             testcase05this    
+
+Basic Block 114
+Entry: 113
+Exit:
+396 : ENDF            testcase05
+
+
+Function Block 13
+Basic Block 115
+Entry:
+Exit: 116
+397 : FUN             testcase06
+398 : ASSIGN          5       a       
+399 : INV             4       $temp1  
+/* 400 : ASSIGN          $temp1  d        */
+401 : SUB             7       $temp1  $temp4  
+402 : MUL             a       2       $temp6  
+403 : DIV             7       $temp1  $temp8  
+404 : ADD             a       $temp6  $temp7  
+405 : SUB             $temp7  $temp8  $temp9  
+406 : ADD             1       7       $temp11 
+407 : INV             3       $temp0  
+/* 408 : ASSIGN          $temp0  b        */
+409 : ASSIGN          7       c       
+410 : DIV             $temp0  2       $temp14 
+411 : MUL             3       8       $temp16 
+412 : ADD             a       $temp0  $temp2  
+413 : SUB             $temp2  1       $temp3  
+414 : MUL             $temp3  $temp4  $temp5  
+415 : DIV             $temp5  $temp9  $temp10 
+416 : MUL             $temp10 $temp11 a       
+/* 417 : ASSIGN          a       $temp12  */
+418 : MUL             a       c       $temp18 
+419 : MUL             a       4       $temp13 
+420 : SUB             $temp13 $temp14 $temp15 
+421 : ADD             $temp15 $temp16 b       
+/* 422 : ASSIGN          b       $temp17  */
+423 : ADD             b       $temp18 $temp19 
+424 : SUB             $temp19 $temp1  c       
+/* 425 : ASSIGN          c       $temp20  */
+426 : MUL             c       3       $temp21 
+427 : SUB             $temp21 2       $temp22 
+428 : ADD             $temp22 1       d       
+/* 429 : ASSIGN          d       $temp23  */
+430 : RET             testcase06d       
+
+Basic Block 116
+Entry: 115
+Exit:
+431 : ENDF            testcase06
+
+
+Function Block 14
+Basic Block 117
+Entry:
+Exit: 118
+432 : FUN             testcase07
+433 : ASSIGN          1.23    a       
+434 : FINV            3.36    $temp1  
+/* 435 : ASSIGN          $temp1  d        */
+436 : FSUB            4.92    $temp1  $temp4  
+437 : FMUL            a       2.0     $temp6  
+438 : FDIV            4.92    $temp1  $temp8  
+439 : FADD            a       $temp6  $temp7  
+440 : FSUB            $temp7  $temp8  $temp9  
+441 : FADD            1.0     4.92    $temp11 
+442 : FINV            2.4     $temp0  
+/* 443 : ASSIGN          $temp0  b        */
+444 : ASSIGN          4.92    c       
+445 : FDIV            $temp0  2.0     $temp14 
+446 : FMUL            3.0     8.0     $temp16 
+447 : FADD            a       $temp0  $temp2  
+448 : FSUB            $temp2  1.0     $temp3  
+449 : FMUL            $temp3  $temp4  $temp5  
+450 : FDIV            $temp5  $temp9  $temp10 
+451 : FMUL            $temp10 $temp11 a       
+/* 452 : ASSIGN          a       $temp12  */
+453 : FMUL            a       c       $temp18 
+454 : FMUL            a       4.0     $temp13 
+455 : FSUB            $temp13 $temp14 $temp15 
+456 : FADD            $temp15 $temp16 b       
+/* 457 : ASSIGN          b       $temp17  */
+458 : FADD            b       $temp18 $temp19 
+459 : FSUB            $temp19 $temp1  c       
+/* 460 : ASSIGN          c       $temp20  */
+461 : FMUL            c       3.0     $temp21 
+462 : FSUB            $temp21 2.0     $temp22 
+463 : FADD            $temp22 1.0     d       
+/* 464 : ASSIGN          d       $temp23  */
+465 : FTOI            d       $temp24 
+466 : RET             testcase07$temp24 
+
+Basic Block 118
+Entry: 117
+Exit:
+467 : ENDF            testcase07
+
+
+Function Block 15
+Basic Block 119
+Entry:
+Exit: 120
+468 : FUN             testcase08
+469 : ASSIGN          3       x       
+470 : ITOF            1       $temp4  
+471 : ITOF            7       $temp6  
+472 : FINV            2.4     $temp2  
+/* 473 : ASSIGN          $temp2  b        */
+474 : ASSIGN          4.92    c       
+475 : FMUL            $temp2  $temp6  $temp7  
+476 : INV             2       y       
+/* 477 : ASSIGN          y       $temp0   */
+478 : ASSIGN          7       z       
+479 : ITOF            y       $temp10 
+480 : FINV            3.36    $temp3  
+/* 481 : ASSIGN          $temp3  d        */
+482 : FMUL            $temp3  $temp10 $temp11 
+483 : FSUB            c       $temp11 $temp12 
+484 : ITOF            x       $temp14 
+485 : FMUL            1.23    2.0     $temp16 
+486 : FDIV            c       $temp3  $temp18 
+487 : FADD            1.23    $temp14 $temp15 
+488 : FADD            $temp15 $temp16 $temp17 
+489 : FSUB            $temp17 $temp18 $temp19 
+490 : INV             4       w       
+/* 491 : ASSIGN          w       $temp1   */
+492 : ASSIGN          1.23    a       
+493 : ITOF            w       $temp22 
+494 : FADD            1.0     c       $temp21 
+495 : FSUB            $temp21 $temp22 $temp23 
+496 : ITOF            2       $temp25 
+497 : FDIV            4.0     $temp10 $temp28 
+498 : FADD            2.0     $temp14 $temp31 
+499 : FDIV            $temp2  $temp31 $temp32 
+500 : FMUL            3.0     8.0     $temp34 
+501 : MUL             z       x       $temp38 
+502 : ITOF            $temp38 $temp39 
+503 : FADD            c       $temp22 $temp46 
+504 : FADD            a       $temp4  $temp5  
+505 : FADD            $temp5  $temp7  $temp8  
+506 : FSUB            $temp8  1.0     $temp9  
+507 : FMUL            $temp9  $temp12 $temp13 
+508 : FDIV            $temp13 $temp19 $temp20 
+509 : FMUL            $temp20 $temp23 $temp24 
+510 : FDIV            $temp24 $temp25 a       
+/* 511 : ASSIGN          a       $temp26  */
+/* 512 : ASSIGN          $temp10 $temp27  */
+513 : FMUL            a       $temp6  $temp44 
+/* 514 : ASSIGN          $temp22 $temp45  */
+515 : FMUL            $temp44 $temp46 $temp47 
+516 : FDIV            10000.0 $temp10 $temp51 
+517 : FMUL            a       $temp28 $temp29 
+/* 518 : ASSIGN          $temp14 $temp30  */
+519 : FSUB            $temp29 $temp32 $temp33 
+520 : FADD            $temp33 $temp34 $temp35 
+/* 521 : ASSIGN          $temp22 $temp36  */
+522 : FSUB            $temp35 $temp22 $temp37 
+523 : FADD            $temp37 $temp39 b       
+/* 524 : ASSIGN          b       $temp40  */
+/* 525 : ASSIGN          $temp14 $temp41  */
+526 : FADD            b       $temp14 $temp42 
+/* 527 : ASSIGN          $temp6  $temp43  */
+528 : FADD            $temp42 $temp47 $temp48 
+529 : FSUB            $temp48 $temp3  $temp49 
+/* 530 : ASSIGN          $temp10 $temp50  */
+531 : FADD            $temp49 $temp51 c       
+/* 532 : ASSIGN          c       $temp52  */
+/* 533 : ASSIGN          $temp14 $temp53  */
+534 : FMUL            c       $temp14 $temp54 
+/* 535 : ASSIGN          $temp25 $temp55  */
+536 : FSUB            $temp54 $temp25 $temp56 
+537 : FADD            $temp56 1.0     d       
+/* 538 : ASSIGN          d       $temp57  */
+539 : FADD            d       14608.2 $temp58 
+540 : FTOI            $temp58 $temp59 
+541 : RET             testcase08$temp59 
+
+Basic Block 120
+Entry: 119
+Exit:
+542 : ENDF            testcase08
+
+
+Function Block 16
+Basic Block 121
+Entry:
+Exit: 122
+543 : FUN             testcase09
+544 : PARAM           k       
+
+Basic Block 122
+Entry: 121
+Exit: 123 124
+545 : ASSIGN          1       a       
+546 : ASSIGN          2       b       
+547 : JNE             a       b       label0  
+
+Basic Block 123
+Entry: 122
+Exit: 124
+548 : ASSIGN          0       k       
+549 : JMP             label1  
+
+Basic Block 124
+Entry: 122 123
+Exit: 125 126
+550 : LABEL           label0  
+551 : LABEL           label1  
+552 : SUB             b       1       $temp0  
+553 : JNE             a       $temp0  label2  
+
+Basic Block 125
+Entry: 124
+Exit: 127
+554 : JMP             label3  
+
+Basic Block 126
+Entry: 124
+Exit: 127
+555 : LABEL           label2  
+556 : ASSIGN          0       k       
+
+Basic Block 127
+Entry: 126 125
+Exit: 128 129
+557 : LABEL           label3  
+558 : JLE             a       b       label4  
+
+Basic Block 128
+Entry: 127
+Exit: 129
+559 : ASSIGN          0       k       
+560 : JMP             label5  
+
+Basic Block 129
+Entry: 127 128
+Exit: 130 131
+561 : LABEL           label4  
+562 : LABEL           label5  
+563 : JLT             a       b       label6  
+
+Basic Block 130
+Entry: 129
+Exit: 131
+564 : ASSIGN          0       k       
+565 : JMP             label7  
+
+Basic Block 131
+Entry: 129 130
+Exit: 132 133
+566 : LABEL           label6  
+567 : LABEL           label7  
+568 : SUB             b       1       $temp1  
+569 : JLT             a       $temp1  label8  
+
+Basic Block 132
+Entry: 131
+Exit: 134
+570 : JMP             label9  
+
+Basic Block 133
+Entry: 131
+Exit: 134
+571 : LABEL           label8  
+572 : ASSIGN          0       k       
+
+Basic Block 134
+Entry: 133 132
+Exit: 135 136
+573 : LABEL           label9  
+574 : JGE             a       b       label10 
+
+Basic Block 135
+Entry: 134
+Exit: 137
+575 : JMP             label11 
+
+Basic Block 136
+Entry: 134
+Exit: 137
+576 : LABEL           label10 
+577 : ASSIGN          0       k       
+
+Basic Block 137
+Entry: 136 135
+Exit: 138 139
+578 : LABEL           label11 
+579 : JGT             a       b       label12 
+
+Basic Block 138
+Entry: 137
+Exit: 140
+580 : JMP             label13 
+
+Basic Block 139
+Entry: 137
+Exit: 140
+581 : LABEL           label12 
+582 : ASSIGN          0       k       
+
+Basic Block 140
+Entry: 139 138
+Exit: 141 142
+583 : LABEL           label13 
+584 : ADD             1       a       $temp2  
+585 : JGT             $temp2  b       label14 
+
+Basic Block 141
+Entry: 140
+Exit: 143
+586 : JMP             label15 
+
+Basic Block 142
+Entry: 140
+Exit: 143
+587 : LABEL           label14 
+588 : ASSIGN          0       k       
+
+Basic Block 143
+Entry: 142 141
+Exit: 144
+589 : LABEL           label15 
+590 : RET             testcase09k       
+
+Basic Block 144
+Entry: 143
+Exit:
+591 : ENDF            testcase09
+
+
+Function Block 17
+Basic Block 145
+Entry:
+Exit: 146
+592 : FUN             testcase10
+593 : PARAM           k       
+
+Basic Block 146
+Entry: 145
+Exit: 147 148
+594 : ITOF            1       a       
+/* 595 : ASSIGN          a       $temp0   */
+596 : ITOF            2       b       
+/* 597 : ASSIGN          b       $temp1   */
+598 : FJLE            a       b       label0  
+
+Basic Block 147
+Entry: 146
+Exit: 148
+599 : ASSIGN          0       k       
+600 : JMP             label1  
+
+Basic Block 148
+Entry: 146 147
+Exit: 149 150
+601 : LABEL           label0  
+602 : LABEL           label1  
+603 : FJLT            a       b       label2  
+
+Basic Block 149
+Entry: 148
+Exit: 150
+604 : ASSIGN          0       k       
+605 : JMP             label3  
+
+Basic Block 150
+Entry: 148 149
+Exit: 151 152
+606 : LABEL           label2  
+607 : LABEL           label3  
+608 : ITOF            1       $temp2  
+609 : FSUB            b       $temp2  $temp3  
+610 : FJLT            a       $temp3  label4  
+
+Basic Block 151
+Entry: 150
+Exit: 153
+611 : JMP             label5  
+
+Basic Block 152
+Entry: 150
+Exit: 153
+612 : LABEL           label4  
+613 : ASSIGN          0       k       
+
+Basic Block 153
+Entry: 152 151
+Exit: 154 155
+614 : LABEL           label5  
+615 : FJGE            a       b       label6  
+
+Basic Block 154
+Entry: 153
+Exit: 156
+616 : JMP             label7  
+
+Basic Block 155
+Entry: 153
+Exit: 156
+617 : LABEL           label6  
+618 : ASSIGN          0       k       
+
+Basic Block 156
+Entry: 155 154
+Exit: 157 158
+619 : LABEL           label7  
+620 : FJGT            a       b       label8  
+
+Basic Block 157
+Entry: 156
+Exit: 159
+621 : JMP             label9  
+
+Basic Block 158
+Entry: 156
+Exit: 159
+622 : LABEL           label8  
+623 : ASSIGN          0       k       
+
+Basic Block 159
+Entry: 158 157
+Exit: 160 161
+624 : LABEL           label9  
+625 : ITOF            1       $temp4  
+626 : FADD            $temp4  a       $temp5  
+627 : FJGT            $temp5  b       label10 
+
+Basic Block 160
+Entry: 159
+Exit: 162
+628 : JMP             label11 
+
+Basic Block 161
+Entry: 159
+Exit: 162
+629 : LABEL           label10 
+630 : ASSIGN          0       k       
+
+Basic Block 162
+Entry: 161 160
+Exit: 163
+631 : LABEL           label11 
+632 : RET             testcase10k       
+
+Basic Block 163
+Entry: 162
+Exit:
+633 : ENDF            testcase10
+
+
+Function Block 18
+Basic Block 164
+Entry:
+Exit: 165
+634 : FUN             testcase11
+635 : ASSIGN          0       i       
+636 : ASSIGN          i       sum     
+637 : CALL            randomize
+638 : CALL            sort    
+
+Basic Block 165
+Entry: 164 168
+Exit: 166 169
+639 : LABEL           label0  
+640 : JGE             i       10      label1  
+
+Basic Block 166
+Entry: 165
+Exit: 167 168
+641 : PUSH            i       
+642 : CALL            get     $temp0  
+643 : JNE             i       $temp0  label2  
+
+Basic Block 167
+Entry: 166
+Exit: 168
+644 : ADD             sum     1       sum     
+/* 645 : ASSIGN          sum     $temp1   */
+
+Basic Block 168
+Entry: 167 166
+Exit: 165
+646 : LABEL           label2  
+647 : ADD             i       1       i       
+/* 648 : ASSIGN          i       $temp2   */
+649 : JMP             label0  
+
+Basic Block 169
+Entry: 165
+Exit: 170
+650 : LABEL           label1  
+651 : CALL            randomize
+652 : PUSH            9       
+653 : PUSH            0       
+654 : CALL            qsort   
+655 : ASSIGN          0       i       
+
+Basic Block 170
+Entry: 169 173
+Exit: 171 174
+656 : LABEL           label3  
+657 : JGE             i       10      label4  
+
+Basic Block 171
+Entry: 170
+Exit: 172 173
+658 : PUSH            i       
+659 : CALL            get     $temp3  
+660 : JNE             i       $temp3  label5  
+
+Basic Block 172
+Entry: 171
+Exit: 173
+661 : ADD             sum     1       sum     
+/* 662 : ASSIGN          sum     $temp4   */
+
+Basic Block 173
+Entry: 172 171
+Exit: 170
+663 : LABEL           label5  
+664 : ADD             i       1       i       
+/* 665 : ASSIGN          i       $temp5   */
+666 : JMP             label3  
+
+Basic Block 174
+Entry: 170
+Exit: 175
+667 : LABEL           label4  
+668 : RET             testcase11sum     
+
+Basic Block 175
+Entry: 174
+Exit:
+669 : ENDF            testcase11
+
+
+Function Block 19
+Basic Block 176
+Entry:
+Exit: 177 178
+670 : FUN             main    
+671 : PUSH            gf      
+672 : PUSH            gi      
+673 : PUSH            gc      
+674 : CALL            testcase01$temp0  
+675 : JNE             $temp0  57      label0  
+
+Basic Block 177
+Entry: 176
+Exit: 179
+676 : WRITE           "Test Case 01 - PASS"
+677 : NEWLINE         
+678 : JMP             label1  
+
+Basic Block 178
+Entry: 176
+Exit: 179
+679 : LABEL           label0  
+680 : WRITE           "Test Case 01 - FAILED:"
+681 : PUSH            gf      
+682 : PUSH            gi      
+683 : PUSH            gc      
+684 : CALL            testcase01$temp1  
+685 : WRITE           $temp1  
+686 : NEWLINE         
+
+Basic Block 179
+Entry: 178 177
+Exit: 180 181
+687 : LABEL           label1  
+688 : PUSH            gf      
+689 : PUSH            gi      
+690 : PUSH            gc      
+691 : CALL            testcase02$temp2  
+692 : JNE             $temp2  3       label2  
+
+Basic Block 180
+Entry: 179
+Exit: 182
+693 : WRITE           "Test Case 02 - PASS"
+694 : NEWLINE         
+695 : JMP             label3  
+
+Basic Block 181
+Entry: 179
+Exit: 182
+696 : LABEL           label2  
+697 : WRITE           "Test Case 02 - FAILED:"
+698 : PUSH            gf      
+699 : PUSH            gi      
+700 : PUSH            gc      
+701 : CALL            testcase02$temp3  
+702 : WRITE           $temp3  
+703 : NEWLINE         
+
+Basic Block 182
+Entry: 181 180
+Exit: 183 184
+704 : LABEL           label3  
+705 : CALL            testcase03$temp4  
+706 : JNE             $temp4  5050    label4  
+
+Basic Block 183
+Entry: 182
+Exit: 185
+707 : WRITE           "Test Case 03 - PASS"
+708 : NEWLINE         
+709 : JMP             label5  
+
+Basic Block 184
+Entry: 182
+Exit: 185
+710 : LABEL           label4  
+711 : WRITE           "Test Case 03 - FAILED:"
+712 : CALL            testcase03$temp5  
+713 : WRITE           $temp5  
+714 : NEWLINE         
+
+Basic Block 185
+Entry: 184 183
+Exit: 186 187
+715 : LABEL           label5  
+716 : PUSH            i       
+717 : CALL            testcase04$temp6  
+718 : INV             $temp6  $temp7  
+719 : JNE             $temp7  3       label6  
+
+Basic Block 186
+Entry: 185
+Exit: 188
+720 : WRITE           "Test Case 04 - PASS"
+721 : NEWLINE         
+722 : JMP             label7  
+
+Basic Block 187
+Entry: 185
+Exit: 188
+723 : LABEL           label6  
+724 : WRITE           "Test Case 04 - FAILED:"
+725 : PUSH            i       
+726 : CALL            testcase04$temp8  
+727 : WRITE           $temp8  
+728 : NEWLINE         
+
+Basic Block 188
+Entry: 187 186
+Exit: 189 193
+729 : LABEL           label7  
+730 : CALL            testcase05$temp9  
+731 : ASSIGN          $temp9  tmp     
+732 : FJLT            tmp     3.13    label8  
+
+Basic Block 189
+Entry: 188
+Exit: 190 191
+733 : FJGT            tmp     3.15    label9  
+
+Basic Block 190
+Entry: 189
+Exit: 192
+734 : WRITE           "Test Case 05 - PASS"
+735 : NEWLINE         
+736 : JMP             label10 
+
+Basic Block 191
+Entry: 189
+Exit: 192
+737 : LABEL           label9  
+738 : WRITE           "Test Case 05 - FAILED:"
+739 : WRITE           tmp     
+740 : NEWLINE         
+
+Basic Block 192
+Entry: 191 190
+Exit: 194
+741 : LABEL           label10 
+742 : JMP             label11 
+
+Basic Block 193
+Entry: 188
+Exit: 194
+743 : LABEL           label8  
+744 : WRITE           "Test Case 05 - FAILED:"
+745 : NEWLINE         
+
+Basic Block 194
+Entry: 193 192
+Exit: 195 196
+746 : LABEL           label11 
+747 : CALL            testcase06$temp10 
+748 : JNE             86      $temp10 label12 
+
+Basic Block 195
+Entry: 194
+Exit: 197
+749 : WRITE           "Test Case 06 - PASS"
+750 : NEWLINE         
+751 : JMP             label13 
+
+Basic Block 196
+Entry: 194
+Exit: 197
+752 : LABEL           label12 
+753 : WRITE           "Test Case 06 - FAILED:"
+754 : CALL            testcase06$temp11 
+755 : WRITE           $temp11 
+756 : NEWLINE         
+
+Basic Block 197
+Entry: 196 195
+Exit: 198 199
+757 : LABEL           label13 
+758 : CALL            testcase07$temp12 
+759 : INV             $temp12 $temp13 
+760 : JNE             467     $temp13 label14 
+
+Basic Block 198
+Entry: 197
+Exit: 200
+761 : WRITE           "Test Case 07 - PASS"
+762 : NEWLINE         
+763 : JMP             label15 
+
+Basic Block 199
+Entry: 197
+Exit: 200
+764 : LABEL           label14 
+765 : WRITE           "Test Case 07 - FAILED:"
+766 : CALL            testcase07$temp14 
+767 : INV             $temp14 $temp15 
+768 : WRITE           $temp15 
+769 : NEWLINE         
+
+Basic Block 200
+Entry: 199 198
+Exit: 201 202
+770 : LABEL           label15 
+771 : CALL            testcase08$temp16 
+772 : JNE             1       $temp16 label16 
+
+Basic Block 201
+Entry: 200
+Exit: 203
+773 : WRITE           "Test Case 08 - PASS"
+774 : NEWLINE         
+775 : JMP             label17 
+
+Basic Block 202
+Entry: 200
+Exit: 203
+776 : LABEL           label16 
+777 : WRITE           "Test Case 08 - FAILED:"
+778 : CALL            testcase08$temp17 
+779 : WRITE           $temp17 
+780 : NEWLINE         
+
+Basic Block 203
+Entry: 202 201
+Exit: 204 205
+781 : LABEL           label17 
+782 : PUSH            123     
+783 : CALL            testcase09$temp18 
+784 : JNE             123     $temp18 label18 
+
+Basic Block 204
+Entry: 203
+Exit: 206
+785 : WRITE           "Test Case 09 - PASS"
+786 : NEWLINE         
+787 : JMP             label19 
+
+Basic Block 205
+Entry: 203
+Exit: 206
+788 : LABEL           label18 
+789 : WRITE           "Test Case 09 - FAILED:"
+790 : PUSH            123     
+791 : CALL            testcase09$temp19 
+792 : WRITE           $temp19 
+793 : NEWLINE         
+
+Basic Block 206
+Entry: 205 204
+Exit: 207 208
+794 : LABEL           label19 
+795 : PUSH            123     
+796 : CALL            testcase10$temp20 
+797 : JNE             123     $temp20 label20 
+
+Basic Block 207
+Entry: 206
+Exit: 209
+798 : WRITE           "Test Case 10 - PASS"
+799 : NEWLINE         
+800 : JMP             label21 
+
+Basic Block 208
+Entry: 206
+Exit: 209
+801 : LABEL           label20 
+802 : WRITE           "Test Case 10 - FAILED:"
+803 : PUSH            123     
+804 : CALL            testcase10$temp21 
+805 : WRITE           $temp21 
+806 : NEWLINE         
+
+Basic Block 209
+Entry: 208 207
+Exit: 210 211
+807 : LABEL           label21 
+808 : CALL            testcase11$temp22 
+809 : JNE             20      $temp22 label22 
+
+Basic Block 210
+Entry: 209
+Exit: 212
+810 : WRITE           "Test Case 11 - PASS"
+811 : NEWLINE         
+812 : JMP             label23 
+
+Basic Block 211
+Entry: 209
+Exit: 212
+813 : LABEL           label22 
+814 : WRITE           "Test Case 11 - FAILED:"
+815 : CALL            testcase11$temp23 
+816 : WRITE           $temp23 
+817 : NEWLINE         
+
+Basic Block 212
+Entry: 211 210
+Exit:
+818 : LABEL           label23 
+819 : ENDF            main    
+
+
+>>>>>>> .r125

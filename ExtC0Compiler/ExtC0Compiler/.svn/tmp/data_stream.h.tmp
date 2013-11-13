@@ -1,0 +1,81 @@
+#ifndef _COMPILER_DATA_STREAM
+#define _COMPILER_DATA_STREAM
+
+#include <map>
+#include <vector>
+#include <set>
+#include "bit_set.h"
+#include "instructions.h"
+#include "basic_block.h"
+#include "quaternion.h"
+
+class data_stream
+{
+public:
+	data_stream(instructions&);
+private:
+	void analyze();
+	instructions& ins;
+	/*
+		存储一个符号在哪些四元式中被定义了
+	*/
+	std::map<symbol*, bit_set> definition;
+
+	/*
+		存储一个符号在哪些四元式中被使用了
+	*/
+	std::map<symbol*, bit_set> use;
+
+	/*
+<<<<<<< .mine
+		基本块的in集合
+	*/
+	std::map<basic_block*, bit_set> in_map;
+	/*
+		基本块的out集合
+	*/
+	std::map<basic_block*, bit_set> out_map;
+
+	std::map<basic_block*, bit_set> in_net_map;
+
+	std::map<basic_block*, bit_set> out_net_map;
+	
+	/*
+		符号和网的多重映射
+	*/
+	std::multimap<symbol*, net*> net_symbol_map;
+
+	/*
+		网的下标
+	*/
+	std::map<net*, unsigned int> net_index;
+
+	/*
+		网
+	*/
+	std::vector<std::pair<symbol*, net*>> conflict_graph_node;
+
+	/*
+		到达定义分析
+	*/
+	void reach_definition(function_block*);
+
+	/*
+		构造定义使用链
+	*/
+	void get_du_chain(instructions&, function_block*);
+
+	/*
+=======
+>>>>>>> .r82
+		建立符号到网之间的映射
+	*/
+	void symbol_net_mapping(instructions&, function_block*);
+
+	/*
+		构造冲突图
+	*/
+	void build_conflict_graph(instructions&, function_block*);
+};
+
+#endif

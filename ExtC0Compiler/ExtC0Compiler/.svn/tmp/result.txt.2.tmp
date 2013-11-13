@@ -1,0 +1,227 @@
+Function Block 0
+Basic Block 0
+Entry:
+Exit: 1
+0   : FUN             test    
+1   : PARAM           a       
+
+Basic Block 1
+Entry: 0
+Exit: 2 4
+2   : JEQ             a       0       label0  
+
+Basic Block 2
+Entry: 1
+Exit: 5
+3   : WRITE           1       
+4   : RET             test    1       
+
+Basic Block 3
+Entry:
+Exit: 5
+5   : JMP             label1  
+
+Basic Block 4
+Entry: 1
+Exit: 5
+6   : LABEL           label0  
+7   : SUB             a       1       $temp0  
+8   : PUSH            $temp0  
+9   : CALL            test    $temp1  
+10  : MUL             $temp1  a       p       
+11  : ASSIGN          p       $temp2  
+12  : WRITE           p       
+13  : RET             test    p       
+
+Basic Block 5
+Entry: 3 2 4
+Exit:
+14  : LABEL           label1  
+15  : ENDF            test    
+
+
+Function Block 1
+Basic Block 6
+Entry:
+Exit: 7
+16  : FUN             main    
+17  : READ            a       
+18  : PUSH            a       
+19  : CALL            test    $temp0  
+20  : ASSIGN          $temp0  a       
+21  : WRITE           a       
+
+Basic Block 7
+Entry: 6
+Exit:
+22  : ENDF            main    
+
+
+====================Awaken's C0 Compiler====================
+; 标号以@@name@scope的形式命名
+; 函数以@scope的形式命名
+; 字面值以$$value的形式命名
+; 全局量以$name@global的形式命名
+; 常量以$name@scope的形式命名
+; 全局变量以$name@scope的形式命名
+
+.386									;32位模式
+.model flat, stdcall					;32位寻址, stdcall模式
+option casemap :none					;大小写敏感
+
+includelib \masm32\lib\msvcrt.lib	;vc运行时环境
+printf PROTO C:ptr sbyte, :vararg
+scanf PROTO C:ptr sbyte, :vararg
+_ftol PROTO C:ptr sbyte
+
+.data
+$$@c db "%c",0
+$$@d db "%d",0
+$$@f db "%f",0
+
+.code
+<<<<<<< .mine
+
+$gcd@global proc
+=======
+$test@global proc
+>>>>>>> .r93
+<<<<<<< .mine
+	push ebx
+	push ebp
+	push esi
+	push edi
+	sub esp, 8
+@@label0@gcd:
+	mov EAX, dword ptr [esp] -32
+	cmp EAX, $$0
+	je @@label1@gcd
+	mov dword ptr [esp] -32, EAX
+	mov EAX, dword ptr [esp] -4
+	mov EAX, dword ptr [esp] -36
+@@label2@gcd:
+	cmp EAX, dword ptr [esp] -32
+	jlt @@label3@gcd
+	mov EAX, EAX
+	sub EAX, dword ptr [esp] -32
+	mov dword ptr [esp] -4, EAX
+	mov EAX, dword ptr [esp]
+	mov EAX, dword ptr [esp] -4
+	jmp @@label2@gcd
+@@label3@gcd:
+=======
+push ebx
+push ebp
+push esi
+push edi
+sub esp, 16
+mov EAX, dword ptr [esp] + 40
+cmp EAX, $$0
+je @@label0@test
+push $$1
+push offset $$@d
+call printf
+add esp, 8
+mov dword ptr [esp] + 40, EAX
+mov EAX, $$1
+jmp @@endof$test@global
+jmp @@label1@test
+@@label0@test:
+mov EAX, dword ptr [esp] + 8
+mov EAX, dword ptr [esp] + 40
+sub EAX, $$1
+push EAX
+mov dword ptr [esp] + 8, EAX
+call $test@global
+mov dword ptr [esp] + 4, EAX
+mov EAX, dword ptr [esp] + 12
+mov EAX, dword ptr [esp] + 4
+imul EAX, dword ptr [esp] + 40
+mov dword ptr [esp] + 12, EAX
+mov EAX, dword ptr [esp]
+mov EAX, dword ptr [esp] + 12
+push dword ptr [esp] + 12
+push offset $$@d
+call printf
+add esp, 8
+>>>>>>> .r93
+<<<<<<< .mine
+	mov dword ptr [esp], EAX
+	mov EAX, dword ptr [esp] -36
+	mov EAX, dword ptr [esp] -32
+	mov dword ptr [esp] -36, EAX
+	mov EAX, dword ptr [esp] -32
+	mov EAX, dword ptr [esp] -4
+	jmp @@label0@gcd
+@@label1@gcd:
+	push dword ptr [esp] -36
+	push offset $$%d
+	call printf
+@@endof$gcd@global:
+	add esp 8
+	pop edi
+	pop esi
+	pop ebp
+	pop ebx
+=======
+mov dword ptr [esp], EAX
+mov EAX, dword ptr [esp] + 12
+jmp @@endof$test@global
+@@label1@test:
+@@endof$test@global:
+add esp, 16
+pop edi
+pop esi
+pop ebp
+pop ebx
+>>>>>>> .r93
+ret 4
+$test@global endp
+
+$main@global proc
+<<<<<<< .mine
+	push ebx
+	push ebp
+	push esi
+	push edi
+	sub esp, 12
+	push dword ptr [esp] -4
+	push dword ptr [esp] -8
+	call $gcd@global
+	@@endof$main@global:
+	add esp 12
+	pop edi
+	pop esi
+	pop ebp
+	pop ebx
+=======
+push ebx
+push ebp
+push esi
+push edi
+sub esp, 8
+sub esp, 4
+push esp
+push offset $$@d
+call scanf
+add esp, 8
+pop dword ptr [esp] + 4
+push dword ptr [esp] + 4
+call $test@global
+mov dword ptr [esp], EAX
+mov EAX, dword ptr [esp] + 4
+mov EAX, dword ptr [esp]
+push EAX
+push offset $$@d
+call printf
+add esp, 8
+@@endof$main@global:
+add esp, 8
+pop edi
+pop esi
+pop ebp
+pop ebx
+>>>>>>> .r93
+ret 0
+$main@global endp
+end $main@global

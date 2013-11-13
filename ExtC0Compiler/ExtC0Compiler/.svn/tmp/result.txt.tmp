@@ -1,0 +1,46 @@
+Function Block 0
+Basic Block 0
+Entry:
+Exit: 1 2
+0   : FUN             main    
+1   : JLE             z       10      label0  
+
+Basic Block 1
+Entry: 0
+Exit: 3
+2   : ADD             x       1       x       
+3   : ASSIGN          x       $temp0  
+4   : JMP             label1  
+
+Basic Block 2
+Entry: 0
+Exit: 3
+5   : LABEL           label0  
+6   : ADD             y       1       y       
+7   : ASSIGN          y       $temp1  
+
+Basic Block 3
+Entry: 2 1
+Exit: 4 5
+8   : LABEL           label1  
+9   : JLE             z       11      label2  
+
+Basic Block 4
+Entry: 3
+Exit: 6
+10  : WRITE           x       
+11  : JMP             label3  
+
+Basic Block 5
+Entry: 3
+Exit: 6
+12  : LABEL           label2  
+13  : WRITE           y       
+
+Basic Block 6
+Entry: 5 4
+Exit:
+14  : LABEL           label3  
+15  : ENDF            main    
+
+

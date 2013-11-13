@@ -1,0 +1,57 @@
+#ifndef _COMPILER_TOKENIZER
+#define _COMPILER_TOKENIZER
+
+#include <iostream>
+#include <deque>
+#include "token.h"
+
+class tokenizer
+{
+public:
+	typedef unsigned int line_number;
+
+	tokenizer():input(std::cin), line_num(1){}
+	tokenizer(std::istream & _input):input(_input), line_num(1){}
+	token next_token();
+	token look_ahead(unsigned int);
+	line_number get_line_number() const{return line_num;}
+
+private:
+	const static unsigned int NUMBER_OF_RESERVE = 13;
+	const static std::string RESERVE[NUMBER_OF_RESERVE];
+
+	std::istream & input;
+	std::deque<token> ahead_tokens;
+	
+	line_number line_num;
+
+	token _next_token();
+	bool has_more_token();
+
+	bool is_letter(char);
+	bool is_digit(char);
+	bool is_non_zero(char);
+	bool is_white_space(char);
+	bool is_add_operator(char);
+	bool is_multiply_operator(char);
+	
+	token identifier(char);
+	token unsigned_const(char);
+	token char_const(char);
+	token string_const(char);
+	token add_operator(char);
+	token multiply_operator(char);
+	token assign_operator(char);
+	token relation_operator(char);
+	//token special_char(char);
+	token left_parenthese(char);
+	token right_parenthese(char);
+	token left_bracket(char);
+	token right_bracket(char);
+	token semicolon(char);
+	token comma(char);
+
+	int is_reserve(std::string);
+};
+
+#endif

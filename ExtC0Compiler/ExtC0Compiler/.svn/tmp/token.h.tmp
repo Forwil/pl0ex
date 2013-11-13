@@ -1,0 +1,53 @@
+#ifndef _COMPILER_TOKEN
+#define _COMPILER_TOKEN
+
+#include <string>
+
+struct token
+{
+public:
+	const static enum token_type{
+		IDENTIFIER,
+		CHAR,
+		CONST,
+		ELSE,
+		FLOAT,
+		FOR,
+		IF,
+		INT,
+		MAIN,
+		PRINTF,
+		RETURN,
+		SCANF,
+		VOID,
+		WHILE,
+		UNSIGNED_INT_CONST,
+		UNSIGNED_REAL_CONST,
+		CHAR_CONST,
+		STRING_CONST,
+		ADD_OPERATOR,
+		MULTIPLY_OPERATOR,
+		RELATION_OPERATOR,
+		ASSIGN_OPERATOR,
+		/*SPECIAL_CHAR,*/
+		LEFT_PARENTHESE,
+		RIGHT_PARENTHESE,
+		LEFT_BRACKET,
+		RIGHT_BRACKET,
+		SEMICOLON,
+		COMMA,
+		NEW_LINE,
+		UNKNOWN_TOKEN,
+		NULL_TOKEN
+	};
+
+	token(){}
+	token(std::string _value, token::token_type _type):value(_value), type(_type) {}
+	std::string get_value() const {return this->value;}
+	token_type get_type() const {return this->type;}
+private:
+	std::string value;
+	token_type type;
+};
+
+#endif

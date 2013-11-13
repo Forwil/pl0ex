@@ -1,0 +1,302 @@
+#include "tokenizer.h"
+#include <cctype>
+
+const std::string tokenizer::RESERVE[] = {"char", "const", "else", "float", "for", "if", "int", "main", "printf", "return", "scanf", "void", "while"};
+
+//bool tokenizer::has_more_token()
+//{
+//	if(ahead_tokens.empty())
+//		return _has_more_token();
+//	else
+//		return true;
+//}
+
+bool tokenizer::has_more_token()
+{
+	char ptr;
+	while(input.get(ptr) && is_white_space(ptr))
+		if(ptr == '\n')line_num++;
+	if(input.eof())
+	{
+		return false;
+	}
+	else
+	{
+		input.unget();
+		return true;
+	}
+}
+
+token tokenizer::next_token()
+{
+	if(ahead_tokens.empty())
+	{
+		return _next_token();
+	}
+	else if(!has_more_token())
+	{
+		return token("", token::NULL_TOKEN);
+	}	
+	else 
+	{
+		token next = ahead_tokens.front();
+		ahead_tokens.pop_front();
+		return next;
+	}
+}
+token tokenizer::_next_token()
+{
+	char ptr;
+	while(input.get(ptr) && is_white_space(ptr))
+		if(ptr == '\n')line_num++;
+	if(is_letter(ptr))
+	{
+		return identifier(ptr);
+	}
+	else if(is_digit(ptr))
+	{
+		return unsigned_integer(ptr);
+	}
+	else
+	{
+		switch(ptr)
+		{
+		case '+':
+		case '-':
+			return add_operator(ptr);
+		case '*':
+		case '/':
+			return multiply_operator(ptr);
+		case '=':
+			return assign_operator(ptr);
+		case '>':
+		case '<':
+		case '!':
+			return relation_operator(ptr);
+		case '(':
+			return left_parenthese(ptr);
+		case ')':
+			return right_parenthese(ptr);
+		case '{':
+			return left_bracket(ptr);
+		case '}':
+			return right_bracket(ptr);
+		case ';':
+			return semicolon(ptr);
+		case ',':
+			return comma(ptr);
+		case '.':
+			return dot(ptr);
+		case '\'':
+			return char_const(ptr);
+		case '"':
+			return string_const(ptr);
+		default:
+			return token("", token::UNKNOWN_TOKEN);
+		}
+	}
+}
+
+bool tokenizer::is_letter(char ch)
+{
+	return isalpha(ch) || ch == '_';
+}
+
+bool tokenizer::is_digit(char ch)
+{
+	return is_non_zero(ch) || ch == '0';
+}
+
+bool tokenizer::is_non_zero(char ch)
+{
+	return (ch >= '1' && ch <= '9');
+}
+
+bool tokenizer::is_white_space(char ch)
+{
+	if(isspace(ch))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool tokenizer::is_add_operator(char ch)
+{
+	return (ch == '+' || ch == '-');
+}
+
+bool tokenizer::is_multiply_operator(char ch)
+{
+	return (ch == '*' || ch == '/');
+}
+
+token tokenizer::identifier(char ptr)
+{
+	std::string value;
+	do
+	{
+		value += ptr;
+	}while(input.get(ptr) && (is_letter(ptr) || is_digit(ptr)));
+	input.unget();
+	return token(value, (token::token_type)is_reserve(value));
+}
+
+token tokenizer::unsigned_integer(char ptr)
+{
+	std::string value;
+	if(is_non_zero(ptr))
+	{
+		do
+		{
+			value += ptr;
+		}while(input.get(ptr) && is_digit(ptr));
+		input.unget();
+	}
+	else
+	{
+		value += ptr;
+	}
+	return token(value, token::UNSIGNED_INT_CONST);
+}
+
+token tokenizer::char_const(char ptr)
+{
+	//TODO
+	std::string value;
+	return token(value, token::CHAR_CONST);
+}
+
+token tokenizer::string_const(char ptr)
+{
+	//TODO
+	std::string value;
+	return token(value, token::STRING_CONST);
+}
+token tokenizer::add_operator(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::ADD_OPERATOR);
+}
+
+token tokenizer::multiply_operator(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::MULTIPLY_OPERATOR);
+}
+
+token tokenizer::assign_operator(char ptr)
+{
+	std::string value;
+	value += ptr;
+	input.get(ptr);
+	if(ptr == '=')
+	{
+		value += ptr;
+		return token(value, token::RELATION_OPERATOR);
+	}
+	else
+	{
+		input.unget();
+		return token(value, token::ASSIGN_OPERATOR);
+	}
+
+}
+
+token tokenizer::relation_operator(char ptr)
+{
+	std::string value;
+	value += ptr;
+	input.get(ptr);
+	if(ptr == '=')
+		value += ptr;
+	else
+		input.unget();
+	return token(value, token::RELATION_OPERATOR);
+}
+
+//token tokenizer::special_char(char ptr)
+//{
+//	std::string value;
+//	value += ptr;
+//	return token(value, token::SPECIAL_CHAR);
+//}
+token tokenizer::left_parenthese(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::LEFT_PARENTHESE);
+}
+
+token tokenizer::right_parenthese(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::RIGHT_PARENTHESE);
+}
+
+token tokenizer::left_bracket(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::LEFT_BRACKET);
+}
+
+token tokenizer::right_bracket(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::RIGHT_BRACKET);
+}
+
+token tokenizer::semicolon(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::SEMICOLON);
+}
+
+token tokenizer::comma(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::COMMA);
+}
+
+token tokenizer::dot(char ptr)
+{
+	std::string value;
+	value += ptr;
+	return token(value, token::DOT);
+}
+
+int tokenizer::is_reserve(std::string value)
+{
+	int l = 0;
+	int r = tokenizer::NUMBER_OF_RESERVE - 1;
+	int mid;
+	while(l <= r)
+	{
+		mid = (l + r) / 2;
+		if(tokenizer::RESERVE[mid] == value)return mid + 1;
+		else if(tokenizer::RESERVE[mid] < value) l = mid + 1;
+		else r = mid - 1;
+	}
+	return 0;
+}
+
+token tokenizer::look_ahead(unsigned int index)
+{
+	std::deque<token>::size_type i = ahead_tokens.size();
+	while(i < index)
+	{
+		ahead_tokens.push_back(_next_token());
+		i++;
+	}
+	return ahead_tokens[index - 1];
+}

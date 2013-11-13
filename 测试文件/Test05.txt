@@ -1,0 +1,46 @@
+const int d = 2;
+char a;
+char b;
+char c;
+
+void func_a( char a , int d ){
+	printf( a + d );
+	return ;
+}
+
+void func_b( char a , int d ){
+	char b;
+	b = a + d;
+	printf( a + d );
+}
+
+int func_c( int a , int d ){
+	printf( a + d );
+}
+
+void func_error( ){
+	printf( "error" );
+}
+
+void main(){
+	char c;
+	c = 'a';
+	while( c != 'd' ){
+		scanf( c );
+		switch( c ){
+			case 'a':
+				func_a( c , d );
+			case 'b':
+				func_b( c , d + 2);
+			case 'c':
+				func_c( c , d * ( d + 2 ) );
+			case 10:
+				{}
+			default:
+				{
+					printf( c );
+					func_error( );
+				}
+		}
+	}
+}

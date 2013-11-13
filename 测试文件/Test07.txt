@@ -1,0 +1,8 @@
+void main()
+{
+   int a;
+   scanf(a);
+   a = a+1;
+   printf("a=", a);
+   return
+}

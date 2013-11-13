@@ -1,0 +1,16 @@
+#ifndef _COMPILER_ATTRIBUTE
+#define _COMPILER_ATTRIBUTE
+#include <string>
+
+struct attribute
+{
+public:
+	attribute():name(), value(){}
+	attribute(std::string _name, std::string _value):name(_name), value(_value){}
+	std::string get_name() const{return this->name;}
+	std::string get_value() const{return this->value;}
+private:
+	std::string name;
+	std::string value;
+};
+#endif

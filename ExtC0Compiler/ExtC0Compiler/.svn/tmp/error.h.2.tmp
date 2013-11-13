@@ -1,0 +1,15 @@
+#ifndef _COMPILER_ERROR
+#define _COMPILER_ERROR
+
+class error
+{
+public:
+	const enum error_type
+	{
+		
+	};
+private:
+	
+};
+
+#endif
