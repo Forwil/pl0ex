@@ -15,9 +15,11 @@
  *
  * =====================================================================================
  */
+
 #define NALPHABET 21
 #define MAXLINE 255
 #define MAXSYM 255
+#define MAXVARDEC 100
 #define c2i(c) (c-'0') 
 #define iss(c) ((c)>=32 && (c)<=126 && (c)!=34)
 

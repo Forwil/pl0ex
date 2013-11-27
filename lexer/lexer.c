@@ -25,7 +25,6 @@ int symnumber[255];
 int linelen,linep,symtype,num,t;
 char line[MAXLINE],sym[MAXSYM];
 char ch;
-
 char *alphabet[] = 
 {
 "array",
@@ -51,7 +50,7 @@ char *alphabet[] =
 "write"
 };
 
-void init()
+void lexer_init()
 {
 	symnumber['+'] = PLUS;
 	symnumber['-'] = MINUS;
@@ -61,11 +60,12 @@ void init()
 	symnumber['.'] = PERIOD;
 	symnumber[';'] = SEM;
 	symnumber[':'] = COLON;
-	symnumber['['] = RBP;
-	symnumber[']'] = LBP;
+	symnumber['['] = LBP;
+	symnumber[']'] = RBP;
 	symnumber['('] = RP;
 	symnumber[')'] = LP;
 	symnumber['='] = EQ;
+	getch();
 }
 
 void getch()
@@ -271,7 +271,6 @@ int main(void)
 		fin = fopen(inf,"r");
 	}
 	fout = fopen("11091222_token.txt","w");
-	getch();
 	while(getsym() != -1)
 	{
 		fprintf(fout,"%d %s %s\n",i++,OUTPUT[symtype],sym);
