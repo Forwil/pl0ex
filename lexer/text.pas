@@ -16,8 +16,20 @@ function mod(var fArg1,fArg2:integer):integer;
 begin
   for i:=3 downto 1 do
   begin
-   write("input x: )
-  end
+   write("input x: ");
+   read(x);
+   write("input y: ");
+   read(y);  
+  
+   x:=mod(x,y);
+   write("x mod y = ",x);
+   write("choice 1 2 3: ");
+   read(g);
+   case g of
+        1: write("good ");
+        2: write("better ");
+        3: write("best ")
+   end
    
   end
 end.

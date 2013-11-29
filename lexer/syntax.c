@@ -18,14 +18,30 @@
 
 #include<name.h>
 #include<stdio.h>
-#define t_char 1
-#define t_integer 2
+#define MAXVARDEC 100
+#define MAXSYMTABLE 200
+#define MAXSYMNAME	1000
+#define MAXLEVEL 20
+#define t_char 		1
+#define t_integer 	2
+#define t_charc		3
+#define t_intc		4
+#define t_string 	5
+#define t_proc 		6
+#define t_func 		7
 
-struct s_type
+struct symtable
 {
-	int base_type;
-	int len;  // zero represent one-value var
+	char *name;
+	int type;	//undefined 0, char 1,int 2, charc 3, intc 4, string 5, proc 6,func 7
+	int len;
+	int level;	
 }
+
+char symname[MAXSYMNAME];
+int symnamep = 1,symtablep = 1,nowlevel = -1;
+int plevel[MAXLEVEL];
+struct symtable symtables[MAXSYMTABLE];
 
 extern void getsym();
 extern void lexer_init();
@@ -33,65 +49,115 @@ extern int symtype;
 extern char sym[MAXSYM];
 extern int num;
 
-
-void constvalue()
+char *new_sym_name(char a[])
 {
+	int i = 0;
+	char * r;
+	r = &symname[symnamep];
+	while(a[i])
+	{
+		symname[symnamep] = a[i];
+		symnamep += 1;
+		i += 1;
+	}
+	symname[symnamep] = '\0';
+	symnamep += 1;
+	return r;
+}
+
+int insert_symtable(char a[], int val,int type);
+{
+	symtables[symtablep].type = type;
+	symtables[symtablep].len = val;
+	symtables[symtablep].level = nowlevel;
+	symtables[symtablep].name = new_sym_name(a);
+	symtablep += 1;	
+	return symtablep - 1;
+}
+
+void settype_symtable(int ind,struct symtable t)
+{
+	symtables[ind].type = t.type;
+	symtables[ind].len  = t.len;
+}
+
+void uplevel_symtable(int ind)
+{
+	symtables[ind].level += 1;
+}
+
+void find_symtable(char a[],int t)
+{
+	int i,lev;
+	for(i = plevel[nowlevel];i < symtablep;i++)
+		if (strcmp(symtables[i].name,a) == 0)
+			return i;
+	lev = nowlevel - 1;
+	while(lev !=0)
+	{
+		for( i = plevel[lev]; symtables[i].level != symtables[plevel[lev]].level;i++)
+			if (strcmp(symtables[i].name,a)==0)
+				return i;
+		lev-= 1;
+	}
+	return 0;	
+}
+int const_value()
+{
+	int t;
 	if (symtype == PLUS)
+	{
 		getsym();
+		t = num;
+	}
 	else if (symtype == MINUS)
 	{
 		getsym();
-		num = -num;
+		t = -num;
 	}
 	else if (symtype == T_CHAR)
-		getsym();
+	{
+		t = num;
+	}
 	else
 		error(); // unknown const value
+	return t;
 }
 
-void constdeclare()
+void const_declare()
 {
 	char ident[MAXSYM];
-	
-	getsym();
-	if (symtype != T_IDENT)
-		error();	// missing ident
-	while (symtype == T_IDENT)
+	int t;
+	if (symtype == T_IDENT)
 	{
 		strcpy(ident,sym);
 		getsym();
 		if(symtype == BECOME)
 		{
 			getsym();
-			constvalue();
-			insert_symtable(sym,CONST); //insert const to symtable
+			t = const_value();
+			if(symtype == T_CHAR)
+				insert_symtable(ident,t,t_charc); //insert const to symtable
+			else
+				insert_symtable(ident,t,t_intc);
+			getsym();
 		}
 		else
 			error();	// missing BECOME
-		if(symtype == COMMA)
-			getsym();
-		else if (symtype == SEM)
-		{	
-			getsym();
-			return ;
-		}
-		else
-			error(); //missing COLON
-	}
+	}	
 }
 
-struct s_type gettype()
+void get_type(struct symtable *t)
 {
-	struct s_type t;
 	if (symtype == INT)
 	{
-		t.base_type = t_integer;
-		t.len = 0;
+		t->type = t_integer;
+		t->len = 0;
 	}
 	else if (symtype == CHAR)
 	{
-		t.base_type = t_char;
-		t.len = 0;
+		t->type= t_char;
+		t->len = 0;
 	}
 	else if (symtype == ARRAY)
 	{
@@ -101,7 +167,7 @@ struct s_type gettype()
 			getsym();
 			if(symtype == T_CONST)
 			{
-				t.len = num;
+				t->len = num;
 				getsym();
 				if (symtype == RBP)
 					getsym();
@@ -112,9 +178,9 @@ struct s_type gettype()
 				else
 					error(); // missing OF
 				if (symtype == INT)
-					t.base_type = t_integer;
+					t->type = t_integer;
 				else if (symtype == CHAR)
-					t.base_type = t_char;
+					t->type = t_char;
 				else 
 					error(); // unknown type	
 			}
@@ -127,21 +193,17 @@ struct s_type gettype()
 	else
 		error(); // missing ARRAY
 	getsym();
-	return t;
 }
 
-void vardeclare()
+void var_declare()
 {
-	struct symtable	* p[MAXVARDEC];
-	struct s_type t;
+	int p[MAXVARDEC];
 	int nvdec = 0,i;
-	getsym();
-	if (symtype != T_IDENT)
-		error() 	//missing ident
+	struct symtable t;
 	while (symtype == T_IDENT)
 	{
 		//insert var indent to symtable
-		p[nvdec] = insert_symtable(sym,VAR); // no demain yet!
+		p[nvdec] = insert_symtable(sym,0,0); // no demain yet!
 		nvdec += 1;
 		getsym();
 		if (symtype == COMMA)
@@ -149,24 +211,22 @@ void vardeclare()
 		else if (symtype == COLON)
 		{
 			getsym();
-			t = gettype();
-			if (symtype == SEM)
-				getsym();
-			else
-				error();//missing SEM
+			get_type(&t);
 			for(i = 0;i < nvdec;i++)
 				settype_symtable(p[i],t);// set all var to t_type
 			break;			
 		}
+		else
+			error();// missing COMMA
 	}
 }
 
-void procdeclare()
+void proc_declare()
 {
 	getsym();
 	if (symtype == T_IDENT)
 	{
-		insert_symtable(sym,PROC);
+		insert_symtable(sym,0,t_proc);
 		getsym();
 		if (symtype == LP)
 		{
@@ -180,7 +240,7 @@ void procdeclare()
 				getsym();
 			else
 				error();//missing SEM
-			partpro();
+			part_pro();
 			if (symtype == SEM)
 				getsym();
 			else
@@ -193,14 +253,14 @@ void procdeclare()
 		error();//missing ident	
 }
 
-void funcdeclare()
+void func_declare()
 {
-	struct symtable	* p;
-	struct s_type t;
+	int p;
+	struct symtable t;
 	getsym();
 	if (symtype == T_IDENT)
 	{
-		p = insert_symtable(sym,FUNC);
+		p = insert_symtable(sym,0,t_func);
 		getsym();
 		if (symtype == LP)
 		{
@@ -214,10 +274,11 @@ void funcdeclare()
 				getsym();
 			else
 				error();//missing COLON
+			t.len = 0;
 			if (symtype == INT)
-				t.base_type = t_integer;
+				t.type = t_integer;
 			else if (symtype == CHAR)
-				t.base_type = t_char;
+				t.type = t_char;
 			else
 				error();//unknown type
 			settype_symtable(p,t);
@@ -225,7 +286,7 @@ void funcdeclare()
 				getsym();
 			else
 				error();//missing SEM
-			partpro();
+			part_pro();
 			if (symtype == SEM)
 				getsym();
 			else
@@ -238,9 +299,10 @@ void funcdeclare()
 		error();//missing ident	
 }
 
-var form_arguments()
+void form_arguments()
 {
-	struct s_type t;
+	struct symtable t;
+	int isvar = 0,p;
 	if (symtype != VAR && symtype != T_IDENT)
 		error();//error type of form arguments
 	while(symtype == VAR || symtype == T_IDENT)
@@ -248,11 +310,13 @@ var form_arguments()
 		if (symtype == VAR)
 		{
 			getsym();
+			isvar = -1;
 			//mark some...
 		}
 		while (symtype == T_IDENT)
 		{
 			// do something about the ident
+			p = insert_symtable(sym,0,0);
 			getsym();
 			if (symtype == COMMA)
 				getsym();
@@ -262,16 +326,19 @@ var form_arguments()
 		else
 			error();//missing COLON
 		if (symtype == INT)
-			t.base_type = t_integer;
+			t.type = t_integer;
 		else if(symtype == CHAR)
-			t.base_type = t_char;
+			t.type = t_char;
 		else
 			error();// unknow type
+		t.len = isvar;	//set VAR type is -1
+		settype_symtable(p,t);
+		uplevel_symtable(p);	// the arguements must be level up
 		if (symtype ==SEM)
 			getsym();
 		else
 			break;
-	}			
+	}
 }
 
 void statement()
@@ -568,24 +635,49 @@ int condition()
 	// do something for CONDITION
 }
 
-void partpro();
+void part_pro();
 {
+	int i;
+	nowlevel += 1;
+
+	i = symtablep -1;
+	while(symtables[plevel[i]].level == nowlevel) i -= 1;
+	plevel[nowlevel] = i + 1;
+
 	if (symtype == CONST)
 	{
-		constdeclare();
+		getsym();
+		const_declare();
+		while(symtype == COMMA)
+		{
+			getsym();
+			const_declare();
+		}
+		if(symtype == SEM)
+			getsym();
+		else
+			error();//missing SEM
 	}
 	
 	if (symtype == VAR)
 	{
-		vardeclare();	
+		getsym();
+		while(symtype == T_IDENT)
+		{
+			var_declare();	
+			if (symtype == SEM)
+				getsym();
+			else
+				error();//missing SEM
+		}
 	}
 	
 	while (symtype == PROC || symtype == FUNC)
 	{
 		if (symtype == PROC)
-			procdeclare();	
+			proc_declare();	
 		if (symtype == FUNC)
-			funcdeclare();	
+			func_declare();	
 	}
 	if (symtype == BEGIN)
 	{
@@ -603,14 +695,19 @@ void partpro();
 	}
 	else
 		error();// no part_pro
+	nowlevel -= 1;
 }
 
 int main(void)
 {
 	
 	lexer_init();
+	symtables[0].name = NULL;
+	symtables[0].len = 0;
+	symtables[0].type = 0;
+	symtables[0].level = -1;
 	getsym();
-	partpro();
+	part_pro();
 	if (symtype == PERIOD)
 		getsym();
 	else
