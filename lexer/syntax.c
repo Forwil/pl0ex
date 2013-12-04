@@ -21,7 +21,7 @@
 #define MAXVARDEC 100
 #define MAXSYMTABLE 200
 #define MAXSYMNAME	1000
-#define MAXLEVEL 20
+
 #define t_char 		1
 #define t_integer 	2
 #define t_charc		3
@@ -30,17 +30,58 @@
 #define t_proc 		6
 #define t_func 		7
 
+#define four_add	1
+#define four_sub	2
+#define four_mul	3
+#define four_div	4
+
+#define four_big	5
+#define four_smo	6
+#define four_bige	7
+#define four_smoe	8
+#define four_eq		9
+#define four_neq	10
+
+#define four_jmp	11
+#define four_jz		12
+#define four_bec	13
+#define four_call	14
+
+#define four_read	15
+#define four_write	16
+#define four_push	17
+#define four_pop	18
+#define four_end	19
+
 struct symtable
 {
 	char *name;
 	int type;	//undefined 0, char 1,int 2, charc 3, intc 4, string 5, proc 6,func 7
-	int len;
-	int level;	
+	int x;	// when type is char int ,0 is single,>0 is array,
+			// when type is charc intc,it is the value
+			// when type is proc func,it is the number of arguements
+			// when type is string ,it is not used
+	int level;
+	int first_son;
+	int father;
+	int next;
+	int reg;// when we want to generate machine code... we will use that.
+	int mem;	
+}
+
+struct four_expression
+{
+	int type;
+	int src1;
+	int f1;// flag1= 0, it means src1 is a normal var,when flag1 <> 0,it means we get src1[f1]
+	int src2;
+	int f2;
+	int des;
+	int f3;
 }
 
 char symname[MAXSYMNAME];
-int symnamep = 1,symtablep = 1,nowlevel = -1;
-int plevel[MAXLEVEL];
+int symnamep = 1,symtablep = 1,nowlevel = -1,nowfather;
 struct symtable symtables[MAXSYMTABLE];
 
 extern void getsym();
@@ -67,10 +108,26 @@ char *new_sym_name(char a[])
 
 int insert_symtable(char a[], int val,int type);
 {
+	int i;
 	symtables[symtablep].type = type;
-	symtables[symtablep].len = val;
+	symtables[symtablep].x = val;
 	symtables[symtablep].level = nowlevel;
 	symtables[symtablep].name = new_sym_name(a);
+	symtables[symtablep].father = nowfather;
+	symtables[symtablep].next = 0;
+	symtables[symtablep].first_son = 0;
+	i = symtables[nowfather].first_son;
+	//set linker
+	if (i == 0)
+	{	
+		symtables[nowfather].first_son = symtablep;
+	}
+	else
+	{	
+		while(symtables[i].next)
+			i = symtables[i].next;
+		symtables[i].next = symtablep;
+	}
 	symtablep += 1;	
 	return symtablep - 1;
 }
@@ -78,7 +135,7 @@ int insert_symtable(char a[], int val,int type);
 void settype_symtable(int ind,struct symtable t)
 {
 	symtables[ind].type = t.type;
-	symtables[ind].len  = t.len;
+	symtables[ind].x  = t.x;
 }
 
 void uplevel_symtable(int ind)
@@ -86,22 +143,24 @@ void uplevel_symtable(int ind)
 	symtables[ind].level += 1;
 }
 
-void find_symtable(char a[],int t)
+void find_symtable(char a[],int type)
 {
-	int i,lev;
-	for(i = plevel[nowlevel];i < symtablep;i++)
-		if (strcmp(symtables[i].name,a) == 0)
-			return i;
-	lev = nowlevel - 1;
-	while(lev !=0)
+	int i,f;
+	f = nowfather;
+	while(f);
 	{
-		for( i = plevel[lev]; symtables[i].level != symtables[plevel[lev]].level;i++)
-			if (strcmp(symtables[i].name,a)==0)
+		i = symtable[f].first_son;
+		while(i)
+		{
+			if(strcmp(a,symtable[i].name)==0 && symtable[i].type == type)
 				return i;
-		lev-= 1;
+			i = symtable[i].next;
+		}
+		f = symtable[f].father;	
 	}
 	return 0;	
 }
+
 int const_value()
 {
 	int t;
@@ -152,12 +211,12 @@ void get_type(struct symtable *t)
 	if (symtype == INT)
 	{
 		t->type = t_integer;
-		t->len = 0;
+		t->x = 0;
 	}
 	else if (symtype == CHAR)
 	{
 		t->type= t_char;
-		t->len = 0;
+		t->x = 0;
 	}
 	else if (symtype == ARRAY)
 	{
@@ -167,7 +226,7 @@ void get_type(struct symtable *t)
 			getsym();
 			if(symtype == T_CONST)
 			{
-				t->len = num;
+				t->x = num;
 				getsym();
 				if (symtype == RBP)
 					getsym();
@@ -223,15 +282,22 @@ void var_declare()
 
 void proc_declare()
 {
+	char ident[MAXSYM];
+	struct symtable t;
+	int p;
 	getsym();
 	if (symtype == T_IDENT)
 	{
-		insert_symtable(sym,0,t_proc);
+		strcmp(ident,sym);
+		p = insert_symtable(sym,0,0);
+		nowfather = p;
 		getsym();
 		if (symtype == LP)
 		{
 			getsym();
-			form_arguments();//deal with form_arguments
+			t.x = form_arguments();//deal with form_arguments
+			t.type = t_proc;
+			settype_symtable(p,t);
 			if (symtype == RP)
 				getsym();
 			else
@@ -256,16 +322,21 @@ void proc_declare()
 void func_declare()
 {
 	int p;
+	char ident[MAXSYM];
 	struct symtable t;
 	getsym();
 	if (symtype == T_IDENT)
 	{
-		p = insert_symtable(sym,0,t_func);
+		strcmp(ident,sym);
+		p = insert_symtable(sym,0,0); // unknown x
+		nowfather = p;
 		getsym();
 		if (symtype == LP)
 		{
 			getsym();
-			form_arguments();//deal with form_arguments
+			t.x = form_arguments();//deal with form_arguments
+			t.type = t_func;
+			settype_symtable(p,t);
 			if (symtype == RP)
 				getsym();
 			else
@@ -274,14 +345,13 @@ void func_declare()
 				getsym();
 			else
 				error();//missing COLON
-			t.len = 0;
 			if (symtype == INT)
 				t.type = t_integer;
 			else if (symtype == CHAR)
 				t.type = t_char;
 			else
 				error();//unknown type
-			settype_symtable(p,t);
+			insert_symtable(ident,0,t.type);
 			if (symtype == SEM)
 				getsym();
 			else
@@ -302,7 +372,7 @@ void func_declare()
 void form_arguments()
 {
 	struct symtable t;
-	int isvar = 0,p;
+	int isvar = 0,p,count;
 	if (symtype != VAR && symtype != T_IDENT)
 		error();//error type of form arguments
 	while(symtype == VAR || symtype == T_IDENT)
@@ -317,6 +387,7 @@ void form_arguments()
 		{
 			// do something about the ident
 			p = insert_symtable(sym,0,0);
+			count += 1;
 			getsym();
 			if (symtype == COMMA)
 				getsym();
@@ -331,7 +402,7 @@ void form_arguments()
 			t.type = t_char;
 		else
 			error();// unknow type
-		t.len = isvar;	//set VAR type is -1
+		t.x = isvar;	//set VAR type is -1
 		settype_symtable(p,t);
 		uplevel_symtable(p);	// the arguements must be level up
 		if (symtype ==SEM)
@@ -339,6 +410,7 @@ void form_arguments()
 		else
 			break;
 	}
+	return count;
 }
 
 void statement()
@@ -637,12 +709,8 @@ int condition()
 
 void part_pro();
 {
-	int i;
+	int f;
 	nowlevel += 1;
-
-	i = symtablep -1;
-	while(symtables[plevel[i]].level == nowlevel) i -= 1;
-	plevel[nowlevel] = i + 1;
 
 	if (symtype == CONST)
 	{
@@ -671,7 +739,7 @@ void part_pro();
 				error();//missing SEM
 		}
 	}
-	
+	f = nowfather;	
 	while (symtype == PROC || symtype == FUNC)
 	{
 		if (symtype == PROC)
@@ -679,6 +747,7 @@ void part_pro();
 		if (symtype == FUNC)
 			func_declare();	
 	}
+	nowfather = f;
 	if (symtype == BEGIN)
 	{
 		getsym();
@@ -703,7 +772,7 @@ int main(void)
 	
 	lexer_init();
 	symtables[0].name = NULL;
-	symtables[0].len = 0;
+	symtables[0].x = 0;
 	symtables[0].type = 0;
 	symtables[0].level = -1;
 	getsym();
