@@ -21,14 +21,17 @@
 #define MAXVARDEC 100
 #define MAXSYMTABLE 200
 #define MAXSYMNAME	1000
+#define MAXFOURCODE	2000
+
+#define k_var		1
+#define k_const		2
+#define k_func		3
+#define k_proc		4
+#define k_point		5
 
 #define t_char 		1
 #define t_integer 	2
-#define t_charc		3
-#define t_intc		4
-#define t_string 	5
-#define t_proc 		6
-#define t_func 		7
+#define t_string 	3
 
 #define four_add	1
 #define four_sub	2
@@ -53,18 +56,19 @@
 #define four_pop	18
 #define four_end	19
 
-struct symtable
+#define four_getarr 20
+
+struct sym_table
 {
 	char *name;
-	int type;	//undefined 0, char 1,int 2, charc 3, intc 4, string 5, proc 6,func 7
-	int x;	// when type is char int ,0 is single,>0 is array,
-			// when type is charc intc,it is the value
-			// when type is proc func,it is the number of arguements
-			// when type is string ,it is not used
+	int kind; 	// 
+	int type;	//
+	int x;	// 
+			//
+			//
+			//
 	int level;
-	int first_son;
-	int father;
-	int next;
+	int last;
 	int reg;// when we want to generate machine code... we will use that.
 	int mem;	
 }
@@ -73,16 +77,16 @@ struct four_expression
 {
 	int type;
 	int src1;
-	int f1;// flag1= 0, it means src1 is a normal var,when flag1 <> 0,it means we get src1[f1]
 	int src2;
-	int f2;
 	int des;
-	int f3;
 }
 
-char symname[MAXSYMNAME];
-int symnamep = 1,symtablep = 1,nowlevel = -1,nowfather;
-struct symtable symtables[MAXSYMTABLE];
+struct four_expression four_codes[MAXFOURCODE];
+int four_codep = 1;
+
+char sym_name[MAXSYMNAME];
+int sym_namep = 1,sym_tablep = 1,nowlevel = -1;
+struct sym_table sym_tables[MAXSYMTABLE];
 
 extern void getsym();
 extern void lexer_init();
@@ -90,73 +94,87 @@ extern int symtype;
 extern char sym[MAXSYM];
 extern int num;
 
+int insert_four(int type,int src1,int src2,int des)
+{
+	four_codes[four_codep].type = type;
+	four_codes[four_codep].src1 = src1;
+	four_codes[four_codep].src2 = src2;
+	four_codes[four_codep].des = des;
+	four_codep += 1;
+	return four_codep - 1;
+}
+void set_des_four(int ind,int des)
+{
+	four_codes[ind].des = des;
+}
 char *new_sym_name(char a[])
 {
 	int i = 0;
 	char * r;
-	r = &symname[symnamep];
+	r = &sym_name[sym_namep];
 	while(a[i])
 	{
-		symname[symnamep] = a[i];
-		symnamep += 1;
+		sym_name[sym_namep] = a[i];
+		sym_namep += 1;
 		i += 1;
 	}
-	symname[symnamep] = '\0';
-	symnamep += 1;
+	sym_name[sym_namep] = '\0';
+	sym_namep += 1;
 	return r;
 }
 
-int insert_symtable(char a[], int val,int type);
+int insert_sym_table(char a[],int kind);
 {
 	int i;
-	symtables[symtablep].type = type;
-	symtables[symtablep].x = val;
-	symtables[symtablep].level = nowlevel;
-	symtables[symtablep].name = new_sym_name(a);
-	symtables[symtablep].father = nowfather;
-	symtables[symtablep].next = 0;
-	symtables[symtablep].first_son = 0;
-	i = symtables[nowfather].first_son;
-	//set linker
-	if (i == 0)
-	{	
-		symtables[nowfather].first_son = symtablep;
-	}
-	else
-	{	
-		while(symtables[i].next)
-			i = symtables[i].next;
-		symtables[i].next = symtablep;
-	}
-	symtablep += 1;	
-	return symtablep - 1;
+	sym_tables[sym_tablep].kind = kind;
+	sym_tables[sym_tablep].x = 0;
+	sym_tables[sym_tablep].level = nowlevel;
+	sym_tables[sym_tablep].name = new_sym_name(a);
+	// set "last" linker
+	i = sym_tablep - 1;
+	while(i > 0 && sym_tables[i].level < nowlevel) i -= 1;
+	sym_tables[sym_tablep].last = i;
+	
+	sym_tablep += 1;	
+	return sym_tablep - 1;
 }
 
-void settype_symtable(int ind,struct symtable t)
+int new_temp_var_sym_table();
 {
-	symtables[ind].type = t.type;
-	symtables[ind].x  = t.x;
+	int i;
+	i = insert_sym_table("",k_var);
+	settype_sym_table(i,0,t_integer);
+	return i;
 }
 
-void uplevel_symtable(int ind)
+int new_temp_const_sym_table(int x);
 {
-	symtables[ind].level += 1;
+	int i;
+	i = insert_sym_table("",k_const);
+	settype_sym_table(i,x,t_integer);
+	return i;
 }
 
-void find_symtable(char a[],int type)
+void settype_sym_table(int ind,int x,int type)
 {
-	int i,f;
-	f = nowfather;
-	while(f);
+	sym_tables[ind].type = type;
+	sym_tables[ind].x  = x;
+}
+
+void uplevel_sym_table(int ind)
+{
+	sym_tables[ind].level += 1;
+}
+
+void find_sym_table(char a[])
+{
+	int i;
+	i = sym_tablep - 1;
+	while(i)
 	{
-		i = symtable[f].first_son;
-		while(i)
-		{
-			if(strcmp(a,symtable[i].name)==0 && symtable[i].type == type)
-				return i;
-			i = symtable[i].next;
-		}
-		f = symtable[f].father;	
+		if (strcmp(sym_tables[i].name,a) == 0)
+			return i;
+		i = sym_tables[i].last;
 	}
 	return 0;	
 }
@@ -186,7 +204,7 @@ int const_value()
 void const_declare()
 {
 	char ident[MAXSYM];
-	int t;
+	int t,p;
 	if (symtype == T_IDENT)
 	{
 		strcpy(ident,sym);
@@ -195,10 +213,11 @@ void const_declare()
 		{
 			getsym();
 			t = const_value();
+			p = insert_sym_table(ident,k_const);
 			if(symtype == T_CHAR)
-				insert_symtable(ident,t,t_charc); //insert const to symtable
+				settype_sym_table(p,t,t_char);
 			else
-				insert_symtable(ident,t,t_intc);
+				settype_sym_table(p,t,t_integer);
 			getsym();
 		}
 		else
@@ -206,7 +225,7 @@ void const_declare()
 	}	
 }
 
-void get_type(struct symtable *t)
+void get_type(struct sym_table *t)
 {
 	if (symtype == INT)
 	{
@@ -258,11 +277,11 @@ void var_declare()
 {
 	int p[MAXVARDEC];
 	int nvdec = 0,i;
-	struct symtable t;
+	struct sym_table t;
 	while (symtype == T_IDENT)
 	{
-		//insert var indent to symtable
-		p[nvdec] = insert_symtable(sym,0,0); // no demain yet!
+		//insert var indent to sym_table
+		p[nvdec] = insert_sym_table(sym,k_var); // no demain yet!
 		nvdec += 1;
 		getsym();
 		if (symtype == COMMA)
@@ -272,7 +291,7 @@ void var_declare()
 			getsym();
 			get_type(&t);
 			for(i = 0;i < nvdec;i++)
-				settype_symtable(p[i],t);// set all var to t_type
+				settype_sym_table(p[i],t.x,t.type);// set all var to t_type
 			break;			
 		}
 		else
@@ -283,21 +302,19 @@ void var_declare()
 void proc_declare()
 {
 	char ident[MAXSYM];
-	struct symtable t;
-	int p;
+	int p,x;
 	getsym();
 	if (symtype == T_IDENT)
 	{
 		strcmp(ident,sym);
-		p = insert_symtable(sym,0,0);
+		p = insert_sym_table(sym,k_proc);
 		nowfather = p;
 		getsym();
 		if (symtype == LP)
 		{
 			getsym();
-			t.x = form_arguments();//deal with form_arguments
-			t.type = t_proc;
-			settype_symtable(p,t);
+			x = form_arguments();//deal with form_arguments
+			settype_sym_table(p,x,0);
 			if (symtype == RP)
 				getsym();
 			else
@@ -306,7 +323,7 @@ void proc_declare()
 				getsym();
 			else
 				error();//missing SEM
-			part_pro();
+			part_pro(p);
 			if (symtype == SEM)
 				getsym();
 			else
@@ -322,21 +339,17 @@ void proc_declare()
 void func_declare()
 {
 	int p;
-	char ident[MAXSYM];
-	struct symtable t;
+	const sym_table t;
 	getsym();
 	if (symtype == T_IDENT)
 	{
-		strcmp(ident,sym);
-		p = insert_symtable(sym,0,0); // unknown x
+		p = insert_sym_table(sym,k_func); // unknown x
 		nowfather = p;
 		getsym();
 		if (symtype == LP)
 		{
 			getsym();
 			t.x = form_arguments();//deal with form_arguments
-			t.type = t_func;
-			settype_symtable(p,t);
 			if (symtype == RP)
 				getsym();
 			else
@@ -351,12 +364,12 @@ void func_declare()
 				t.type = t_char;
 			else
 				error();//unknown type
-			insert_symtable(ident,0,t.type);
+			settype_sym_table(p,t.x,t.type);
 			if (symtype == SEM)
 				getsym();
 			else
 				error();//missing SEM
-			part_pro();
+			part_pro(p);
 			if (symtype == SEM)
 				getsym();
 			else
@@ -369,24 +382,40 @@ void func_declare()
 		error();//missing ident	
 }
 
+void real_arguments()
+{
+	int t;
+	t = expression();
+	insert_four(four_push,0,0,t);
+	while(symtype == COMMA)
+	{
+		getsym();
+		t = expression();
+		insert_four(four_push,0,0,t);
+	}	
+}
+
 void form_arguments()
 {
-	struct symtable t;
-	int isvar = 0,p,count;
+	int kind = 0,count = 0,t,i,nvdec;
+	int p[MAXVARDEC];
 	if (symtype != VAR && symtype != T_IDENT)
 		error();//error type of form arguments
 	while(symtype == VAR || symtype == T_IDENT)
 	{
+		nvdec = 0;
+		kind = k_var;
 		if (symtype == VAR)
 		{
 			getsym();
-			isvar = -1;
+			kind = k_point;
 			//mark some...
 		}
 		while (symtype == T_IDENT)
 		{
 			// do something about the ident
-			p = insert_symtable(sym,0,0);
+			p[nvdec]= insert_sym_table(sym,kind);
+			nvdec += 1;
 			count += 1;
 			getsym();
 			if (symtype == COMMA)
@@ -397,14 +426,16 @@ void form_arguments()
 		else
 			error();//missing COLON
 		if (symtype == INT)
-			t.type = t_integer;
+			t = t_integer;
 		else if(symtype == CHAR)
-			t.type = t_char;
+			t = t_char;
 		else
 			error();// unknow type
-		t.x = isvar;	//set VAR type is -1
-		settype_symtable(p,t);
-		uplevel_symtable(p);	// the arguements must be level up
+		for(i = 0;i < nvdec;i++)
+		{
+			settype_sym_table(p[i],0,t);
+			uplevel_sym_table(p[i]);	// the arguements must be level up
+		}
 		if (symtype ==SEM)
 			getsym();
 		else
@@ -415,18 +446,25 @@ void form_arguments()
 
 void statement()
 {
+	int a,b,c,d,i,t1,t2;
 	if (symtype == T_IDENT)
 	{
+		a = find_sym_table(sym);
+		if (a == 0)
+			error();// can't find ident
+		if (sym_tables[a].kind == k_const)
+			error();// it can't be const
 		getsym();
 		if (symtype == BECOME)
 		{
 			getsym();// do something for BECOME
-			 = expression();
+			b = expression();
+			insert_four(four_bec,b,0,a);
 		}
 		else if (symtype == LBP)
 		{
 			getsym();// do something for ARRAY-INDEX
-			 = expression();
+			b = expression();
 			if (symtype == RBP)
 				getsym();
 			else
@@ -435,38 +473,35 @@ void statement()
 				getsym();
 			else
 				error();//missing BECOME
-			 = expressiong();
+			c = expressiong();
+			insert_four(four_bec,c,b,a);
 			// do something for BECOME 
 		}
 		else if (symtype == LP)
 		{
 			getsym();
-			real_arguments();
 			if (symtype == RP)
 				getsym();
 			else
-				error();// missing RP
+			{
+				real_arguments();
+				if (symtype == RP)
+					getsym();
+				else
+					error();// missing RP
+			}
 			// do something for CALL
+			b = sym_tables[a].x;
+			insert_four(four_call,a,b,0);
 		}
 		else
 			error();//error BECOME statement
 	}
-	else if (symtype == FUNC)
-	{
-		getsym();
-		if (symtype == BECOME)
-		{
-			getsym();
-			 = expression();
-				// do something for FUNC-BECOME
-		}
-		else
-			error();//missing  BECOME
-	}
 	else if (symtype == IF)
 	{
 		getsym();
-		 = condition();
+		a = condition();
+		t1 = insert_four(four_jz,a,0,0);
 		// do something for condition
 		if (symtype == THEN)
 			getsym();
@@ -475,24 +510,30 @@ void statement()
 		statement();
 		if (symtype == ELSE)
 		{
+			t2 = insert_four(four_jmp,0,0,0);
+			set_des_four(t1,four_tablep);
 			getsym();
 			statement();
+			set_des_four(t2,four_tablep);
 			// do something for IF-THEN-ELSE
 		}
 		else
 		{
+			set_des_four(t1,four_tablep);
 			// do something for IF-THEN
 		}
 	}
 	else if (symtype == REPEAT)
 	{
 		getsym();
+		t1 = four_tablep;
 		statement();
 		if (symtype == UNTIL)
 			getsym();
 		else
 			error();//missing UNTIL
-		 = condiction();	
+		a = condiction();	
+		insert_four(four_jz,a,0,t1);
 		// do some thing for REPEAT-UNTIL
 	}
 	else if (symtype == BEGIN)
@@ -521,6 +562,8 @@ void statement()
 		while(symtype == T_IDENT)
 		{
 			// do something for T_IDENT
+			a = find_sym_table(sym);
+			insert_four(four_read,0,0,a);
 			getsym();
 			if (symtype == COMMA)
 				getsym();
@@ -542,13 +585,17 @@ void statement()
 		else
 			error();//missing LP
 		if (symtype == T_STRING)
-		{
+		{	
+			a = insert_sym_table(sym,k_const);
+			settype_sym_table(a,0,t_string);
+			insert_four(four_write,0,0,a);
 			//do something for string
 			getsym();
 			if (symtype == COMMA)
 			{
 				getsym();
-				 = expression();
+				a = expression();
+				insert_four(four_write,0,0,a);
 				// do some for expressiong
 			}
 			else if (symtype == RP)
@@ -558,7 +605,8 @@ void statement()
 		}
 		else
 		{
-			= expression; 
+			a = expression; 
+			insert_four(four_write,0,0,a);
 			// do something for expression
 		}	
 	}
@@ -568,27 +616,40 @@ void statement()
 		if (symtype == T_IDENT)
 		{
 			// save ident
+			a = find_sym_table(sym);
 			getsym();
 			if (symtype == BECOME)
 				getsym();
 			else
 				error();// missing BECOME
-			 = expression();
+			b = expression();
+			insert_four(four_bec,b,0,a);
 			if (symtype == TO)
 			{
 				// mark for TO
+				t1 = 1;
 			}
 			else if (symtype == DOWNTO)
 			{
 				// mark for DOWNTO
+				t1 = -1;
 			}
 			else
 				error();// unknow type for FOR
-			 = expression();
+			c = new_temp_const_sym_table(t1);
+			t1 = four_tablep;	
+			d = expression();
+			t2 = new_temp_var_sym_table();
+			insert_four(four_smoe,a,d,t2);
+			b = insert_four(four_jz,t2,0,0);
 			if (symtype == DO)
 				getsym();
 			else
 				error();// missing DO
+			statement();
+			insert_four(four_add,a,c,a);
+			insert_four(four_jmp,0,0,t1);	
+			set_des_four(b,four_tablep);
 			// do important something for FOR
 		}
 		else
@@ -600,73 +661,104 @@ void statement()
 
 int expression();
 {
+	int a,f,t,c,mflag = 0;
 	if (symtype == PLUS)
 		getsym();
 	else if (symtype == MINUS)
 	{
 		getsym();
 		// minus flag
+		mflag = 1;
 	}
-	 = term();
+	a = term();
 	while(symtype == PLUS || symtype == MINUS)
 	{
 		// do something for PLUS and MINUS
+		f = symtype;
 		getsym();
-		 = term();
-		// do something for term()
+		b = term();
+		t = new_temp_var_four();
+		if (f == MINUS)
+			insert_four(four_sub,a,b,t);
+		else
+			insert_four(four_add,a,b,t);
+		a = t;
 	}
-	// do something for others
+	if (mflag)
+	{
+		t = new_temp_var_four();
+		c = new_temp_const_four(0);
+		insert_four(four_sub,c,a,t);
+		a = t;
+	}
+	return a;
 }
 
 int term()
 {
-	 = factor();
+	int a,b,f,t;
+	a = factor();
 	while(symtype == MULT || symtype == DIV)
 	{
 		// do something for MULT and DIV
+		f = symtype;
 		getsym();
-		 = factor();
-		// do something for factor();
+		b = factor();
+		t = new_temp_var_four();
+		if (f == MULT)
+			insert_four(four_mul,a,b,t);
+		else
+			insert_four(four_div,a,b,t);
+		a = t
 	}
-	// do something for others
+	return a;
 }
 
 int factor()
 {
+	int a,b,t;
 	if (symtype == T_IDENT)
 	{
+		a = find_sym_table(sym);
 		// do some for ident
 		getsym();
 		if (symtype == LBP)
 		{
 			getsym();
-			 = expression();
+			b = expression();
 			if (symtype == RBP)
 				getsym();
 			else
 				error();//missing RBP
 			// do some for array index
+			t = new_temp_var_symtable();
+			insert_four(four_getarr,a,b,t);
+			a = t;
 		}
 		else if (symtype == LP)
 		{
 			getsym();
-			 = real_arguements();
+			real_arguements();
+			t = new_temp_var_symtable();
+			insert_four(four_call,a,symtables[a].x,t);
 			// deal with real_arguements
 			if (symtype == RP)
 				getsym();
 			else
 				error();
+			a = t;
 		}
 	}
 	else if (symtype == T_CONST)
 	{
 		//do some for CONST
+		a = new_temp_const_table(num);
 		getsym();
 	}
 	else if (symtype == LP)
 	{
 		getsym();
-		 = expression();
+		a = expression();
 		// do something for expression
 		if (symtype == RP)
 			getsym();
@@ -675,43 +767,53 @@ int factor()
 	}
 	else 
 		error();// empty factor
+	return a;
 }
 
 int condition()
 {
-	= expression();
-	if (symtype == EQ)
+	int a,t,f;
+	a = expression();
+	if (symtype != EQ &&
+		symtype != NEQ &&
+		symtype != SMO &&
+		symtype != SMOE &&
+		symtype != BIG &&
+		symtype != BIGE)
+		error();// unknown bj
+	f = symtype;
+	getsym();
+	t = new_temp_var_sym_table();
+ 	b = expression();
+	switch (f) 
 	{
+		case EQ: 
+			insert_four(four_eq,a,b,t); break;
+		case NEQ: 
+			insert_four(four_neq,a,b,t); break;
+		case SMO: 
+			insert_four(four_smo,a,b,t); break;
+		case SMOE: 
+			insert_four(four_smoe,a,b,t); break;
+		case BIG: 
+			insert_four(four_big,a,b,t); break;
+		case BIGE: 
+			insert_four(four_bige,a,b,t); break;
+		default :
+			error();// what the fuck!
 	}
-	else if (symtype == NEQ)
-	{
-	}
-	else if (symtype == SMO)
-	{
-	}
-	else if (symtype == SMOE)
-	{
-	}
-	else if (symtype == SMOE)
-	{
-	}
-	else if (symtype == BIG)
-	{
-	}
-	else if (symtype == BIGE)
-	{
-	}
-	else
-		error();// unknown BJ
- 	= expression();
+	return t;
 	// do something for CONDITION
 }
 
-void part_pro();
+void part_pro(int name);
 {
-	int f;
+	int i,f;
+	if(name)
+		for (i = sym_tables[name].x;i >= 1;i--)
+			insert_four(four_pop,0,0,name + i);
 	nowlevel += 1;
-
+	i = insert_four(four_jmp,0,0,0);
 	if (symtype == CONST)
 	{
 		getsym();
@@ -748,6 +850,7 @@ void part_pro();
 			func_declare();	
 	}
 	nowfather = f;
+	set_four_des(i,four_tablep);
 	if (symtype == BEGIN)
 	{
 		getsym();
@@ -771,12 +874,12 @@ int main(void)
 {
 	
 	lexer_init();
-	symtables[0].name = NULL;
-	symtables[0].x = 0;
-	symtables[0].type = 0;
-	symtables[0].level = -1;
+	sym_tables[0].name = NULL;
+	sym_tables[0].x = 0;
+	sym_tables[0].type = 0;
+	sym_tables[0].level = -1;
 	getsym();
-	part_pro();
+	part_pro(0);
 	if (symtype == PERIOD)
 		getsym();
 	else
