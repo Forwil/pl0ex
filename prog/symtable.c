@@ -36,7 +36,7 @@ int insert_sym_table(char a[],int kind)
 	while(i > 0 && sym_tables[i].level > nowlevel) i -= 1;
 	sym_tables[sym_tablep].last = i;
 	
-	//printf("\t\t\t\t\t\t%s %d %d\n",a,sym_tablep,i);
+	printf("\t\t\t\t\t\t%s %d %d\n",a,sym_tablep,i);
 	sym_tablep += 1;	
 	return sym_tablep - 1;
 }

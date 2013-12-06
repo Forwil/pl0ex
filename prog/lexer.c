@@ -216,7 +216,7 @@ int getsym()
 		symtype = symnumber[ch];
 		getch();
 	}
-	//printf("%s\n",sym);
+	printf("%s\n",sym);
 	return 0;
 }
 

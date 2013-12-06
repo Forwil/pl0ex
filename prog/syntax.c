@@ -109,7 +109,7 @@ int const_value()
 		getsym();
 		t = -num;
 	}
-	else if (symtype == T_CHAR)
+	else if (symtype == T_CHAR || symtype == T_CONST)
 	{
 		t = num;
 	}
@@ -126,7 +126,7 @@ void const_declare()
 	{
 		strcpy(ident,sym);
 		getsym();
-		if(symtype == BECOME)
+		if(symtype == EQ)
 		{
 			getsym();
 			t = const_value();
@@ -743,7 +743,7 @@ void part_pro(int name)
 		if(sym_tables[name].kind == k_proc)
 			insert_four(four_end,0,0,0);
 		else
-			insert_four(four_end,0,0,name + 1);
+			insert_four(four_end,0,0,name);
 }
 
 

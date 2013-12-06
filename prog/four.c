@@ -98,7 +98,7 @@ void out_one(struct four_expression a)
 	else if (a.type == four_call)
 	{
 		printf("\t\t%s",out[a.type]);
-		printf(",LABELL%d,%d",sym_tables[a.src1].mem,a.src2);
+		printf(",LABELL%d,%d",four_codes[sym_tables[a.src1].mem].des,a.src2);
 		out_val(a.des);
 	}
 	else
