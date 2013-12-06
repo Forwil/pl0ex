@@ -22,12 +22,15 @@
 
 #define MAXVARDEC 100
 
-int nowlevel,nlabel;
+int nowlevel;
 void part_pro(int);
 void init_syntax()
 {
 	nowlevel = -1;
-	nlabel = 0;	
+	sym_tables[0].name = 0;
+	sym_tables[0].x = 0;
+	sym_tables[0].type = 0;
+	sym_tables[0].level = -1;
 }
 
 
@@ -361,23 +364,26 @@ void statement()
 		statement();
 		if (symtype == ELSE)
 		{
-			t2 = insert_four(four_jmp,0,0,0);
-			set_des_four(t1,four_tablep);
+			t2 = insert_four(four_jmp,0,0,0);	
+			a = new_label_four();
+			set_des_four(t1,a);
 			getsym();
 			statement();
-			set_des_four(t2,four_tablep);
+			a = new_label_four();
+			set_des_four(t2,a);
 			// do something for IF-THEN-ELSE
 		}
 		else
 		{
-			set_des_four(t1,four_tablep);
+			a = new_label_four();
+			set_des_four(t1,a);
 			// do something for IF-THEN
 		}
 	}
 	else if (symtype == REPEAT)
 	{
 		getsym();
-		t1 = four_tablep;
+		t1 = new_label_four();
 		statement();
 		if (symtype == UNTIL)
 			getsym();
@@ -488,7 +494,7 @@ void statement()
 			else
 				error();// unknow type for FOR
 			c = new_temp_const_sym_table(t1);
-			t1 = four_tablep;	
+			t1 = new_label_four();	
 			d = expression();
 			t2 = new_temp_var_sym_table();
 			insert_four(four_smoe,a,d,t2);
@@ -499,8 +505,9 @@ void statement()
 				error();// missing DO
 			statement();
 			insert_four(four_add,a,c,a);
-			insert_four(four_jmp,0,0,t1);	
-			set_des_four(b,four_tablep);
+			insert_four(four_jmp,0,0,t1);
+			t2 = new_label_four();	
+			set_des_four(b,t2);
 			// do important something for FOR
 		}
 		else
@@ -659,7 +666,10 @@ int condition()
 
 void part_pro(int name)
 {
-	int i,f;
+	int i,f,t;
+	t = new_label_four();
+	if (name)
+		symtables[name].mem = t;
 	if(name)
 		for (i = sym_tables[name].x;i >= 1;i--)
 			insert_four(four_pop,0,0,name + i);
@@ -699,7 +709,7 @@ void part_pro(int name)
 		if (symtype == FUNC)
 			func_declare();	
 	}
-	set_four_des(i,four_tablep);
+	set_des_four(i,four_tablep);
 	if (symtype == BEGIN)
 	{
 		getsym();
@@ -717,16 +727,19 @@ void part_pro(int name)
 	else
 		error();// no part_pro
 	nowlevel -= 1;
+	if (name)
+		if(sym_tables[name].kind == proc)
+			insert_four(four_end,0,0,0);
+		else
+			insert_four(four_end,0,0,name + 1);
 }
+
 
 int main(void)
 {
-	
-	lexer_init();
-	sym_tables[0].name = 0;
-	sym_tables[0].x = 0;
-	sym_tables[0].type = 0;
-	sym_tables[0].level = -1;
+	init_lexer();
+	init_sym_table();
+	init_syntax();
 	getsym();
 	part_pro(0);
 	if (symtype == PERIOD)

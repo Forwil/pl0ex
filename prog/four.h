@@ -36,7 +36,7 @@ struct four_expression
 };
 
 struct four_expression four_codes[MAXFOURCODE];
-int four_tablep;
+int four_tablep,four_labelp;
 
 int insert_four(int,int,int,int);
 void set_des_four(int,int);

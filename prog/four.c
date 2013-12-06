@@ -10,6 +10,14 @@ int insert_four(int type,int src1,int src2,int des)
 	return four_codep - 1;
 }
 
+int new_label_four()
+{
+	int t;
+	t = insert_four(four_label,0,0,four_labelp);
+	four_labelp += 1;
+	return t; 	
+}
+
 void set_des_four(int ind,int des)
 {
 	four_codes[ind].des = des;
@@ -18,4 +26,5 @@ void set_des_four(int ind,int des)
 void init_four()
 {
 	four_codep = 1;
+	four_labelp = 0;
 }

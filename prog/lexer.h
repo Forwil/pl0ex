@@ -82,7 +82,7 @@
 
 char sym[MAXSYM];
 
-void lexer_init();
+void init_lexer();
 int getsym();
 int num,symtype;
 

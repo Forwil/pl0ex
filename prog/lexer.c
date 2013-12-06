@@ -50,7 +50,7 @@ char *alphabet[] =
 "write"
 };
 
-void lexer_init()
+void init_lexer()
 {
 	symnumber['+'] = PLUS;
 	symnumber['-'] = MINUS;
@@ -261,7 +261,7 @@ int main(void)
 {
 	int i = 1;
 	char inf[255];
-	init();
+	init_lexer();
 	printf("Please input source file name:\n");
 	scanf("%s",inf);
 	fin = fopen(inf,"r");
