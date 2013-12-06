@@ -41,3 +41,5 @@ int four_tablep,four_labelp;
 int insert_four(int,int,int,int);
 void set_des_four(int,int);
 void init_four();
+void out_all_four();
+void out_one(struct four_expression);

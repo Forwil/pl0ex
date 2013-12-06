@@ -21,7 +21,7 @@
 #include "lexer.h"
 
 FILE *fin,*fout;
-int symnumber[255];
+int symnumber[256];
 int linelen,linep,symtype,num,t;
 char line[MAXLINE],sym[MAXSYM];
 char ch;
@@ -37,6 +37,7 @@ char *alphabet[] =
 "end",
 "for",
 "function",
+"if",
 "integer",
 "of",
 "procedure",
@@ -52,6 +53,7 @@ char *alphabet[] =
 
 void init_lexer()
 {
+	char inf[256];
 	symnumber['+'] = PLUS;
 	symnumber['-'] = MINUS;
 	symnumber['*'] = MULT;
@@ -62,9 +64,19 @@ void init_lexer()
 	symnumber[':'] = COLON;
 	symnumber['['] = LBP;
 	symnumber[']'] = RBP;
-	symnumber['('] = RP;
-	symnumber[')'] = LP;
+	symnumber['('] = LP;
+	symnumber[')'] = RP;
 	symnumber['='] = EQ;
+	printf("Please input source file name:\n");
+	scanf("%s",inf);
+	fin = fopen(inf,"r");
+	while (fin==NULL)
+	{
+		printf("source file <%s> name can\'t open,Please try again!\n",inf);
+		scanf("%s",inf);
+		fin = fopen(inf,"r");
+	}
+	fout = fopen("11091222.txt","w");
 	getch();
 }
 
@@ -204,6 +216,7 @@ int getsym()
 		symtype = symnumber[ch];
 		getch();
 	}
+	//printf("%s\n",sym);
 	return 0;
 }
 
@@ -256,7 +269,7 @@ char *OUTPUT[]=
 "CHARCON",
 "STRCON",
 };
-
+/*  
 int main(void)
 {
 	int i = 1;
@@ -280,3 +293,4 @@ int main(void)
 	fclose(fout);
 	return 0;
 }
+*/

@@ -51,8 +51,6 @@ int form_arguments()
 {
 	int kind = 0,count = 0,t,i,nvdec;
 	int p[MAXVARDEC];
-	if (symtype != VAR && symtype != T_IDENT)
-		error();//error type of form arguments
 	while(symtype == VAR || symtype == T_IDENT)
 	{
 		nvdec = 0;
@@ -83,6 +81,7 @@ int form_arguments()
 			t = t_char;
 		else
 			error();// unknow type
+		getsym();
 		for(i = 0;i < nvdec;i++)
 		{
 			settype_sym_table(p[i],0,t);
@@ -230,8 +229,11 @@ void proc_declare()
 		if (symtype == LP)
 		{
 			getsym();
-			x = form_arguments();//deal with form_arguments
-			settype_sym_table(p,x,0);
+			if (symtype == VAR || symtype == T_IDENT)
+			{
+				x = form_arguments();//deal with form_arguments
+				settype_sym_table(p,x,0);
+			}
 			if (symtype == RP)
 				getsym();
 			else
@@ -281,6 +283,7 @@ void func_declare()
 			else
 				error();//unknown type
 			settype_sym_table(p,t.x,t.type);
+			getsym();
 			if (symtype == SEM)
 				getsym();
 			else
@@ -327,7 +330,7 @@ void statement()
 				getsym();
 			else
 				error();//missing BECOME
-			c = expressiong();
+			c = expression();
 			insert_four(four_bec,c,b,a);
 			// do something for BECOME 
 		}
@@ -389,7 +392,7 @@ void statement()
 			getsym();
 		else
 			error();//missing UNTIL
-		a = condiction();	
+		a = condition();	
 		insert_four(four_jz,a,0,t1);
 		// do some thing for REPEAT-UNTIL
 	}
@@ -453,9 +456,9 @@ void statement()
 				getsym();
 				a = expression();
 				insert_four(four_write,0,0,a);
-				// do some for expressiong
+				// do some for expression
 			}
-			else if (symtype == RP)
+			if (symtype == RP)
 				getsym();
 			else
 				error();// missing type
@@ -464,6 +467,10 @@ void statement()
 		{
 			a = expression(); 
 			insert_four(four_write,0,0,a);
+			if (symtype == RP)
+				getsym();
+			else
+				error();// missing type
 			// do something for expression
 		}	
 	}
@@ -493,11 +500,15 @@ void statement()
 			}
 			else
 				error();// unknow type for FOR
+			getsym();
 			c = new_temp_const_sym_table(t1);
 			t1 = new_label_four();	
 			d = expression();
 			t2 = new_temp_var_sym_table();
-			insert_four(four_smoe,a,d,t2);
+			if (t1 == 1)
+				insert_four(four_smoe,a,d,t2);
+			else
+				insert_four(four_bige,a,d,t2);
 			b = insert_four(four_jz,t2,0,0);
 			if (symtype == DO)
 				getsym();
@@ -535,7 +546,7 @@ int expression()
 		f = symtype;
 		getsym();
 		b = term();
-		t = new_temp_var_four();
+		t = new_temp_var_sym_table();
 		if (f == MINUS)
 			insert_four(four_sub,a,b,t);
 		else
@@ -544,8 +555,8 @@ int expression()
 	}
 	if (mflag)
 	{
-		t = new_temp_var_four();
-		c = new_temp_const_four(0);
+		t = new_temp_var_sym_table();
+		c = new_temp_const_sym_table(0);
 		insert_four(four_sub,c,a,t);
 		a = t;
 	}
@@ -562,7 +573,7 @@ int term()
 		f = symtype;
 		getsym();
 		b = factor();
-		t = new_temp_var_four();
+		t = new_temp_var_sym_table();
 		if (f == MULT)
 			insert_four(four_mul,a,b,t);
 		else
@@ -589,15 +600,15 @@ int factor()
 			else
 				error();//missing RBP
 			// do some for array index
-			t = new_temp_var_symtable();
+			t = new_temp_var_sym_table();
 			insert_four(four_getarr,a,b,t);
 			a = t;
 		}
 		else if (symtype == LP)
 		{
 			getsym();
-			real_arguements();
-			t = new_temp_var_symtable();
+			real_arguments();
+			t = new_temp_var_sym_table();
 			insert_four(four_call,a,sym_tables[a].x,t);
 			// deal with real_arguements
 			if (symtype == RP)
@@ -610,7 +621,7 @@ int factor()
 	else if (symtype == T_CONST)
 	{
 		//do some for CONST
-		a = new_temp_const_table(num);
+		a = new_temp_const_sym_table(num);
 		getsym();
 	}
 	else if (symtype == LP)
@@ -668,8 +679,8 @@ void part_pro(int name)
 {
 	int i,f,t;
 	t = new_label_four();
-	if (name)
-		symtables[name].mem = t;
+	if(name)
+		sym_tables[name].mem = t;
 	if(name)
 		for (i = sym_tables[name].x;i >= 1;i--)
 			insert_four(four_pop,0,0,name + i);
@@ -709,7 +720,8 @@ void part_pro(int name)
 		if (symtype == FUNC)
 			func_declare();	
 	}
-	set_des_four(i,four_tablep);
+	t = new_label_four();	
+	set_des_four(i,t);
 	if (symtype == BEGIN)
 	{
 		getsym();
@@ -728,7 +740,7 @@ void part_pro(int name)
 		error();// no part_pro
 	nowlevel -= 1;
 	if (name)
-		if(sym_tables[name].kind == proc)
+		if(sym_tables[name].kind == k_proc)
 			insert_four(four_end,0,0,0);
 		else
 			insert_four(four_end,0,0,name + 1);
@@ -738,13 +750,17 @@ void part_pro(int name)
 int main(void)
 {
 	init_lexer();
+	printf("init lexer success!\n");
 	init_sym_table();
+	printf("init symtable success!\n");
 	init_syntax();
+	printf("init syntax success!\n");
 	getsym();
 	part_pro(0);
 	if (symtype == PERIOD)
 		getsym();
 	else
 		error();//missing PERIOD
+	out_all_four();
 	return 0;
 }

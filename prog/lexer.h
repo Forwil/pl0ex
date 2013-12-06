@@ -16,7 +16,7 @@
  * =====================================================================================
  */
 
-#define NALPHABET 21
+#define NALPHABET 22
 #define MAXLINE 255
 #define MAXSYM 255
 #define MAXVARDEC 100
