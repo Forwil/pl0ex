@@ -2,7 +2,6 @@
 #include "symtable.h"
 #include <stdio.h>
 
-
 int insert_four(int type,int src1,int src2,int des)
 {
 	four_codes[four_tablep].type = type;
@@ -20,6 +19,13 @@ int new_label_four()
 	t = insert_four(four_label,0,0,four_labelp);
 	four_labelp += 1;
 	return t; 	
+}
+
+int new_enter_four(int func)
+{
+	int t;
+	t = insert_four(four_enter,0,0,func);
+	return t;	
 }
 
 void set_des_four(int ind,int des)
@@ -56,7 +62,8 @@ char * out[]=
 "POP",
 "END",
 "GETARR",
-"LABEL"
+"LABEL",
+"ENTER"
 };
 
 void out_val(int x)
@@ -64,7 +71,9 @@ void out_val(int x)
 	printf(",");
 	if (x == 0)
 		printf("-");
-	else if (sym_tables[x].kind == k_var)
+	else if (sym_tables[x].kind == k_var ||
+			 sym_tables[x].kind == k_func||
+			 sym_tables[x].kind == k_proc)
 		printf("%s",sym_tables[x].name);
 	else if (sym_tables[x].kind == k_const)
 	{
@@ -77,33 +86,37 @@ void out_val(int x)
 	}
 	else if (sym_tables[x].kind == k_point)
 		printf("(%s)",sym_tables[x].name);
-	else if (sym_tables[x].kind == k_func || sym_tables[x].kind == k_proc)
-		printf("%s",sym_tables[x].name);
 }
 
 void out_one(struct four_expression a)
 {
+	if(a.type == four_label||
+	   a.type == four_enter)
+		printf("\t%s",out[a.type]);
+	else
+		printf("\t\t%s",out[a.type]);
+
 	if(a.type == four_jmp ||
 	   a.type == four_jz)
 	{
-		printf("\t\t%s",out[a.type]);
 		out_val(a.src1);
-		printf(",LABELL%d",four_codes[a.des].des);		
+		printf(",L%d",four_codes[a.des].des);		
 	}
 	else if (a.type == four_label)
 	{
-		printf("\t%s",out[a.type]);
-		printf("L%d:",a.des);
+		printf(" L%d:",a.des);
+	}
+	else if (a.type == four_enter)
+	{
+		printf(" %s:",sym_tables[a.des].name);
 	}
 	else if (a.type == four_call)
 	{
-		printf("\t\t%s",out[a.type]);
-		printf(",LABELL%d,%d",four_codes[sym_tables[a.src1].mem].des,a.src2);
+		printf(",%s,%d",sym_tables[a.src1].name,a.src2);
 		out_val(a.des);
 	}
 	else
 	{
-		printf("\t\t%s",out[a.type]);
 		out_val(a.src1);
 		out_val(a.src2);
 		out_val(a.des);

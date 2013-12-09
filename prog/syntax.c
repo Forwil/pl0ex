@@ -24,6 +24,7 @@
 
 int nowlevel;
 void part_pro(int);
+
 void init_syntax()
 {
 	nowlevel = -1;
@@ -678,7 +679,7 @@ int condition()
 void part_pro(int name)
 {
 	int i,f,t;
-	t = new_label_four();
+	t = new_enter_four(name);
 	if(name)
 		sym_tables[name].mem = t;
 	if(name)

@@ -26,7 +26,7 @@
 
 #define four_getarr 20
 #define four_label	21
-
+#define four_enter	22
 struct four_expression
 {
 	int type;
@@ -39,6 +39,8 @@ struct four_expression four_codes[MAXFOURCODE];
 int four_tablep,four_labelp;
 
 int insert_four(int,int,int,int);
+int new_label_four();
+int new_enter_four();
 void set_des_four(int,int);
 void init_four();
 void out_all_four();
