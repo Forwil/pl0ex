@@ -78,7 +78,7 @@ void out_val(int x)
 	else if (sym_tables[x].kind == k_const)
 	{
 		if (sym_tables[x].type == t_string)
-			printf("%s",sym_tables[x].name);
+			printf("\"%s\"",sym_tables[x].name);
 		else if (sym_tables[x].type == t_char)
 			printf("%c",sym_tables[x].x);
 		else

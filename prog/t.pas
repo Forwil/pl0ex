@@ -1,7 +1,7 @@
 const a = 1,b = 'a', c = -122;
 var x,y:integer;
 	z:char;
-function gcd2(a,b:integer):integer;
+function gcd2(var a,b:integer):integer;
 var t:integer;
 begin
 	repeat
@@ -18,7 +18,7 @@ begin
 	if b=0 then
 		gcd1 :=a
 	else
-		gcd1 := gcd(b,a - a/b*b)
+		gcd1 := gcd1(b,a - a/b*b)
 end;
 begin
 	write("shabi");
