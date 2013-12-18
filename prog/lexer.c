@@ -94,10 +94,12 @@ void getch()
 			ch = EOF;
 			return ;
 		}
+	//	printf("%s",line);
 		linep = 0;
 		linelen = strlen(line);
 	}
 	ch = line[linep];
+	putchar(ch);
 	linep += 1;
 }
 
@@ -216,7 +218,7 @@ int getsym()
 		symtype = symnumber[ch];
 		getch();
 	}
-	printf("%s\n",sym);
+//	printf("%s\n",sym);
 	return 0;
 }
 

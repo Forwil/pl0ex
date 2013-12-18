@@ -27,7 +27,7 @@ void part_pro(int);
 
 void init_syntax()
 {
-	nowlevel = -1;
+	nowlevel = 0;
 	sym_tables[0].name = 0;
 	sym_tables[0].x = 0;
 	sym_tables[0].type = 0;
@@ -68,12 +68,14 @@ int form_arguments()
 			kind = k_point;
 			//mark some...
 		}
-		if (symtype == T_IDENT)
+		if (symtype != T_IDENT)
 			error();// no ident
 		while (symtype == T_IDENT)
 		{
 			// do something about the ident
+			//printf("\n \n shsb\n");
 			t = find_sym_table(sym);
+			//printf("\n %d  %d\n",sym_tables[t].level,nowlevel);
 			if (t == 0|| sym_tables[t].level!=nowlevel)
 				p[nvdec]= insert_sym_table(sym,kind);
 			else
@@ -98,7 +100,6 @@ int form_arguments()
 		for(i = 0;i < nvdec;i++)
 		{
 			settype_sym_table(p[i],0,t);
-			uplevel_sym_table(p[i]);	// the arguements must be level up
 		}
 		if (symtype ==SEM)
 			getsym();
@@ -665,9 +666,10 @@ int factor()
 	if (symtype == T_IDENT)
 	{
 		a = find_sym_table(sym);
-		if (a == 0 || (sym_tables[a].kind!=k_var
-					   sym_tables[a].kind!=k_func
-					   sym_tables[a].kind!=k_point))
+		//printf("\n\t %s %d %d\n",sym_tables[a].name,sym_tables[a].kind,a);
+		if (a == 0 ||   (sym_tables[a].kind!=k_var
+					 &&  sym_tables[a].kind!=k_func
+					 &&  sym_tables[a].kind!=k_point ))
 			error();// can get value from it
 		// do some for ident
 		getsym();
@@ -848,6 +850,11 @@ int main(void)
 		getsym();
 	else
 		error();//missing PERIOD
+
+	printf("---------------------\n");
+	printf("-  Complie Success! -\n");
+	printf("---------------------\n");
+
 	out_all_four();
 	return 0;
 }
