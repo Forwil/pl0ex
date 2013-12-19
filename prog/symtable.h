@@ -24,7 +24,7 @@ struct sym_table
 };
 
 char sym_name[MAXSYMNAME];
-int sym_namep,sym_tablep;
+int sym_namep,sym_tablep,sym_stringp;
 struct sym_table sym_tables[MAXSYMTABLE];
 
 void init_sym_table();
@@ -33,5 +33,5 @@ int insert_sym_table(char *,int);
 void settype_sym_table(int,int,int);
 int new_temp_var_sym_table();
 int new_temp_const_sym_table(int);
-void uplevel_sym_table(int);
+//void uplevel_sym_table(int);
 int find_sym_table(char *);

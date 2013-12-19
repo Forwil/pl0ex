@@ -5,7 +5,9 @@ extern int nowlevel;
 void init_sym_table()
 {
 	sym_namep = 1;
-	sym_tablep = 1;
+	sym_tablep = 0;
+	sym_stringp = 1;
+	insert_sym_table("_main",k_proc);
 }
 
 char *new_sym_name(char a[])
@@ -36,12 +38,11 @@ int insert_sym_table(char a[],int kind)
 	while(i > 0 && sym_tables[i].level > nowlevel) 
 		i -= 1;
 	sym_tables[sym_tablep].last = i;
-	
 //	printf("\t\t\t\t\t\t%s %d %d %d\n",a,sym_tablep,i,nowlevel);
 	sym_tablep += 1;	
 	return sym_tablep - 1;
 }
-
+/*  
 void uplevel_sym_table(int ind)
 {
 	int i;
@@ -52,19 +53,25 @@ void uplevel_sym_table(int ind)
 	sym_tables[sym_tablep].last = i;
 }
 
+*/
+
+
 void settype_sym_table(int ind,int x,int type)
 {
 	sym_tables[ind].type = type;
-	sym_tables[ind].x  = x;
+	if (type == t_string)
+		sym_tables[ind].x = sym_stringp++;
+	else
+		sym_tables[ind].x  = x;
 }
 
-int new_temp_var_sym_table()
+int new_temp_var_sym_table(int kind)
 {
 	static int i = 0;
 	int t;
 	char s[20];
 	sprintf(s,"_t%d",i++);
-	t = insert_sym_table(s,k_var);
+	t = insert_sym_table(s,kind);
 	settype_sym_table(t,0,t_integer);
 	return t;
 }

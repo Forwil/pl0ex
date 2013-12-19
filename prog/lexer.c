@@ -51,6 +51,13 @@ char *alphabet[] =
 "write"
 };
 
+void my_error(char a[],int b)
+{
+	char c;
+	printf("\n\t\t\tError in file:\" %s \"line:%d\n",a,b);
+	c = getchar();
+}
+
 void init_lexer()
 {
 	char inf[256];
@@ -161,7 +168,7 @@ int getsym()
 		num = ch;
 		getch();
 		if (ch !='\'')
-			error();
+			my_error(__FILE__,__LINE__);
 		getch();
 		symtype = T_CHAR;
 	}
@@ -171,7 +178,7 @@ int getsym()
 		while(iss(ch))
 			getch();
 		if(!(ch =='\"'))
-			error();	
+			my_error(__FILE__,__LINE__);	
 		symtype = T_STRING;
 		getch();
 	}

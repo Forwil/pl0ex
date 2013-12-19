@@ -9,7 +9,7 @@ int insert_four(int type,int src1,int src2,int des)
 	four_codes[four_tablep].src2 = src2;
 	four_codes[four_tablep].des = des;
 	four_tablep += 1;
-	//out_one(four_codes[four_tablep-1]);
+	///out_one(four_codes[four_tablep-1]);
 	return four_tablep - 1;
 }
 
@@ -62,6 +62,7 @@ char * out[]=
 "POP",
 "END",
 "GETARR",
+"GETADD",
 "LABEL",
 "ENTER"
 };
@@ -129,6 +130,7 @@ void out_all_four()
 	int i;
 	for(i = 1;i < four_tablep;i ++)
 	{
+		printf("%d",i);
 		out_one(four_codes[i]);
 	}
 }

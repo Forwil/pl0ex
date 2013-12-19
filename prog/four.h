@@ -25,8 +25,10 @@
 #define four_end	19
 
 #define four_getarr 20
-#define four_label	21
-#define four_enter	22
+#define four_getadd	21
+#define four_label	22
+#define four_enter	23
+
 struct four_expression
 {
 	int type;

@@ -13,7 +13,7 @@ int getsym();
 int num,symtype;
 # 20 "syntax.c" 2
 # 1 "four.h" 1
-# 30 "four.h"
+# 32 "four.h"
 struct four_expression
 {
  int type;
@@ -48,7 +48,7 @@ struct sym_table
 };
 
 char sym_name[1000];
-int sym_namep,sym_tablep;
+int sym_namep,sym_tablep,sym_stringp;
 struct sym_table sym_tables[200];
 
 void init_sym_table();
@@ -57,7 +57,7 @@ int insert_sym_table(char *,int);
 void settype_sym_table(int,int,int);
 int new_temp_var_sym_table();
 int new_temp_const_sym_table(int);
-void uplevel_sym_table(int);
+
 int find_sym_table(char *);
 # 22 "syntax.c" 2
 
@@ -68,7 +68,7 @@ void part_pro(int);
 
 void init_syntax()
 {
- nowlevel = -1;
+ nowlevel = 0;
  sym_tables[0].name = 0;
  sym_tables[0].x = 0;
  sym_tables[0].type = 0;
@@ -78,16 +78,64 @@ void init_syntax()
 
 
 
-void real_arguments()
+
+int deal_var()
 {
- int t;
- t = expression();
- insert_four(17,0,0,t);
- while(symtype == 27)
+ int a,b = 0,t;
+ if (symtype == 42)
  {
+  a = find_sym_table(sym);
+  if (sym_tables[a].kind == 2 || sym_tables[a].kind == 4)
+   error("syntax.c",48,__FUNCTION__);
   getsym();
-  t = expression();
-  insert_four(17,0,0,t);
+  if(symtype == 32)
+  {
+   getsym();
+   b = expression();
+   if(symtype == 31)
+   {
+    getsym();
+    if (sym_tables[a].x == 0)
+     error("syntax.c",58,__FUNCTION__);
+    t = new_temp_var_sym_table(5);
+    insert_four(21,a,b,t);
+   }
+   else
+    error("syntax.c",63,__FUNCTION__);
+  }
+  else if(symtype == 27 || symtype == 33)
+  {
+   getsym();
+   t = new_temp_var_sym_table(5);
+   insert_four(21,a,0,t);
+  }
+  else
+   error("syntax.c",72,__FUNCTION__);
+ }
+ else
+  error("syntax.c",75,__FUNCTION__);
+ return t;
+}
+
+void real_arguments(int f)
+{
+ int t,i;
+ for( i = 1;i <= sym_tables[f].x;i++)
+ {
+  if(sym_tables[f+i].kind == 5)
+  {
+   t = deal_var();
+   insert_four(17,0,0,t);
+  }
+  else
+  {
+   t = expression();
+   insert_four(17,0,0,t);
+  }
+  if (symtype == 27)
+   getsym();
+  else if(((symtype == 33) ^ (i == sym_tables[f].x))!=0)
+   error("syntax.c",97,__FUNCTION__);
  }
 }
 
@@ -109,16 +157,18 @@ int form_arguments()
    kind = 5;
 
   }
-  if (symtype == 42)
-   error();
+  if (symtype != 42)
+   error("syntax.c",120,__FUNCTION__);
   while (symtype == 42)
   {
 
+
    t = find_sym_table(sym);
+
    if (t == 0|| sym_tables[t].level!=nowlevel)
     p[nvdec]= insert_sym_table(sym,kind);
    else
-    error();
+    error("syntax.c",130,__FUNCTION__);
    nvdec += 1;
    count += 1;
    getsym();
@@ -128,18 +178,17 @@ int form_arguments()
   if (symtype == 30)
    getsym();
   else
-   error();
+   error("syntax.c",140,__FUNCTION__);
   if (symtype == 12)
    t = 2;
   else if(symtype == 3)
    t = 1;
   else
-   error();
+   error("syntax.c",146,__FUNCTION__);
   getsym();
   for(i = 0;i < nvdec;i++)
   {
    settype_sym_table(p[i],0,t);
-   uplevel_sym_table(p[i]);
   }
   if (symtype ==29)
    getsym();
@@ -173,7 +222,7 @@ int const_value()
   t = num;
  }
  else
-  error();
+  error("syntax.c",184,__FUNCTION__);
  return t;
 }
 
@@ -197,7 +246,7 @@ void const_declare()
    if (p == 0 || sym_tables[p].level!=nowlevel)
     p = insert_sym_table(ident,2);
    else
-    error();
+    error("syntax.c",208,__FUNCTION__);
    if(symtype == 44)
     settype_sym_table(p,t,1);
    else
@@ -205,7 +254,7 @@ void const_declare()
    getsym();
   }
   else
-   error();
+   error("syntax.c",216,__FUNCTION__);
  }
 }
 
@@ -238,26 +287,26 @@ void get_type(struct sym_table *t)
     if (symtype == 31)
      getsym();
     else
-     error();
+     error("syntax.c",249,__FUNCTION__);
     if (symtype == 13)
      getsym();
     else
-     error();
+     error("syntax.c",253,__FUNCTION__);
     if (symtype == 12)
      t->type = 2;
     else if (symtype == 3)
      t->type = 1;
     else
-     error();
+     error("syntax.c",259,__FUNCTION__);
    }
    else
-    error();
+    error("syntax.c",262,__FUNCTION__);
   }
   else
-   error();
+   error("syntax.c",265,__FUNCTION__);
  }
  else
-  error();
+  error("syntax.c",268,__FUNCTION__);
  getsym();
 }
 
@@ -275,7 +324,7 @@ void var_declare()
   if (i == 0 || sym_tables[i].level!=nowlevel)
    p[nvdec] = insert_sym_table(sym,1);
   else
-   error();
+   error("syntax.c",286,__FUNCTION__);
   nvdec += 1;
   getsym();
   if (symtype == 27)
@@ -289,7 +338,7 @@ void var_declare()
    break;
   }
   else
-   error();
+   error("syntax.c",300,__FUNCTION__);
  }
 }
 
@@ -309,7 +358,7 @@ void proc_declare()
   if (p == 0 || sym_tables[p].level!=nowlevel)
    p = insert_sym_table(sym,4);
   else
-   error();
+   error("syntax.c",320,__FUNCTION__);
   getsym();
   nowlevel += 1;
   if (symtype == 34)
@@ -323,22 +372,22 @@ void proc_declare()
    if (symtype == 33)
     getsym();
    else
-    error();
+    error("syntax.c",334,__FUNCTION__);
    if (symtype == 29)
     getsym();
    else
-    error();
+    error("syntax.c",338,__FUNCTION__);
    part_pro(p);
    if (symtype == 29)
     getsym();
    else
-    error();
+    error("syntax.c",343,__FUNCTION__);
   }
   else
-   error();
+   error("syntax.c",346,__FUNCTION__);
  }
  else
-  error();
+  error("syntax.c",349,__FUNCTION__);
 }
 
 
@@ -356,7 +405,7 @@ void func_declare()
   if (p == 0 || sym_tables[p].level != nowlevel)
    p = insert_sym_table(sym,3);
   else
-   error();
+   error("syntax.c",367,__FUNCTION__);
   getsym();
   nowlevel += 1;
   if (symtype == 34)
@@ -366,34 +415,34 @@ void func_declare()
    if (symtype == 33)
     getsym();
    else
-    error();
+    error("syntax.c",377,__FUNCTION__);
    if (symtype == 30)
     getsym();
    else
-    error();
+    error("syntax.c",381,__FUNCTION__);
    if (symtype == 12)
     t.type = 2;
    else if (symtype == 3)
     t.type = 1;
    else
-    error();
+    error("syntax.c",387,__FUNCTION__);
    settype_sym_table(p,t.x,t.type);
    getsym();
    if (symtype == 29)
     getsym();
    else
-    error();
+    error("syntax.c",393,__FUNCTION__);
    part_pro(p);
    if (symtype == 29)
     getsym();
    else
-    error();
+    error("syntax.c",398,__FUNCTION__);
   }
   else
-   error();
+   error("syntax.c",401,__FUNCTION__);
  }
  else
-  error();
+  error("syntax.c",404,__FUNCTION__);
 }
 
 
@@ -405,9 +454,9 @@ void statement()
  {
   a = find_sym_table(sym);
   if (a == 0)
-   error();
+   error("syntax.c",416,__FUNCTION__);
   if (sym_tables[a].kind == 2)
-   error();
+   error("syntax.c",418,__FUNCTION__);
   getsym();
   if (symtype == 35)
   {
@@ -416,7 +465,7 @@ void statement()
    if (sym_tables[a].type != 4)
     insert_four(13,b,0,a);
    else
-    error();
+    error("syntax.c",427,__FUNCTION__);
   }
   else if (symtype == 32)
   {
@@ -425,17 +474,17 @@ void statement()
    if (symtype == 31)
     getsym();
    else
-    error();
+    error("syntax.c",436,__FUNCTION__);
    if (symtype == 35)
     getsym();
    else
-    error();
+    error("syntax.c",440,__FUNCTION__);
    c = expression();
    if (sym_tables[a].kind == 1 &&
     sym_tables[a].x > 0)
     insert_four(13,c,b,a);
    else
-    error();
+    error("syntax.c",446,__FUNCTION__);
 
   }
   else if (symtype == 34)
@@ -445,11 +494,11 @@ void statement()
     getsym();
    else
    {
-    real_arguments();
+    real_arguments(a);
     if (symtype == 33)
      getsym();
     else
-     error();
+     error("syntax.c",460,__FUNCTION__);
    }
 
    if (sym_tables[a].kind == 4)
@@ -458,10 +507,10 @@ void statement()
     insert_four(14,a,b,0);
    }
    else
-    error();
+    error("syntax.c",469,__FUNCTION__);
   }
   else
-   error();
+   error("syntax.c",472,__FUNCTION__);
  }
  else if (symtype == 11)
  {
@@ -472,7 +521,7 @@ void statement()
   if (symtype == 17)
    getsym();
   else
-   error();
+   error("syntax.c",483,__FUNCTION__);
   statement();
   if (symtype == 7)
   {
@@ -500,7 +549,7 @@ void statement()
   if (symtype == 19)
    getsym();
   else
-   error();
+   error("syntax.c",511,__FUNCTION__);
   a = condition();
   insert_four(12,a,0,t1);
 
@@ -517,7 +566,7 @@ void statement()
   if (symtype == 8)
    getsym();
   else
-   error();
+   error("syntax.c",528,__FUNCTION__);
  }
  else if (symtype == 15)
  {
@@ -525,9 +574,9 @@ void statement()
   if (symtype == 34)
    getsym();
   else
-   error();
+   error("syntax.c",536,__FUNCTION__);
   if (symtype !=42)
-   error();
+   error("syntax.c",538,__FUNCTION__);
   while(symtype == 42)
   {
 
@@ -537,7 +586,7 @@ void statement()
       || sym_tables[a].kind == 5))
     insert_four(15,0,0,a);
    else
-    error();
+    error("syntax.c",548,__FUNCTION__);
    getsym();
    if (symtype == 27)
     getsym();
@@ -547,7 +596,7 @@ void statement()
     break;
    }
    else
-    error();
+    error("syntax.c",558,__FUNCTION__);
   }
  }
  else if (symtype == 22)
@@ -556,7 +605,7 @@ void statement()
   if (symtype == 34)
    getsym();
   else
-   error();
+   error("syntax.c",567,__FUNCTION__);
   if (symtype == 45)
   {
    a = insert_sym_table(sym,2);
@@ -574,7 +623,7 @@ void statement()
    if (symtype == 33)
     getsym();
    else
-    error();
+    error("syntax.c",585,__FUNCTION__);
   }
   else
   {
@@ -583,7 +632,7 @@ void statement()
    if (symtype == 33)
     getsym();
    else
-    error();
+    error("syntax.c",594,__FUNCTION__);
 
   }
  }
@@ -595,12 +644,12 @@ void statement()
 
    a = find_sym_table(sym);
    if (a == 0 || sym_tables[a].kind !=1)
-    error();
+    error("syntax.c",606,__FUNCTION__);
    getsym();
    if (symtype == 35)
     getsym();
    else
-    error();
+    error("syntax.c",611,__FUNCTION__);
    b = expression();
    insert_four(13,b,0,a);
    if (symtype == 18)
@@ -614,12 +663,12 @@ void statement()
     t3 = -1;
    }
    else
-    error();
+    error("syntax.c",625,__FUNCTION__);
    getsym();
    c = new_temp_const_sym_table(t1);
    t1 = new_label_four();
    d = expression();
-   t2 = new_temp_var_sym_table();
+   t2 = new_temp_var_sym_table(1);
    if (t3 == 1)
     insert_four(8,a,d,t2);
    else
@@ -628,7 +677,7 @@ void statement()
    if (symtype == 5)
     getsym();
    else
-    error();
+    error("syntax.c",639,__FUNCTION__);
    statement();
    insert_four(1,a,c,a);
    insert_four(11,0,0,t1);
@@ -637,7 +686,7 @@ void statement()
 
   }
   else
-   error();
+   error("syntax.c",648,__FUNCTION__);
  }
  else;
 
@@ -663,7 +712,7 @@ int expression()
   f = symtype;
   getsym();
   b = term();
-  t = new_temp_var_sym_table();
+  t = new_temp_var_sym_table(1);
   if (f == 24)
    insert_four(2,a,b,t);
   else
@@ -672,7 +721,7 @@ int expression()
  }
  if (mflag)
  {
-  t = new_temp_var_sym_table();
+  t = new_temp_var_sym_table(1);
   c = new_temp_const_sym_table(0);
   insert_four(2,c,a,t);
   a = t;
@@ -690,7 +739,7 @@ int term()
   f = symtype;
   getsym();
   b = factor();
-  t = new_temp_var_sym_table();
+  t = new_temp_var_sym_table(1);
   if (f == 25)
    insert_four(3,a,b,t);
   else
@@ -706,10 +755,11 @@ int factor()
  if (symtype == 42)
  {
   a = find_sym_table(sym);
+
   if (a == 0 || (sym_tables[a].kind!=1
-        sym_tables[a].kind!=3
-        sym_tables[a].kind!=5 ))
-   error();
+      && sym_tables[a].kind!=3
+      && sym_tables[a].kind!=5 ))
+   error("syntax.c",721,__FUNCTION__);
 
   getsym();
   if (symtype == 32)
@@ -719,31 +769,31 @@ int factor()
    if (symtype == 31)
     getsym();
    else
-    error();
+    error("syntax.c",731,__FUNCTION__);
 
    if ( sym_tables[a].kind == 1 &&
      sym_tables[a].x >0)
    {
-    t = new_temp_var_sym_table();
+    t = new_temp_var_sym_table(1);
     insert_four(20,a,b,t);
     a = t;
    }
    else
-    error();
+    error("syntax.c",741,__FUNCTION__);
   }
   else if (symtype == 34)
   {
    getsym();
    if (sym_tables[a].kind != 3)
-    error();
-   real_arguments();
-   t = new_temp_var_sym_table();
+    error("syntax.c",747,__FUNCTION__);
+   real_arguments(a);
+   t = new_temp_var_sym_table(1);
    insert_four(14,a,sym_tables[a].x,t);
 
    if (symtype == 33)
     getsym();
    else
-    error();
+    error("syntax.c",755,__FUNCTION__);
    a = t;
   }
  }
@@ -761,10 +811,10 @@ int factor()
   if (symtype == 33)
    getsym();
   else
-   error();
+   error("syntax.c",773,__FUNCTION__);
  }
  else
-  error();
+  error("syntax.c",776,__FUNCTION__);
  return a;
 }
 
@@ -778,10 +828,10 @@ int condition()
   symtype != 39 &&
   symtype != 40 &&
   symtype != 41)
-  error();
+  error("syntax.c",790,__FUNCTION__);
  f = symtype;
  getsym();
- t = new_temp_var_sym_table();
+ t = new_temp_var_sym_table(1);
   b = expression();
  switch (f)
  {
@@ -798,7 +848,7 @@ int condition()
   case 41:
    insert_four(7,a,b,t); break;
   default :
-   error();
+   error("syntax.c",810,__FUNCTION__);
  }
  return t;
 
@@ -810,9 +860,13 @@ void part_pro(int name)
  t = new_enter_four(name);
  if(name)
   sym_tables[name].mem = t;
- if(name)
-  for (i = sym_tables[name].x;i >= 1;i--)
-   insert_four(18,0,0,name + i);
+
+
+
+
+
+
+
  i = insert_four(11,0,0,0);
  if (symtype == 4)
  {
@@ -826,7 +880,7 @@ void part_pro(int name)
   if(symtype == 29)
    getsym();
   else
-   error();
+   error("syntax.c",842,__FUNCTION__);
  }
 
  if (symtype == 20)
@@ -838,7 +892,7 @@ void part_pro(int name)
    if (symtype == 29)
     getsym();
    else
-    error();
+    error("syntax.c",854,__FUNCTION__);
   }
  }
  while (symtype == 14 || symtype == 10)
@@ -862,10 +916,10 @@ void part_pro(int name)
   if (symtype == 8)
    getsym();
   else
-   error();
+   error("syntax.c",878,__FUNCTION__);
  }
  else
-  error();
+  error("syntax.c",881,__FUNCTION__);
  nowlevel -= 1;
  if (name)
   if(sym_tables[name].kind == 4)
@@ -885,10 +939,11 @@ int main(void)
  printf("init syntax success!\n");
  getsym();
  part_pro(0);
+ printf("%d\n",symtype);
  if (symtype == 28)
   getsym();
  else
-  error();
+  error("syntax.c",905,__FUNCTION__);
 
  printf("---------------------\n");
  printf("-  Complie Success! -\n");
