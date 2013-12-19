@@ -87,17 +87,26 @@ char *reg_name[] =
 "$fp",
 "$ra"
 };
+int using[32];
+
 
 int get_reg()
 {
-	return reg_t1;
+	int i;
+	for(i = 0;i<32;i++)
+		if (using[i] == 0)
+		{
+			using[i] = 1;
+			return i;
+		}
 }
 
-void rel_reg()
+void rel_reg(int i)
 {
+	using[i] = 0;
 }
 
-int get_into_reg(int ind,int nowlevel)
+int get_into_reg(int ind,int.level)
 {
 	int base,a,b;
 	b = get_reg();
@@ -117,7 +126,7 @@ int get_into_reg(int ind,int nowlevel)
 	return b;	
 }
 
-int get_mem(int ind,int nowlevel,int *base)
+int get_mem(int ind,int.level,int *base)
 {
 	int delt_level,a,i;
 	delt_level = nowlevel - sym_tables[ind].level;
@@ -134,7 +143,7 @@ int get_mem(int ind,int nowlevel,int *base)
 	return -(sym_tables[ind].mem + 12);	
 }
 
-void store_to_mem(int reg,int ind,int nowlevel)
+void store_to_mem(int reg,int ind,int.level)
 {
 	int a,base,b;
 	a = get_mem(ind,nowlevel,&base);
@@ -185,6 +194,18 @@ void set_all_mem()
 
 void init_mips()
 {
+	using[reg_zero] = 1; 
+	using[reg_at] = 1; 
+	using[reg_v0] = 1; 
+	using[reg_v1] = 1; 
+	using[reg_a0] = 1; 
+	using[reg_a1] = 1; 
+	using[reg_a2] = 1; 
+	using[reg_a3] = 1; 
+	using[reg_gp] = 1; 
+	using[reg_sp] = 1; 
+	using[reg_fp] = 1; 
+	using[reg_ra] = 1; 
 	set_string();
 	set_all_mem();
 }
@@ -209,6 +230,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_sub:
 					a = get_into_reg(t.src1,t.level);
@@ -218,6 +240,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_mul:
 					a = get_into_reg(t.src1,t.level);
@@ -228,6 +251,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);	
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_div:
 					a = get_into_reg(t.src1,t.level);
@@ -238,6 +262,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_big:	
 					a = get_into_reg(t.src1,t.level);
@@ -247,6 +272,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_bige:
 					a = get_into_reg(t.src1,t.level);
@@ -256,6 +282,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_smo:
 					a = get_into_reg(t.src1,t.level);
@@ -265,6 +292,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_smoe:
 					a = get_into_reg(t.src1,t.level);
@@ -274,6 +302,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 			case four_eq:
 					a = get_into_reg(t.src1,t.level);
@@ -283,6 +312,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 				break;
 			case four_neq:
 					a = get_into_reg(t.src1,t.level);
@@ -292,6 +322,7 @@ void gen_mips()
 					rel_reg(a);
 					rel_reg(b);
 					rel_reg(c);
+					store_to_mem(c,t.des,t.level);
 					break;
 
 			case four_jmp:
@@ -313,7 +344,7 @@ void gen_mips()
 					}
 					else
 					{
-						a = get_mem(t.src1,t.level,&base);
+						a = get_mem(t.des,t.level,&base);
 						d = get_reg();
 						b = get_into_reg(t.src2,t.level);
 						c = get_reg();
@@ -322,7 +353,8 @@ void gen_mips()
 						printf("\t mult,%s,%s\n",reg_name[c],reg_name[b]);
 						printf("\t mflo,%s\n",reg_name[c]);
 						printf("\t add,%s,%s,%s\n",reg_name[d],reg_name[c],reg_name[d]);
-						printf("\t lw,%s,0(%s)\n",reg_name[c],reg_name[d]);		
+						a = get_into_reg(t.src1,t.level);
+						printf("\t sw,%s,0(%s)\n",reg_name[a],reg_name[d]);		
 						rel_reg(b);
 						rel_reg(c);
 						rel_reg(d);
@@ -331,7 +363,7 @@ void gen_mips()
 			case four_call:
 					printf("\t addi,$sp,$sp,%d\n",12+4*sym_tables[t.src1].x);
 					printf("\t sw,$fp,-4($sp)\n");
-					printf("\t move,$fp,$sp");
+					printf("\t move,$fp,$sp\n");
 					get_mem(t.src1,t.level,&base);
 					a = get_reg();
 					printf("\t lw,%s,-4(%s)\n",reg_name[a],reg_name[base]);
@@ -339,8 +371,11 @@ void gen_mips()
 					printf("\t sw,%s,-12($sp)\n",reg_name[reg_ra]);
 					
 					printf("\t jal,%s\n",sym_tables[t.src1].name);
-					b = get_into_reg(t.des,t.level);
-					printf("\t move,%s,$v0\n",reg_name[b]);
+					if(t.des !=0)
+					{
+						b = get_into_reg(t.des,t.level);
+						printf("\t move,%s,$v0\n",reg_name[b]);
+					}
 					printf("\t lw,$fp,-4($sp)\n");
 					printf("\t lw,%s,-8($sp)\n",reg_name[a]);	
 					printf("\t lw,%s,-12($sp)\n",reg_name[reg_ra]);
@@ -352,6 +387,7 @@ void gen_mips()
 					printf("\t li,$v0,5\n");
 					printf("\t syscall\n");
 					printf("\t move %s,$v0\n",reg_name[a]);
+					store_to_mem(a,t.des,t.level);
 					break;
 			case four_write:
 					if (sym_tables[t.des].kind == k_var)
@@ -382,12 +418,54 @@ void gen_mips()
 					printf("\t addi,$sp,$sp,-4\n");	
 					break;
 			case four_end:
-					
+					if (t.des)
+					{
+						a = get_into_reg(t.des,t.level);
+						printf("\t move,$v0,%s\n",reg_name[a]);
+					}
+					printf("\t jr,$ra\n");
 					break;
 
 			case four_getarr:
+					a = get_mem(t.src1,t.level,&base);
+					d = get_reg();
+					b = get_into_reg(t.src2,t.level);
+					c = get_reg();
+					printf("\t addi,%s,%s,%d\n",reg_name[d],reg_name[base],a);
+					printf("\t li,%s,%d\n",reg_name[c],4);
+					printf("\t mult,%s,%s\n",reg_name[c],reg_name[b]);
+					printf("\t mflo,%s\n",reg_name[c]);
+					printf("\t add,%s,%s,%s\n",reg_name[d],reg_name[c],reg_name[d]);
+					printf("\t lw,%s,0(%s)\n",reg_name[c],reg_name[d]);		
+					store_to_mem(c,t.des,t.level);
+					rel_reg(b);
+					rel_reg(c);
+					rel_reg(d);
 					break;
 			case four_getadd:
+					if (t.src2)
+					{
+						a = get_mem(t.src1,t.level,&base);
+						d = get_reg();
+						b = get_into_reg(t.src2,t.level);
+						c = get_reg();
+						printf("\t addi,%s,%s,%d\n",reg_name[d],reg_name[base],a);
+						printf("\t li,%s,%d\n",reg_name[c],4);
+						printf("\t mult,%s,%s\n",reg_name[c],reg_name[b]);
+						printf("\t mflo,%s\n",reg_name[c]);
+						printf("\t add,%s,%s,%s\n",reg_name[d],reg_name[c],reg_name[d]);
+						store_to_mem(d,t.des,t.level);
+						rel_reg(b);
+						rel_reg(c);
+						rel_reg(d);
+					}
+					else
+					{
+						a = get_mem(t.src1,t.level,&base);
+						b = get_reg();
+						printf("\t addi,%s,%s,%d\n",reg_name[b],reg_name[base],a);
+						store_to_mem(b,t.des,t.level);
+					}
 					break;
 			case four_label:
 					printf("$L%d:\n",t.des);
