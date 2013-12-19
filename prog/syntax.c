@@ -820,7 +820,6 @@ void part_pro(int name)
 		for (i = sym_tables[name].x;i >= 1;i--)
 			insert_four(four_pop,0,0,name + i);
 */
-
 	if (symtype == CONST)
 	{
 		getsym();
@@ -905,6 +904,8 @@ int main(void)
 	printf("---------------------\n");
 
 	out_all_four();
+
+	printf("\nStart generate mips code\n");	
 	init_mips();
 	gen_mips();
 	return 0;

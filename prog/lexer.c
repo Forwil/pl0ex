@@ -57,6 +57,30 @@ void my_error(char a[],int b)
 	printf("\n\t\t\tError in file:\" %s \"line:%d\n",a,b);
 	c = getchar();
 }
+void getch()
+{
+	if(!isspace(ch) && ch!='\"')
+		{
+		sym[t++] = ch;
+		sym[t] = '\0';
+		}
+	if (linep == linelen)
+	{
+		if (fgets(line,MAXLINE,fin) == NULL)
+		{
+			ch = EOF;
+			return ;
+		}
+	//	printf("%s",line);
+		linep = 0;
+		linelen = strlen(line);
+	}
+	ch = line[linep];
+	putchar(ch);
+	fflush(stdout);
+	linep += 1;
+}
+
 
 void init_lexer()
 {
@@ -85,29 +109,6 @@ void init_lexer()
 	}
 	fout = fopen("11091222.txt","w");
 	getch();
-}
-
-void getch()
-{
-	if(!isspace(ch) && ch!='\"')
-		{
-		sym[t++] = ch;
-		sym[t] = '\0';
-		}
-	if (linep == linelen)
-	{
-		if (fgets(line,MAXLINE,fin) == NULL)
-		{
-			ch = EOF;
-			return ;
-		}
-	//	printf("%s",line);
-		linep = 0;
-		linelen = strlen(line);
-	}
-	ch = line[linep];
-	putchar(ch);
-	linep += 1;
 }
 
 int searchident()

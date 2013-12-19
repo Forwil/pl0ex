@@ -35,6 +35,7 @@ struct four_expression
 	int src1;
 	int src2;
 	int des;
+	int level;
 };
 
 struct four_expression four_codes[MAXFOURCODE];

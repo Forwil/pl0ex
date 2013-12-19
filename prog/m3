@@ -1,0 +1,5 @@
+gcc -c lexer.c -o lexer.o
+gcc -c symtable.c -o symtable.o
+gcc -c four.c -o four.o
+gcc -c syntax.c -o syntax.o
+gcc syntax.o lexer.o symtable.o four.o -o a.out

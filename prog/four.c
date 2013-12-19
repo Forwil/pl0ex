@@ -2,12 +2,15 @@
 #include "symtable.h"
 #include <stdio.h>
 
+int nowlevel;
+
 int insert_four(int type,int src1,int src2,int des)
 {
 	four_codes[four_tablep].type = type;
 	four_codes[four_tablep].src1 = src1;
 	four_codes[four_tablep].src2 = src2;
 	four_codes[four_tablep].des = des;
+	four_codes[four_tablep].level = nowlevel;
 	four_tablep += 1;
 	///out_one(four_codes[four_tablep-1]);
 	return four_tablep - 1;
