@@ -28,7 +28,7 @@ void part_pro(int);
 void init_syntax()
 {
 	nowlevel = 0;
-	sym_tables[0].name = "_main";
+	sym_tables[0].name = "main";
 	sym_tables[0].x = 0;
 	sym_tables[0].type = 0;
 	sym_tables[0].level = -1;
@@ -905,5 +905,7 @@ int main(void)
 	printf("---------------------\n");
 
 	out_all_four();
+	init_mips();
+	gen_mips();
 	return 0;
 }
