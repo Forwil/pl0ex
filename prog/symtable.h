@@ -14,11 +14,12 @@
 struct sym_table
 {
 	char *name;
-	int kind; 	// 
-	int type;	//
-	int x;		// 
+	int kind; 	 
+	int type;	
+	int x;	 
 	int level;
 	int last;
+	int size;
 	int reg;	// when we want to generate machine code... we will use that.
 	int mem;	
 };

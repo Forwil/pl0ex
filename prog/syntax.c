@@ -32,6 +32,7 @@ void init_syntax()
 	sym_tables[0].x = 0;
 	sym_tables[0].type = 0;
 	sym_tables[0].level = -1;
+	sym_tables[0].size = 0;
 }
 
 /*

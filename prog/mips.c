@@ -106,7 +106,7 @@ void rel_reg(int i)
 	using[i] = 0;
 }
 
-int get_into_reg(int ind,int.level)
+int get_into_reg(int ind,int nowlevel)
 {
 	int base,a,b;
 	b = get_reg();
@@ -126,7 +126,7 @@ int get_into_reg(int ind,int.level)
 	return b;	
 }
 
-int get_mem(int ind,int.level,int *base)
+int get_mem(int ind,int nowlevel,int *base)
 {
 	int delt_level,a,i;
 	delt_level = nowlevel - sym_tables[ind].level;
@@ -140,18 +140,24 @@ int get_mem(int ind,int.level,int *base)
 		}
 	}
 	*base = a;
-	return -(sym_tables[ind].mem + 12);	
+	rel_reg(a);
+	return -(sym_tables[ind].mem + 16);	
 }
 
-void store_to_mem(int reg,int ind,int.level)
+void store_to_mem(int reg,int ind,int nowlevel)
 {
 	int a,base,b;
 	a = get_mem(ind,nowlevel,&base);
-	if(sym_tables[ind].kind == k_point)
+	if(sym_tables[ind].kind == k_func)
+	{
+		// it doesn't need store		
+	}
+	else if(sym_tables[ind].kind == k_point)
 	{
 		b = get_reg();
 		printf("\t lw,%s,%d(%s)\n",reg_name[b],a,reg_name[base]);
 		printf("\t sw,%s,0(%s)\n",reg_name[reg],reg_name[b]);
+		rel_reg(b);
 	}
 	else
 		printf("\t sw,%s,%d(%s)\n",reg_name[reg],a,reg_name[base]);
@@ -172,7 +178,7 @@ void set_string()
 
 void set_all_mem()
 {
-	int i,last;
+	int i,last,t;
 	for(i = 1;i< sym_tablep;i++)
 	{	
 		last = sym_tables[i].last;
@@ -181,7 +187,6 @@ void set_all_mem()
 		else
 			sym_tables[i].mem = sym_tables[last].mem;
 		if(sym_tables[i].kind == k_var||
-		   sym_tables[i].kind == k_func||
 		   sym_tables[i].kind == k_point)
 		{
 			if (sym_tables[i].x == 0)
@@ -189,6 +194,11 @@ void set_all_mem()
 			else
 				sym_tables[i].mem += 4*sym_tables[i].x;
 		}
+		t = i;
+		while(sym_tables[i].level == sym_tables[t].level)
+			t = sym_tables[t].level;
+		sym_tables[i].size = sym_tables[i].mem;
+//		printf("%s %d %d %d\n",sym_tables[i].name,sym_tables[i].level,sym_tables[i].mem,sym_tables[i].father);
 	}
 }
 
@@ -218,8 +228,8 @@ void gen_mips()
 	for(i = 1;i< four_tablep;i++)
 	{
 		t = four_codes[i];	
-		printf("\t\t");
-		out_one(t);
+//		printf("\t\t");
+//		out_one(t);
 		switch (t.type)
 		{
 			case four_add:
@@ -326,20 +336,28 @@ void gen_mips()
 					break;
 
 			case four_jmp:
-					printf("\t b,$L%d\n",sym_tables[t.des].x);	
+					printf("\t b,$L%d\n",four_codes[t.des].des);	
 					break;
 			case four_jz:
 					a = get_into_reg(t.src1,t.level);
-					printf("\t beqz,%s,%L%d\n",reg_name[a],sym_tables[t.des].x);
+					printf("\t beqz,%s,$L%d\n",reg_name[a],four_codes[t.des].des);
 					rel_reg(a);
 					break;
 
 			case four_bec:
-					if(sym_tables[t.des].x == 0)
+					if(sym_tables[t.des].x == 0 || sym_tables[t.des].kind == k_func || sym_tables[t.des].kind == k_point)
 					{
 						a = get_into_reg(t.src1,t.level);
 						c = get_mem(t.des,t.level,&base);
-						printf("\t sw,%s,%d(%s)\n",reg_name[a],a,reg_name[base]);
+						if(sym_tables[t.des].kind == k_point)
+						{
+							b = get_reg();
+							printf("\t lw,%s,%d(%s)\n",reg_name[b],c,reg_name[base]);
+							printf("\t sw,%s,0(%s)\n",reg_name[a],reg_name[b]);
+							rel_reg(b);
+						}
+						else	
+							printf("\t sw,%s,%d(%s)\n",reg_name[a],c,reg_name[base]);
 						rel_reg(a);
 					}
 					else
@@ -361,25 +379,27 @@ void gen_mips()
 					}
 					break;
 			case four_call:
-					printf("\t addi,$sp,$sp,%d\n",12+4*sym_tables[t.src1].x);
-					printf("\t sw,$fp,-4($sp)\n");
-					printf("\t move,$fp,$sp\n");
+					printf("\t addi,$sp,$sp,%d\n",4*sym_tables[t.src1].x);
 					get_mem(t.src1,t.level,&base);
 					a = get_reg();
 					printf("\t lw,%s,-4(%s)\n",reg_name[a],reg_name[base]);
+					printf("\t sw,$fp,-4($sp)\n");
 					printf("\t sw,%s,-8($sp)\n",reg_name[a]);	
 					printf("\t sw,%s,-12($sp)\n",reg_name[reg_ra]);
-					
+					printf("\t sw,%s,-16($sp)\n",reg_name[reg_v0]);
+					printf("\t move,$fp,$sp\n");
+					printf("\t addi,$sp,$sp,%d\n",-(sym_tables[t.src1].size+4));
 					printf("\t jal,%s\n",sym_tables[t.src1].name);
+					printf("\t addi,$sp,$sp,%d\n",(sym_tables[t.src1].size+4));
 					if(t.des !=0)
 					{
-						b = get_into_reg(t.des,t.level);
-						printf("\t move,%s,$v0\n",reg_name[b]);
+						b = get_mem(t.des,t.level,&base);
+						printf("\t sw,$v0,%d(%s)\n",b,reg_name[base]);
 					}
 					printf("\t lw,$fp,-4($sp)\n");
-					printf("\t lw,%s,-8($sp)\n",reg_name[a]);	
 					printf("\t lw,%s,-12($sp)\n",reg_name[reg_ra]);
-					
+					printf("\t lw,%s,-16($sp)\n",reg_name[reg_v0]);
+					rel_reg(a);	
 					break;
 
 			case four_read:
@@ -388,6 +408,7 @@ void gen_mips()
 					printf("\t syscall\n");
 					printf("\t move %s,$v0\n",reg_name[a]);
 					store_to_mem(a,t.des,t.level);
+					rel_reg(a);
 					break;
 			case four_write:
 					if (sym_tables[t.des].kind == k_var)
@@ -408,14 +429,14 @@ void gen_mips()
 			case four_push:
 					a = get_mem(t.des,t.level,&base);
 					b = get_reg();
-					printf("\t addi,$sp,$sp,-12\n");
 					printf("\t lw,%s,%d(%s)\n",reg_name[b],a,reg_name[base]);
 					if(sym_tables[t.des].kind == k_point)
 					{
 						printf("\t lw,%s,0(%s)\n",reg_name[b],reg_name[b]);					
 					}
-					printf("\t sw,%s,-4($sp)\n",reg_name[b]);
+					printf("\t sw,%s,-16($sp)\n",reg_name[b]);
 					printf("\t addi,$sp,$sp,-4\n");	
+					rel_reg(b);
 					break;
 			case four_end:
 					if (t.des)
@@ -465,6 +486,7 @@ void gen_mips()
 						b = get_reg();
 						printf("\t addi,%s,%s,%d\n",reg_name[b],reg_name[base],a);
 						store_to_mem(b,t.des,t.level);
+						rel_reg(b);
 					}
 					break;
 			case four_label:
