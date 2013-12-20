@@ -80,7 +80,7 @@ void store_into_mem(int reg,int ind,int nowlevel)
 	a = get_mem(ind,nowlevel,&base);
 	if(sym_tables[ind].kind == k_func)
 	{
-		// it doesn't need store		
+		fprintf(fout,"\t sw,%s,-16(%s)\n",reg_name[reg],reg_name[base]);
 	}
 	else if(sym_tables[ind].kind == k_point)
 	{
