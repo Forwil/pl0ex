@@ -121,8 +121,11 @@ void out_one(struct four_expression a)
 	}
 	else
 	{
-		out_val(a.src1);
-		out_val(a.src2);
+		if(a.type !=four_push)
+		{
+			out_val(a.src1);
+			out_val(a.src2);
+		}
 		out_val(a.des);
 	}
 	printf("\n");

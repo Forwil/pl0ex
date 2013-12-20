@@ -2,7 +2,7 @@ const a = 1,b = 'a', c = -122;
 var x,y:integer;
 	z:char;
 
-function gcd2(var a,b:integer):integer;
+function gcd(a,b:integer):integer;
 var t:integer;
 	function mod(a,b:integer):integer;
 	begin
@@ -16,21 +16,12 @@ begin
 		a := t
 		end
 	until b = 0;
-	gcd2 := a
-end;
-
-function gcd1(a,b:integer):integer;
-begin
-	if b=0 then
-		gcd1 :=a
-	else
-		gcd1 := gcd1(b,a - a/b*b)
+	gcd := a
 end;
 
 begin
-	write("shabi");
+	write("shabi\n");
 	read(x);
 	read(y);
-	write(gcd1(x,y));
-	write(gcd2(x,y))
+	write(gcd(x,y))
 end.

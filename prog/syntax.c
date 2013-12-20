@@ -84,12 +84,12 @@ void real_arguments(int f)
 		if(sym_tables[f+i].kind == k_point)
 		{
 			t = deal_var();
-			insert_four(four_push,0,0,t);
+			insert_four(four_push,i,0,t);
 		}
 		else
 		{
 			t = expression();
-			insert_four(four_push,0,0,t);
+			insert_four(four_push,i,0,t);
 		}
 		if (symtype == COMMA)
 			getsym();
@@ -624,7 +624,7 @@ void statement()
 			else
 				my_error(__FILE__,__LINE__);// unknow type for FOR
 			getsym();
-			c = new_temp_const_sym_table(t1);
+			c = new_temp_const_sym_table(t3);
 			t1 = new_label_four();	
 			d = expression();
 			t2 = new_temp_var_sym_table(k_var);
@@ -717,7 +717,8 @@ int factor()
 		//printf("\n\t %s %d %d\n",sym_tables[a].name,sym_tables[a].kind,a);
 		if (a == 0 ||   (sym_tables[a].kind!=k_var
 					 &&  sym_tables[a].kind!=k_func
-					 &&  sym_tables[a].kind!=k_point ))
+					 &&  sym_tables[a].kind!=k_point
+					 &&  sym_tables[a].kind!=k_const))
 			my_error(__FILE__,__LINE__);// can get value from it
 		// do some for ident
 		getsym();
@@ -876,11 +877,7 @@ void part_pro(int name)
 		my_error(__FILE__,__LINE__);// no part_pro
 	nowlevel -= 1;
 
-	if (name)
-		if(sym_tables[name].kind == k_proc)
-			insert_four(four_end,0,0,0);
-		else
-			insert_four(four_end,0,0,name);
+	insert_four(four_end,0,0,name);
 }
 
 int main(void)
