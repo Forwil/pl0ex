@@ -164,8 +164,8 @@ void gen_mips()
 	for(i = 1;i< four_tablep;i++)
 	{
 		t = four_codes[i];	
-	//	printf("\t\t#");
-	//	out_one(t);
+		printf("\t\t#");
+		out_one(t);
 		switch (t.type)
 		{
 			case four_add: case four_sub: case four_mul: case four_div: 
@@ -280,7 +280,9 @@ void gen_mips()
 					rel_reg(a);
 					break;
 			case four_write:
-					if (sym_tables[t.des].kind == k_var)
+					if (sym_tables[t.des].kind == k_var
+					  ||(sym_tables[t.des].kind == k_const&&
+						 sym_tables[t.des].type == t_integer))
 					{
 						a = get_into_reg(t.des,t.level);
 						fprintf(fout,"\t li,$v0,1\n");

@@ -57,13 +57,13 @@ void my_error(char a[],int b)
 	printf("\n\t\t\tError in file:\" %s \"line:%d\n",a,b);
 	c = getchar();
 }
-void getch()
+void getch(int jmpsp)
 {
-	if(!isspace(ch) && ch!='\"')
-		{
+	if(jmpsp ||( !isspace(ch) && ch!='\"'))
+	{
 		sym[t++] = ch;
 		sym[t] = '\0';
-		}
+	}
 	if (linep == linelen)
 	{
 		if (fgets(line,MAXLINE,fin) == NULL)
@@ -108,7 +108,7 @@ void init_lexer()
 		fin = fopen(inf,"r");
 	}
 	//fout = fopen("11091222.txt","w");
-	getch();
+	getch(0);
 }
 
 int searchident()
@@ -135,15 +135,15 @@ int getsym()
 	int  k;
 	t = 0;
 	while (isspace(ch)) 
-		getch();	
+		getch(0);	
 	if(ch == EOF)
 		return -1;	
 	if (isalpha(ch))
 	{
-		getch();
+		getch(0);
 		while (isalnum(ch))
 		{
-			getch();
+			getch(0);
 		}
 		k = searchident();
 	//	printf("%s %d\n",sym,k);
@@ -155,68 +155,68 @@ int getsym()
 	else if (isdigit(ch))	
 	{
 		num = c2i(ch);
-		getch();
+		getch(0);
 		while (isdigit(ch))	
 		{
 			num = num * 10 + c2i(ch);
-			getch();
+			getch(0);
 		}
 		symtype = T_CONST;
 	}
 	else if (ch =='\'')
 	{
-		getch();
+		getch(0);
 		num = ch;
-		getch();
+		getch(0);
 		if (ch !='\'')
 			my_error(__FILE__,__LINE__);
-		getch();
+		getch(0);
 		symtype = T_CHAR;
 	}
 	else if (ch == '\"')
 	{
-		getch();
+		getch(0);
 		while(iss(ch))
-			getch();
+			getch(1);
 		if(!(ch =='\"'))
 			my_error(__FILE__,__LINE__);	
 		symtype = T_STRING;
-		getch();
+		getch(0);
 	}
 	else if(ch == ':')
 	{
-		getch();
+		getch(0);
 		if(ch == '=')
 		{
 			symtype = BECOME;
-			getch();
+			getch(0);
 		}
 		else
 			symtype = COLON;
 	}
 	else if (ch == '<')
 	{
-		getch();
+		getch(0);
 		if(ch == '>')
 		{
 			symtype = NEQ;
-			getch(); 
+			getch(0); 
 		}
 		else if( ch =='=')
 		{
 			symtype = SMOE;
-			getch();
+			getch(0);
 		}
 		else
 			symtype = SMO;
 	}
 	else if (ch == '>')
 	{
-		getch();
+		getch(0);
 		if(ch == '=')
 		{
 			symtype = BIGE;
-			getch();
+			getch(0);
 		}
 		else
 			symtype = BIG;
@@ -224,7 +224,7 @@ int getsym()
 	else
 	{
 		symtype = symnumber[ch];
-		getch();
+		getch(0);
 	}
 //	printf("%s\n",sym);
 	return 0;
