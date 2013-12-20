@@ -16,6 +16,8 @@
  * =====================================================================================
  */
 
+#include<stdio.h>
+
 #include"lexer.h"
 #include"four.h"
 #include"symtable.h"
@@ -57,7 +59,7 @@ int deal_var()
 				getsym();
 				if (sym_tables[a].x == 0)
 					my_error(__FILE__,__LINE__);// it is not array
-				t = new_temp_var_sym_table(k_point); 
+				t = new_temp_var_sym_table(); 
 				insert_four(four_getadd,a,b,t);
 			}
 			else
@@ -65,7 +67,7 @@ int deal_var()
 		}
 		else if(symtype == COMMA || symtype == RP)
 		{
-			t = new_temp_var_sym_table(k_point);
+			t = new_temp_var_sym_table();
 			insert_four(four_getadd,a,0,t);
 		}
 		else
@@ -627,7 +629,7 @@ void statement()
 			c = new_temp_const_sym_table(t3);
 			t1 = new_label_four();	
 			d = expression();
-			t2 = new_temp_var_sym_table(k_var);
+			t2 = new_temp_var_sym_table();
 			if (t3 == 1)
 				insert_four(four_smoe,a,d,t2);
 			else
@@ -671,7 +673,7 @@ int expression()
 		f = symtype;
 		getsym();
 		b = term();
-		t = new_temp_var_sym_table(k_var);
+		t = new_temp_var_sym_table();
 		if (f == MINUS)
 			insert_four(four_sub,a,b,t);
 		else
@@ -680,7 +682,7 @@ int expression()
 	}
 	if (mflag)
 	{
-		t = new_temp_var_sym_table(k_var);
+		t = new_temp_var_sym_table();
 		c = new_temp_const_sym_table(0);
 		insert_four(four_sub,c,a,t);
 		a = t;
@@ -698,7 +700,7 @@ int term()
 		f = symtype;
 		getsym();
 		b = factor();
-		t = new_temp_var_sym_table(k_var);
+		t = new_temp_var_sym_table();
 		if (f == MULT)
 			insert_four(four_mul,a,b,t);
 		else
@@ -734,7 +736,7 @@ int factor()
 			if ( sym_tables[a].kind == k_var &&
 				 sym_tables[a].x >0)
 			{
-				t = new_temp_var_sym_table(k_var);
+				t = new_temp_var_sym_table();
 				insert_four(four_getarr,a,b,t);
 				a = t;
 			}
@@ -747,7 +749,7 @@ int factor()
 			if (sym_tables[a].kind != k_func)
 				my_error(__FILE__,__LINE__);// it is not func
 			real_arguments(a);
-			t = new_temp_var_sym_table(k_var);
+			t = new_temp_var_sym_table();
 			insert_four(four_call,a,sym_tables[a].x,t);
 			// deal with real_arguements
 			if (symtype == RP)
@@ -791,7 +793,7 @@ int condition()
 		my_error(__FILE__,__LINE__);// unknown bj
 	f = symtype;
 	getsym();
-	t = new_temp_var_sym_table(k_var);
+	t = new_temp_var_sym_table();
  	b = expression();
 	switch (f) 
 	{
@@ -890,6 +892,10 @@ int main(void)
 	printf("init syntax success!\n");
 	init_four();
 	printf("init four success!\n");
+
+	printf("------------------------------------------\n");
+	printf("-             Starting Complier          -\n");
+	printf("------------------------------------------\n");
 	getsym();
 	part_pro(0);
 	if (symtype == PERIOD)
@@ -897,14 +903,18 @@ int main(void)
 	else
 		my_error(__FILE__,__LINE__);//missing PERIOD
 
-	printf("---------------------\n");
-	printf("-  Complie Success! -\n");
-	printf("---------------------\n");
+	printf("------------------------------------------\n");
+	printf("-           Complie Success!             -\n");
+	printf("------------------------------------------\n");
 
 	out_all_four();
 
+	printf("------------------------------------------\n");
+	printf("-         Generated four_yuan            -\n");
+	printf("------------------------------------------\n");
 	printf("\nStart generate mips code\n");	
 	init_mips();
 	gen_mips();
+	printf("\nSuccess!\nGenerate into \"result.asm\"\n");	
 	return 0;
 }

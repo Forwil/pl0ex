@@ -1,5 +1,5 @@
 #include "symtable.h"
-
+#include<stdio.h>
 extern int nowlevel;
 
 void init_sym_table()
@@ -34,8 +34,8 @@ int insert_sym_table(char a[],int kind)
 	sym_tables[sym_tablep].name = new_sym_name(a);
 	// set "last" linker
 	i = sym_tablep - 1;
-	while(i > 0 && sym_tables[i].level > nowlevel) 
-		i -= 1;
+	while(sym_tables[i].level > nowlevel) 
+		i = sym_tables[i].last;
 	sym_tables[sym_tablep].last = i;
 	//printf("\t\t\t\t\t\t%s %d %d %d\n",a,sym_tablep,i,nowlevel);
 	sym_tablep += 1;	
@@ -64,13 +64,13 @@ void settype_sym_table(int ind,int x,int type)
 		sym_tables[ind].x  = x;
 }
 
-int new_temp_var_sym_table(int kind)
+int new_temp_var_sym_table()
 {
 	static int i = 0;
 	int t;
 	char s[20];
 	sprintf(s,"_t%d",i++);
-	t = insert_sym_table(s,kind);
+	t = insert_sym_table(s,k_var);
 	settype_sym_table(t,0,t_integer);
 	return t;
 }
@@ -88,6 +88,8 @@ int find_sym_table(char a[])
 	int i;
 //	printf("\nlooking for %s\n",a);
 	i = sym_tablep - 1;
+	while(sym_tables[i].level > nowlevel)
+		i = sym_tables[i].last;
 	while(i)
 	{
 //		printf("\t\t%d\n",i);

@@ -107,7 +107,7 @@ void init_lexer()
 		scanf("%s",inf);
 		fin = fopen(inf,"r");
 	}
-	fout = fopen("11091222.txt","w");
+	//fout = fopen("11091222.txt","w");
 	getch();
 }
 
