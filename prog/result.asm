@@ -1,10 +1,11 @@
 	.data
 _s1:	.ascii	"shabi\n"
 	.text
+main:
 	 move,$fp,$sp
 	 sw,$fp,-4($sp)
 	 sw,$fp,-8($sp)
-	 b,main
+	 b,_main
 gcd:
 	 addi,$sp,$sp,-44
 	 move,$t1,$fp
@@ -74,7 +75,7 @@ $L1:
 	 move,$v0,$t0
 	 addi,$sp,$sp,44
 	 jr,$ra
-main:
+_main:
 	 addi,$sp,$sp,-28
 	 li,$v0,4
 	 la,$a0,_s1
@@ -114,3 +115,5 @@ main:
 	 move,$a0,$t1
 	 syscall
 	 addi,$sp,$sp,28
+	 li,$v0,10
+	 syscall

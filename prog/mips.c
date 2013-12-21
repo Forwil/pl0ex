@@ -157,14 +157,15 @@ void gen_mips()
 	int i,a,b,c,base,d;
 	struct four_expression t;
 	fprintf(fout,"\t.text\n");
+	fprintf(fout,"main:\n");
 	fprintf(fout,"\t move,$fp,$sp\n");
 	fprintf(fout,"\t sw,$fp,-4($sp)\n");
 	fprintf(fout,"\t sw,$fp,-8($sp)\n");
-	fprintf(fout,"\t b,main\n");
+	fprintf(fout,"\t b,_main\n");
 	for(i = 1;i< four_tablep;i++)
 	{
 		t = four_codes[i];	
-		printf("\t\t#");
+		printf("\t#%d",i);
 		out_one(t);
 		switch (t.type)
 		{
@@ -304,7 +305,7 @@ void gen_mips()
 					break;
 
 			case four_end:
-					if (t.des)
+					if (sym_tables[t.des].kind == k_func)
 					{
 						a = get_into_reg(t.des,t.level);
 						fprintf(fout,"\t move,$v0,%s\n",reg_name[a]);
@@ -366,9 +367,10 @@ void gen_mips()
 					fprintf(fout,"\t addi,$sp,$sp,%d\n",-( OFFSET + sym_tables[t.des].size));
 					break;
 			default:
-					fprintf(fout,"%d\n",t.type);
 					error();//shabi
 		}
 	}
+	fprintf(fout,"\t li,$v0,10\n");
+	fprintf(fout,"\t syscall");
 	fclose(fout);
 }

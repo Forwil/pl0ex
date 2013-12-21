@@ -30,7 +30,7 @@ void part_pro(int);
 void init_syntax()
 {
 	nowlevel = 0;
-	sym_tables[0].name = "main";
+	sym_tables[0].name = "_main";
 	sym_tables[0].x = 0;
 	sym_tables[0].type = 0;
 	sym_tables[0].level = -1;
@@ -878,7 +878,6 @@ void part_pro(int name)
 	else
 		my_error(__FILE__,__LINE__);// no part_pro
 	nowlevel -= 1;
-
 	insert_four(four_end,0,0,name);
 }
 
@@ -907,11 +906,6 @@ int main(void)
 	printf("-           Complie Success!             -\n");
 	printf("------------------------------------------\n");
 
-	out_all_four();
-
-	printf("------------------------------------------\n");
-	printf("-         Generated four_yuan            -\n");
-	printf("------------------------------------------\n");
 	printf("\nStart generate mips code\n");	
 	init_mips();
 	gen_mips();

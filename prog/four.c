@@ -1,7 +1,6 @@
 #include "four.h"
 #include "symtable.h"
 #include <stdio.h>
-
 int nowlevel;
 
 int insert_four(int type,int src1,int src2,int des)
