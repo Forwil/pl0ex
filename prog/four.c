@@ -39,6 +39,8 @@ void init_four()
 {
 	four_tablep = 1;
 	four_labelp = 0;
+	four_betterp = 1;
+	four_blockp = 1;
 }
 
 char * out[]=
@@ -138,4 +140,64 @@ void out_all_four()
 		printf("%d",i);
 		out_one(four_codes[i]);
 	}
+}
+
+void out_all_four2()
+{
+	int i;
+	for(i = 1;i < four_betterp;i ++)
+	{
+		printf("%d",i);
+		out_one(four_better[i]);
+	}
+}
+
+void gen_block()
+{
+	int i,t;
+	for(i = 1;i<four_tablep;i++)
+	{
+		if (four_codes[i].type == four_label 
+		  ||four_codes[i].type == four_enter)
+		{
+			if (four_blocks[four_blockp].start != 0)
+			{
+				four_blocks[four_blockp].end = i - 1;
+				four_blockp += 1;
+			}
+			four_blocks[four_blockp].start = i;
+		}
+		if (four_codes[i].type == four_jmp
+		  ||four_codes[i].type == four_jz)
+		{
+			if (four_blocks[four_blockp].start !=0)
+			{
+				four_blocks[four_blockp].end = i;
+				four_blockp += 1;
+				four_blocks[four_blockp].start = i + 1;
+			}
+		}
+		if (four_codes[i].type == four_end)
+		{
+			if (four_blocks[four_blockp].start !=0)
+			{
+				four_blocks[four_blockp].end = i;
+				four_blockp += 1;
+			}
+		}
+	}
+	if(four_blocks[four_blockp].start != 0)
+	{
+		four_blocks[four_blockp].end = four_tablep - 1;
+		four_blockp += 1;
+	}
+
+	for(i = 1;i<four_blockp;i++)
+	{
+		t = four_blocks[i].start;
+		four_blocks[i].level = four_codes[t].level;
+		printf("%d %d\n",four_blocks[i].start,four_blocks[i].end);
+		build_dag(four_blocks[i].start,four_blocks[i].end,four_blocks[i].level);
+	}
+	out_all_four2();
 }

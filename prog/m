@@ -3,4 +3,5 @@ gcc -c symtable.c -o symtable.o
 gcc -c four.c -o four.o
 gcc -c syntax.c -o syntax.o
 gcc -c mips.c -o mips.o
-gcc mips.o syntax.o lexer.o symtable.o four.o -o a.out
+gcc -c dag.c -o dag.o
+gcc mips.o syntax.o lexer.o symtable.o four.o dag.o -o a.out

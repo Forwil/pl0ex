@@ -1,5 +1,8 @@
 
 #define MAXFOURCODE	2000
+#define MAXBLOCK 200
+
+#define four_var	-1
 
 #define four_add	1
 #define four_sub	2
@@ -38,8 +41,18 @@ struct four_expression
 	int level;
 };
 
-struct four_expression four_codes[MAXFOURCODE];
-int four_tablep,four_labelp;
+struct four_block
+{
+	int start;
+	int end;
+	int level;
+	//int follow[10];
+	//int prev[10];
+};
+
+struct four_block four_blocks[MAXBLOCK];
+struct four_expression four_codes[MAXFOURCODE],four_better[MAXFOURCODE];
+int four_tablep,four_labelp,four_blockp,four_betterp;
 
 int insert_four(int,int,int,int);
 int new_label_four();
