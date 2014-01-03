@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include "four.h"
+#include "symtable.h"
 #define MAXP	200
 #define MAXT	200
 
@@ -78,16 +79,14 @@ int point_to_table(int to)
 int get_point_dag(int src)
 {
 	int i;
-	if (src == 0 )
+	if (src == 0)
 		return 0;
 	i = find_table_dag(src);
-//	printf("\n%d %d\n",src,i);
 	if (i == 0)
 	{
 		i = create_point_dag(four_var,0,0);
 		i = create_table_dag(src,i,0);
 	}
-//	printf("%d\n",dag_tables[i].to);
 	return dag_tables[i].to;
 }
 
@@ -147,7 +146,8 @@ void restore_all(int level)
 			{
 				k = dag_tables[k].link;
 				a = dag_tables[k].id;
-				new_better(four_bec,c,0,a,level);	
+				if (sym_tables[a].name[0]!='_')
+					new_better(four_bec,c,0,a,level);	
 			}
 		break;
 		case four_read:
@@ -171,7 +171,6 @@ void build_dag(int st,int en,int level)
 	for (i = st;i<=en;i++)
 	{
 		t = four_codes[i];
-//		printf("%d\n",t.type);
 		switch(t.type){
 		case four_add: case four_sub: case four_mul: case four_div:
 		case four_big: case four_bige:case four_smo: case four_smoe:
@@ -189,7 +188,10 @@ void build_dag(int st,int en,int level)
 			new_point_dag(t.type,a,b,0);
 			break;
 		default:
-			if (t.type == four_call || t.type == four_end || t.type == four_jz || t.type==four_jmp)
+			if (t.type == four_call 
+			 || t.type == four_end 
+			 || t.type == four_jz 
+			 || t.type==four_jmp)
 			{
 				restore_all(level);
 				init_dag();

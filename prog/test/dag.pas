@@ -1,13 +1,8 @@
-var i,j,k,a,b,c:integer;
+var i,j,k,a,b,c,e:integer;
+	z:array[5] of integer; 
 begin
 	i := 1;
-	write(i);
 	j := 2;
-	write(j);
-	k := i + j;
-	write(k);
 	a := i + j;
-	write(a);
-	a := i + 1;
-	write(a)
+	b := i + j
 end.

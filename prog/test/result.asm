@@ -6,70 +6,28 @@ main:
 	 sw,$fp,-8($sp)
 	 b,_main
 _main:
-	 addi,$sp,$sp,-52
+	 addi,$sp,$sp,-72
 	 li,$t0,1
 	 move,$t1,$fp
 	 sw,$t0,-20($t1)
+	 li,$t0,2
+	 move,$t1,$fp
+	 sw,$t0,-24($t1)
 	 move,$t1,$fp
 	 lw,$t0,-20($t1)
-	 li,$v0,1
-	 move,$a0,$t0
-	 syscall
-	 li,$t1,2
-	 move,$t2,$fp
-	 sw,$t1,-24($t2)
 	 move,$t2,$fp
 	 lw,$t1,-24($t2)
-	 li,$v0,1
-	 move,$a0,$t1
-	 syscall
+	 add,$t2,$t0,$t1
 	 move,$t3,$fp
-	 lw,$t2,-20($t3)
-	 move,$t4,$fp
-	 lw,$t3,-24($t4)
-	 add,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-44($t5)
-	 move,$t3,$fp
-	 lw,$t2,-44($t3)
-	 move,$t3,$fp
-	 sw,$t2,-28($t3)
-	 move,$t3,$fp
-	 lw,$t2,-28($t3)
-	 li,$v0,1
-	 move,$a0,$t2
-	 syscall
-	 move,$t4,$fp
-	 lw,$t3,-20($t4)
-	 move,$t5,$fp
-	 lw,$t4,-24($t5)
-	 add,$t5,$t3,$t4
-	 move,$t6,$fp
-	 sw,$t5,-48($t6)
-	 move,$t4,$fp
-	 lw,$t3,-48($t4)
-	 move,$t4,$fp
-	 sw,$t3,-32($t4)
-	 move,$t4,$fp
-	 lw,$t3,-32($t4)
-	 li,$v0,1
-	 move,$a0,$t3
-	 syscall
-	 move,$t5,$fp
-	 lw,$t4,-20($t5)
-	 li,$t5,1
-	 add,$t6,$t4,$t5
-	 move,$t7,$fp
-	 sw,$t6,-52($t7)
-	 move,$t5,$fp
-	 lw,$t4,-52($t5)
-	 move,$t5,$fp
-	 sw,$t4,-32($t5)
-	 move,$t5,$fp
-	 lw,$t4,-32($t5)
-	 li,$v0,1
-	 move,$a0,$t4
-	 syscall
-	 addi,$sp,$sp,52
+	 sw,$t2,-72($t3)
+	 move,$t1,$fp
+	 lw,$t0,-72($t1)
+	 move,$t1,$fp
+	 sw,$t0,-36($t1)
+	 move,$t1,$fp
+	 lw,$t0,-36($t1)
+	 move,$t1,$fp
+	 sw,$t0,-32($t1)
+	 addi,$sp,$sp,72
 	 li,$v0,10
 	 syscall

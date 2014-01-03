@@ -881,9 +881,9 @@ void part_pro(int name)
 	insert_four(four_end,0,0,name);
 }
 
-int main(void)
+int main(int argc,char *argv[])
 {
-	init_lexer();
+	init_lexer(argc,argv);
 	printf("init lexer success!\n");
 	init_sym_table();
 	printf("init symtable success!\n");

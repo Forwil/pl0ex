@@ -2,7 +2,7 @@
 #include "symtable.h"
 #include <stdio.h>
 int nowlevel;
-
+int usedag;
 int insert_four(int type,int src1,int src2,int des)
 {
 	four_codes[four_tablep].type = type;
@@ -196,8 +196,11 @@ void gen_block()
 	{
 		t = four_blocks[i].start;
 		four_blocks[i].level = four_codes[t].level;
-		printf("%d %d\n",four_blocks[i].start,four_blocks[i].end);
+	//	printf("%d %d\n",four_blocks[i].start,four_blocks[i].end);
 		build_dag(four_blocks[i].start,four_blocks[i].end,four_blocks[i].level);
 	}
-	out_all_four2();
+	if(usedag)
+		out_all_four2();
+	else
+		out_all_four();
 }

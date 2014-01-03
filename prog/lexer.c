@@ -20,6 +20,8 @@
 #include<stdio.h>
 #include "lexer.h"
 
+int usedag;
+
 FILE *fin,*fout;
 int symnumber[256];
 int linelen,linep,symtype,num,t;
@@ -57,6 +59,7 @@ void my_error(char a[],int b)
 	printf("\n\t\t\tError in file:\" %s \"line:%d\n",a,b);
 	c = getchar();
 }
+
 void getch(int jmpsp)
 {
 	if(jmpsp ||( !isspace(ch) && ch!='\"'))
@@ -82,7 +85,7 @@ void getch(int jmpsp)
 }
 
 
-void init_lexer()
+void init_lexer(int argc,char *argv[])
 {
 	char inf[256];
 	symnumber['+'] = PLUS;
@@ -98,16 +101,22 @@ void init_lexer()
 	symnumber['('] = LP;
 	symnumber[')'] = RP;
 	symnumber['='] = EQ;
-	printf("Please input source file name:\n");
-	scanf("%s",inf);
-	fin = fopen(inf,"r");
+	if(argc>1)
+	{
+		strcpy(inf,argv[1]);
+		fin = fopen(inf,"r");
+	}
+	else
+		fin = NULL;
 	while (fin==NULL)
 	{
-		printf("source file <%s> name can\'t open,Please try again!\n",inf);
+		printf("Please input source file name!\n",inf);
 		scanf("%s",inf);
 		fin = fopen(inf,"r");
 	}
-	//fout = fopen("11091222.txt","w");
+	usedag = 0;
+	if (argc>2 && argv[2][1]=='u')
+		usedag=1;
 	getch(0);
 }
 
@@ -279,28 +288,29 @@ char *OUTPUT[]=
 "CHARCON",
 "STRCON",
 };
-/*  
+
+/*
 int main(void)
 {
-	int i = 1;
-	char inf[255];
-	init_lexer();
-	printf("Please input source file name:\n");
-	scanf("%s",inf);
-	fin = fopen(inf,"r");
-	while (fin==NULL)
-	{
-		printf("source file <%s> name can\'t open,Please try again!\n",inf);
-		scanf("%s",inf);
-		fin = fopen(inf,"r");
-	}
-	fout = fopen("11091222_token.txt","w");
-	while(getsym() != -1)
-	{
-		fprintf(fout,"%d %s %s\n",i++,OUTPUT[symtype],sym);
-	}
-	fclose(fin);
-	fclose(fout);
-	return 0;
+        int i = 1;
+        char inf[255];
+        init_lexer();
+        printf("Please input source file name:\n");
+        scanf("%s",inf);
+        fin = fopen(inf,"r");
+        while (fin==NULL)
+        {
+                printf("source file <%s> name can\'t open,Please try again!\n",inf);
+                scanf("%s",inf);
+                fin = fopen(inf,"r");
+        }
+        fout = fopen("11091222_token.txt","w");
+        while(getsym() != -1)
+        {
+                fprintf(fout,"%d %s %s\n",i++,OUTPUT[symtype],sym);
+        }
+        fclose(fin);
+        fclose(fout);
+        return 0;
 }
 */

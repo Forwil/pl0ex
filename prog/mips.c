@@ -20,6 +20,8 @@
 #include "symtable.h"
 #include "mips.h"
 #include <stdio.h>
+extern int usedag;
+
 FILE *fout;
 int using[MAXREG];
 int get_reg()
@@ -155,7 +157,7 @@ void init_mips()
 void gen_one_mips(struct four_expression t)
 {
 	int a,b,c,base,d;
-	out_one(t);
+//	out_one(t);
 	switch (t.type)
 	{
 		case four_add: case four_sub: case four_mul: case four_div: 
@@ -370,11 +372,16 @@ void gen_mips()
 	fprintf(fout,"\t sw,$fp,-4($sp)\n");
 	fprintf(fout,"\t sw,$fp,-8($sp)\n");
 	fprintf(fout,"\t b,_main\n");
-	for(i = 1;i< four_tablep;i++)
-	{
-		printf("\t#%d",i);
-		gen_one_mips(four_codes[i]);
-	}
+	if(usedag)
+		for(i = 1;i< four_betterp;i++)
+		{
+			gen_one_mips(four_better[i]);
+		}
+	else
+		for(i = 1;i< four_tablep;i++)
+		{
+			gen_one_mips(four_codes[i]);
+		}	
 	fprintf(fout,"\t li,$v0,10\n");
 	fprintf(fout,"\t syscall");
 	fclose(fout);
