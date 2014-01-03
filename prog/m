@@ -4,4 +4,5 @@ gcc -c four.c -o four.o
 gcc -c syntax.c -o syntax.o
 gcc -c mips.c -o mips.o
 gcc -c dag.c -o dag.o
-gcc mips.o syntax.o lexer.o symtable.o four.o dag.o -o a.out
+gcc -c error.c -o error.o
+gcc mips.o syntax.o lexer.o symtable.o four.o dag.o error.o -o a.out

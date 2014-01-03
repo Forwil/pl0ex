@@ -81,7 +81,6 @@
 #define T_STRING	45
 
 char sym[MAXSYM];
-void my_error(char *,int);
 void init_lexer();
 int getsym();
 int num,symtype;

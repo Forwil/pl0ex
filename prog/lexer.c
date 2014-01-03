@@ -19,7 +19,7 @@
 #include<ctype.h>
 #include<stdio.h>
 #include "lexer.h"
-
+#include "error.h"
 int usedag;
 
 FILE *fin,*fout;
@@ -52,13 +52,6 @@ char *alphabet[] =
 "while",
 "write"
 };
-
-void my_error(char a[],int b)
-{
-	char c;
-	printf("\n\t\t\tError in file:\" %s \"line:%d\n",a,b);
-	c = getchar();
-}
 
 void getch(int jmpsp)
 {
@@ -177,8 +170,8 @@ int getsym()
 		getch(0);
 		num = ch;
 		getch(0);
-		if (ch !='\'')
-			my_error(__FILE__,__LINE__);
+		if (ch !='\'')// missing '
+			my_error(1);
 		getch(0);
 		symtype = T_CHAR;
 	}
@@ -188,7 +181,7 @@ int getsym()
 		while(iss(ch))
 			getch(1);
 		if(!(ch =='\"'))
-			my_error(__FILE__,__LINE__);	
+			my_error(2);	// missing "
 		symtype = T_STRING;
 		getch(0);
 	}
