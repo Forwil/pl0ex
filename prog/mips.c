@@ -31,6 +31,7 @@ int get_reg()
 		if (using[i] == 0)
 		{
 			using[i] = 1;
+//			fprintf(fout,"get %d\n",i);
 			return i;
 		}
 }
@@ -38,6 +39,7 @@ int get_reg()
 void rel_reg(int i)
 {
 	using[i] = 0;
+//	fprintf(fout,"rel %d\n",i);
 }
 
 int get_into_reg(int ind,int nowlevel)
@@ -244,7 +246,6 @@ void gen_one_mips(struct four_expression t)
 				}
 				break;
 		case four_call:
-				//printf("\n\n%s %d %d \n ",sym_tables[t.src1].name,sym_tables[t.src1].level,t.level);
 				a = get_reg();
 				if (sym_tables[t.src1].level == t.level)
 					fprintf(fout,"\t move,%s,$fp\n",reg_name[a]);
@@ -259,7 +260,7 @@ void gen_one_mips(struct four_expression t)
 				fprintf(fout,"\t sw,%s,-12($sp)\n",reg_name[reg_ra]);
 				fprintf(fout,"\t sw,%s,-16($sp)\n",reg_name[reg_v0]);
 				fprintf(fout,"\t move,$fp,$sp\n");
-				fprintf(fout,"\t jal,%s\n",sym_tables[t.src1].name);
+				fprintf(fout,"\t jal,_%s\n",sym_tables[t.src1].name);
 				fprintf(fout,"\t lw,$fp,-4($sp)\n");
 				fprintf(fout,"\t lw,%s,-12($sp)\n",reg_name[reg_ra]);
 				if(t.des !=0)
@@ -298,6 +299,7 @@ void gen_one_mips(struct four_expression t)
 					fprintf(fout,"\t li,$v0,1\n");
 					fprintf(fout,"\t move,$a0,%s\n",reg_name[a]);
 					fprintf(fout,"\t syscall\n");
+					rel_reg(a);
 				}
 				else
 				{
@@ -372,7 +374,7 @@ void gen_one_mips(struct four_expression t)
 				fprintf(fout,"$L%d:\n",t.des);
 				break;
 		case four_enter:
-				fprintf(fout,"%s:\n",sym_tables[t.des].name);
+				fprintf(fout,"_%s:\n",sym_tables[t.des].name);
 				fprintf(fout,"\t addi,$sp,$sp,%d\n",-( OFFSET + sym_tables[t.des].size));
 				break;
 		default:
