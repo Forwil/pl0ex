@@ -1,8 +1,12 @@
 var i:integer;
+	a:array[5] of integer;
 begin
-	for i:=1 to 5 do
+	for i:=0 to 4 do
 		begin
-		write(i)
+			a[i]:=i;
 		end;
-	write(i)
+	for i:=4 downto 0 do
+		begin
+			write(a[i])
+		end
 end.

@@ -20,7 +20,7 @@ struct sym_table
 	int level;
 	int last;
 	int size;
-	int reg;	// when we want to generate machine code... we will use that.
+	int reg;	
 	int mem;	
 };
 

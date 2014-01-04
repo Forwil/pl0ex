@@ -1,10 +1,4 @@
 	.data
-_s1:	.ascii	" The ASCII of c1 is "
-_s2:	.ascii	" The first letter is after m "
-_s3:	.ascii	" The ASCII of c1 is "
-_s4:	.ascii	" The first letter is after M "
-_s5:	.ascii	" The letter you input is invalid "
-_s6:	.ascii	" The result is: "
 	.text
 main:
 	 move,$fp,$sp
@@ -12,274 +6,76 @@ main:
 	 sw,$fp,-8($sp)
 	 b,_main
 _main:
-	 addi,$sp,$sp,-132
-	 li,$t0,1
+	 addi,$sp,$sp,-52
+	 li,$t0,0
 	 move,$t1,$fp
-	 sw,$t0,-44($t1)
+	 sw,$t0,-20($t1)
 $L0:
 	 move,$t1,$fp
-	 lw,$t0,-44($t1)
-	 li,$t1,2
+	 lw,$t0,-20($t1)
+	 li,$t1,4
 	 sle,$t2,$t0,$t1
+	 move,$t3,$fp
+	 sw,$t2,-44($t3)
+	 move,$t1,$fp
+	 lw,$t0,-44($t1)
+	 beqz,$t0,$L1
+	 move,$t0,$fp
+	 move,$t3,$fp
+	 lw,$t2,-20($t3)
+	 addi,$t1,$t0,-40
+	 li,$t3,4
+	 mult,$t3,$t2
+	 mflo,$t3
+	 add,$t1,$t3,$t1
+	 move,$t5,$fp
+	 lw,$t4,-20($t5)
+	 sw,$t4,0($t1)
+	 move,$t1,$fp
+	 lw,$t0,-20($t1)
+	 li,$t1,1
+	 add,$t2,$t0,$t1
+	 move,$t3,$fp
+	 sw,$t2,-20($t3)
+	 b,$L0
+$L1:
+	 li,$t0,4
+	 move,$t1,$fp
+	 sw,$t0,-20($t1)
+$L2:
+	 move,$t1,$fp
+	 lw,$t0,-20($t1)
+	 li,$t1,0
+	 sge,$t2,$t0,$t1
 	 move,$t3,$fp
 	 sw,$t2,-48($t3)
 	 move,$t1,$fp
 	 lw,$t0,-48($t1)
-	 beqz,$t0,$L13
-	 move,$t1,$fp
-	 lw,$t0,-44($t1)
-	 li,$t1,1
-	 seq,$t2,$t0,$t1
+	 beqz,$t0,$L3
+	 move,$t0,$fp
 	 move,$t3,$fp
-	 sw,$t2,-52($t3)
+	 lw,$t2,-20($t3)
+	 addi,$t1,$t0,-40
+	 li,$t3,4
+	 mult,$t3,$t2
+	 mflo,$t3
+	 add,$t1,$t3,$t1
+	 lw,$t3,0($t1)
+	 move,$t4,$fp
+	 sw,$t3,-52($t4)
 	 move,$t1,$fp
 	 lw,$t0,-52($t1)
-	 beqz,$t0,$L1
-	 li,$t0,119
-	 move,$t1,$fp
-	 sw,$t0,-20($t1)
-	 li,$t0,101
-	 move,$t1,$fp
-	 sw,$t0,-24($t1)
-	 li,$t0,1
-	 move,$t1,$fp
-	 sw,$t0,-28($t1)
-	 li,$t0,2
-	 move,$t1,$fp
-	 sw,$t0,-32($t1)
-$L1:
-	 move,$t1,$fp
-	 lw,$t0,-44($t1)
-	 li,$t1,2
-	 seq,$t2,$t0,$t1
-	 move,$t3,$fp
-	 sw,$t2,-56($t3)
-	 move,$t1,$fp
-	 lw,$t0,-56($t1)
-	 beqz,$t0,$L2
-	 li,$t0,70
-	 move,$t1,$fp
-	 sw,$t0,-20($t1)
-	 li,$t0,73
-	 move,$t1,$fp
-	 sw,$t0,-24($t1)
-	 li,$t0,3
-	 move,$t1,$fp
-	 sw,$t0,-28($t1)
-	 li,$t0,5
-	 move,$t1,$fp
-	 sw,$t0,-32($t1)
-$L2:
-	 move,$t1,$fp
-	 lw,$t0,-20($t1)
-	 li,$t1,97
-	 sge,$t2,$t0,$t1
-	 move,$t3,$fp
-	 sw,$t2,-60($t3)
-	 move,$t1,$fp
-	 lw,$t0,-60($t1)
-	 beqz,$t0,$L5
-	 move,$t1,$fp
-	 lw,$t0,-20($t1)
-	 li,$t1,109
-	 sle,$t2,$t0,$t1
-	 move,$t3,$fp
-	 sw,$t2,-64($t3)
-	 move,$t1,$fp
-	 lw,$t0,-64($t1)
-	 beqz,$t0,$L3
-	 move,$t1,$fp
-	 lw,$t0,-20($t1)
-	 li,$t1,97
-	 sub,$t2,$t0,$t1
-	 move,$t3,$fp
-	 sw,$t2,-68($t3)
-	 move,$t1,$fp
-	 lw,$t0,-68($t1)
-	 li,$t1,97
-	 add,$t2,$t0,$t1
-	 move,$t3,$fp
-	 sw,$t2,-72($t3)
-	 move,$t1,$fp
-	 lw,$t0,-72($t1)
-	 move,$t1,$fp
-	 sw,$t0,-40($t1)
-	 li,$v0,4
-	 la,$a0,_s1
-	 syscall
-	 move,$t1,$fp
-	 lw,$t0,-40($t1)
 	 li,$v0,1
 	 move,$a0,$t0
 	 syscall
-	 b,$L4
-$L3:
-	 li,$v0,4
-	 la,$a0,_s2
-	 syscall
-$L4:
-	 b,$L10
-$L5:
 	 move,$t2,$fp
 	 lw,$t1,-20($t2)
-	 li,$t2,65
-	 sge,$t3,$t1,$t2
-	 move,$t4,$fp
-	 sw,$t3,-76($t4)
-	 move,$t2,$fp
-	 lw,$t1,-76($t2)
-	 beqz,$t1,$L8
-	 move,$t2,$fp
-	 lw,$t1,-20($t2)
-	 li,$t2,77
-	 sle,$t3,$t1,$t2
-	 move,$t4,$fp
-	 sw,$t3,-80($t4)
-	 move,$t2,$fp
-	 lw,$t1,-80($t2)
-	 beqz,$t1,$L6
-	 move,$t2,$fp
-	 lw,$t1,-20($t2)
-	 li,$t2,65
-	 sub,$t3,$t1,$t2
-	 move,$t4,$fp
-	 sw,$t3,-84($t4)
-	 move,$t2,$fp
-	 lw,$t1,-84($t2)
-	 li,$t2,65
+	 li,$t2,-1
 	 add,$t3,$t1,$t2
 	 move,$t4,$fp
-	 sw,$t3,-88($t4)
-	 move,$t2,$fp
-	 lw,$t1,-88($t2)
-	 move,$t2,$fp
-	 sw,$t1,-40($t2)
-	 li,$v0,4
-	 la,$a0,_s3
-	 syscall
-	 move,$t2,$fp
-	 lw,$t1,-40($t2)
-	 li,$v0,1
-	 move,$a0,$t1
-	 syscall
-	 b,$L7
-$L6:
-	 li,$v0,4
-	 la,$a0,_s4
-	 syscall
-$L7:
-	 b,$L9
-$L8:
-	 li,$v0,4
-	 la,$a0,_s5
-	 syscall
-$L9:
-$L10:
-	 move,$t3,$fp
-	 lw,$t2,-20($t3)
-	 move,$t4,$fp
-	 lw,$t3,-24($t4)
-	 sle,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-92($t5)
-	 move,$t3,$fp
-	 lw,$t2,-92($t3)
-	 beqz,$t2,$L11
-	 li,$t2,97
-	 move,$t4,$fp
-	 lw,$t3,-28($t4)
-	 mult,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-96($t5)
-	 li,$t2,109
-	 move,$t4,$fp
-	 lw,$t3,-32($t4)
-	 mult,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-100($t5)
-	 move,$t3,$fp
-	 lw,$t2,-96($t3)
-	 move,$t4,$fp
-	 lw,$t3,-100($t4)
-	 add,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-104($t5)
-	 li,$t2,97
-	 li,$t3,109
-	 add,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-108($t5)
-	 move,$t3,$fp
-	 lw,$t2,-104($t3)
-	 move,$t4,$fp
-	 lw,$t3,-108($t4)
-	 div,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-112($t5)
-	 move,$t3,$fp
-	 lw,$t2,-112($t3)
-	 move,$t3,$fp
-	 sw,$t2,-36($t3)
-	 b,$L12
-$L11:
-	 li,$t2,97
-	 move,$t4,$fp
-	 lw,$t3,-32($t4)
-	 mult,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-116($t5)
-	 li,$t2,109
-	 move,$t4,$fp
-	 lw,$t3,-28($t4)
-	 mult,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-120($t5)
-	 move,$t3,$fp
-	 lw,$t2,-116($t3)
-	 move,$t4,$fp
-	 lw,$t3,-120($t4)
-	 add,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-124($t5)
-	 li,$t2,97
-	 li,$t3,109
-	 sub,$t4,$t2,$t3
-	 move,$t5,$fp
-	 sw,$t4,-128($t5)
-	 move,$t3,$fp
-	 lw,$t2,-124($t3)
-	 move,$t4,$fp
-	 lw,$t3,-128($t4)
-	 div,$t2,$t3
-	 mflo,$t4
-	 move,$t5,$fp
-	 sw,$t4,-132($t5)
-	 move,$t3,$fp
-	 lw,$t2,-132($t3)
-	 move,$t3,$fp
-	 sw,$t2,-36($t3)
-$L12:
-	 li,$v0,4
-	 la,$a0,_s6
-	 syscall
-	 move,$t3,$fp
-	 lw,$t2,-36($t3)
-	 li,$v0,1
-	 move,$a0,$t2
-	 syscall
-	 move,$t4,$fp
-	 lw,$t3,-44($t4)
-	 li,$t4,1
-	 add,$t5,$t3,$t4
-	 move,$t6,$fp
-	 sw,$t5,-44($t6)
-	 b,$L0
-$L13:
-	 addi,$sp,$sp,132
+	 sw,$t3,-20($t4)
+	 b,$L2
+$L3:
+	 addi,$sp,$sp,52
 	 li,$v0,10
 	 syscall

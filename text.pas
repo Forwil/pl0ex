@@ -1,7 +1,7 @@
 var x,y,g,m:integer;
     i:integer;
     a,b:integer;
-procedure swap;
+procedure swap();
   var temp:integer;
   begin
     temp:=x;
@@ -25,11 +25,6 @@ begin
    write("x mod y = ",x);
    write("choice 1 2 3: ");
    read(g);
-   case g of
-        1: write("good ");
-        2: write("better ");
-        3: write("best ")
-   end
    
   end
 end.
