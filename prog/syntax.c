@@ -909,6 +909,6 @@ int main(int argc,char *argv[])
 	printf("\nStart generate mips code\n");	
 	init_mips();
 	gen_mips();
-	printf("\nSuccess!\nGenerate into \"test/result.asm\"\n");	
+	printf("\nSuccess!\nGenerate into \"result.asm\"\n");	
 	return 0;
 }

@@ -149,7 +149,7 @@ void init_mips()
 	using[reg_fp] = 1; 
 	using[reg_ra] = 1; 
 	//fout = stdout;
-	fout = fopen("test/result.asm","w");
+	fout = fopen("result.asm","w");
 	set_string();
 	init_all_mem();
 }
