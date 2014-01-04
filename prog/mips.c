@@ -108,7 +108,7 @@ void set_string()
 		if(four_codes[i].type == four_write && sym_tables[four_codes[i].des].type == t_string)
 		{
 			t = sym_tables[four_codes[i].des];
-			fprintf(fout,"_s%d:\t.ascii\t\"%s\"\n",t.x,t.name);		
+			fprintf(fout,"_s%d:\t.asciiz\t\"%s\"\n",t.x,t.name);		
 		}
 }
 
