@@ -231,9 +231,8 @@ $L4:
 	 lw,$t0,-112($t1)
 	 sw,$t0,-24($sp)
 	 move,$t0,$fp
-	 lw,$t1,-8($t0)
 	 sw,$fp,-4($sp)
-	 sw,$t1,-8($sp)
+	 sw,$t0,-8($sp)
 	 sw,$ra,-12($sp)
 	 sw,$v0,-16($sp)
 	 move,$fp,$sp
@@ -296,11 +295,11 @@ $L6:
 	 move,$t1,$fp
 	 lw,$t0,-28($t1)
 	 sw,$t0,-28($sp)
-	 move,$t0,$fp
-	 lw,$t0,-8($t0)
-	 lw,$t1,-8($t0)
+	 move,$t1,$fp
+	 lw,$t1,-8($t1)
+	 lw,$t0,-8($t1)
 	 sw,$fp,-4($sp)
-	 sw,$t1,-8($sp)
+	 sw,$t0,-8($sp)
 	 sw,$ra,-12($sp)
 	 sw,$v0,-16($sp)
 	 move,$fp,$sp
@@ -332,11 +331,11 @@ $L7:
 	 move,$t1,$fp
 	 lw,$t0,-36($t1)
 	 sw,$t0,-28($sp)
-	 move,$t0,$fp
-	 lw,$t0,-8($t0)
-	 lw,$t1,-8($t0)
+	 move,$t1,$fp
+	 lw,$t1,-8($t1)
+	 lw,$t0,-8($t1)
 	 sw,$fp,-4($sp)
-	 sw,$t1,-8($sp)
+	 sw,$t0,-8($sp)
 	 sw,$ra,-12($sp)
 	 sw,$v0,-16($sp)
 	 move,$fp,$sp
@@ -446,9 +445,8 @@ _main:
 	 lw,$t0,-104($t1)
 	 sw,$t0,-28($sp)
 	 move,$t0,$fp
-	 lw,$t1,-8($t0)
 	 sw,$fp,-4($sp)
-	 sw,$t1,-8($sp)
+	 sw,$t0,-8($sp)
 	 sw,$ra,-12($sp)
 	 sw,$v0,-16($sp)
 	 move,$fp,$sp

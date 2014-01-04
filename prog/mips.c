@@ -69,10 +69,13 @@ int get_mem(int ind,int nowlevel,int *base)
 	fprintf(fout,"\t move,%s,%s\n",reg_name[a],reg_name[reg_fp]);
 	*base = a;
 	if(sym_tables[ind].kind == k_func)
-		return -OFFSET;
+		delt_level -= 1;
 
 	for(i = 0;i< delt_level;i++)
 		fprintf(fout,"\t lw,%s,-8(%s)\n",reg_name[a],reg_name[a]);	
+
+	if(sym_tables[ind].kind == k_func)
+		return -OFFSET;
 	return -(sym_tables[ind].mem + OFFSET);	
 }
 
@@ -241,10 +244,16 @@ void gen_one_mips(struct four_expression t)
 				}
 				break;
 		case four_call:
-				get_mem(t.src1,t.level,&base);
+				//printf("\n\n%s %d %d \n ",sym_tables[t.src1].name,sym_tables[t.src1].level,t.level);
 				a = get_reg();
-				fprintf(fout,"\t lw,%s,-8(%s)\n",reg_name[a],reg_name[base]);
-				rel_reg(base);
+				if (sym_tables[t.src1].level == t.level)
+					fprintf(fout,"\t move,%s,$fp\n",reg_name[a]);
+				else
+				{
+					get_mem(t.src1,t.level,&base);
+					fprintf(fout,"\t lw,%s,-8(%s)\n",reg_name[a],reg_name[base]);
+					rel_reg(base);
+				}
 				fprintf(fout,"\t sw,$fp,-4($sp)\n");
 				fprintf(fout,"\t sw,%s,-8($sp)\n",reg_name[a]);	
 				fprintf(fout,"\t sw,%s,-12($sp)\n",reg_name[reg_ra]);
@@ -272,7 +281,16 @@ void gen_one_mips(struct four_expression t)
 				rel_reg(a);
 				break;
 		case four_write:
-				if (sym_tables[t.des].kind == k_var
+				if (sym_tables[t.des].type == t_char)
+				{
+					fprintf(fout,"\t li,$v0,4\n");
+					a = get_into_reg(t.des,t.level);
+					fprintf(fout,"\t sw,%s,-4($sp)\n",reg_name[a]);
+					fprintf(fout,"\t addi,$a0,$sp,-4\n");	
+					fprintf(fout,"\t syscall\n");
+					rel_reg(a);
+				}
+				else if (sym_tables[t.des].kind == k_var
 				  ||(sym_tables[t.des].kind == k_const&&
 					 sym_tables[t.des].type == t_integer))
 				{
