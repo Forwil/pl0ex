@@ -70,7 +70,8 @@ int get_mem(int ind,int nowlevel,int *base)
 	a = get_reg();
 	fprintf(fout,"\t move,%s,%s\n",reg_name[a],reg_name[reg_fp]);
 	*base = a;
-	if(sym_tables[ind].kind == k_func)
+	if(sym_tables[ind].kind == k_func
+	 ||sym_tables[ind].kind == k_proc)
 		delt_level -= 1;
 
 	for(i = 0;i< delt_level;i++)
@@ -275,7 +276,10 @@ void gen_one_mips(struct four_expression t)
 
 		case four_read:
 				a = get_reg();
-				fprintf(fout,"\t li,$v0,5\n");
+				if (sym_tables[t.des].type == t_integer)
+					fprintf(fout,"\t li,$v0,5\n");
+				else
+					fprintf(fout,"\t li,$v0,12\n");
 				fprintf(fout,"\t syscall\n");
 				fprintf(fout,"\t move %s,$v0\n",reg_name[a]);
 				store_into_mem(a,t.des,t.level);
